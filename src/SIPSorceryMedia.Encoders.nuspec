@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SIPSorceryMedia.Encoders</id>
+    <authors>Aaron Clauson</authors>
+    <copyright>Copyright © 2020 Aaron Clauson</copyright>
+    <license type="expression">BSD-3-Clause</license>
+    <title>SIPSorceryMedia.Encoders</title>
+    <summary>Audio and video codecs with media end point wrappers.</summary>
+	<description>Provides audio and video encode and decode capabilities plus media end points that can be used with the main SIPSorcery real-time communications library.</description>
+	<iconUrl>http://www.sipsorcery.com/mainsite/favicon.ico</iconUrl>
+	<icon>icon.png</icon>
+    <projectUrl>https://github.com/sipsorcery/SIPSorceryMedia.Encoders</projectUrl>
+	<repository type="git" url="https://github.com/sipsorcery/SIPSorceryMedia.Encoders" branch="master" />
+	<tags>WebRTC VoIP SIPSorcery Audio Video Codecs Encoders Decoders</tags>
+	<dependencies>
+      <group targetFramework="netcoreapp3.1">
+	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.8" />
+		<dependency id="System.Drawing.Common" version="4.7.0" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.10-pre" />
+		<dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.19041.1" />
+	  </group>
+	 <group targetFramework="net461">
+	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.8" />
+		<dependency id="System.Drawing.Common" version="4.7.0" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.12-pre" />
+		<dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.19041.1" />
+	  </group>
+    </dependencies>
+	<releaseNotes>-v0.0.1-pre: Initial pre-release</releaseNotes>
+	<version>0.0.1-pre</version>
+  </metadata>
+  <files>
+    <file src="icon.png" target="icon.png" />
+  	<file src="bin\Release\netcoreapp3.1\SIPSorceryMedia.Encoders.dll" target="lib\netcoreapp3.1" />
+	<file src="bin\Release\net461\SIPSorceryMedia.Encoders.dll" target="lib\net461" />
+    <file src="..\lib\nuspec\SIPSorceryMedia.Encoders.targets" target="build\SIPSorceryMedia.Encoders.targets" />
+    <file src="..\lib\x64\*.dll" target="build\x64" />
+    <file src="..\lib\x86\*.dll" target="build\x86" />
+  </files>
+</package>
