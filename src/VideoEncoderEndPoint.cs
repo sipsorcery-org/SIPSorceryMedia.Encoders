@@ -22,7 +22,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SIPSorceryMedia.Abstractions.V1;
-using SIPSorceryMedia.Encoders.Codecs;
 using SIPSorceryMedia.Abstractions;
 
 namespace SIPSorceryMedia.Encoders
