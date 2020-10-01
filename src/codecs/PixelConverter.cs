@@ -1,55 +1,55 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+﻿//using System;
+//using System.Drawing;
+//using System.Drawing.Imaging;
+//using System.Runtime.InteropServices;
 
 namespace SIPSorceryMedia.Encoders.Codecs
 {
     public class PixelConverter
     {
-        public static byte[] BitmapToRGBA(Bitmap bmp, int width, int height)
-        {
-            int pixelSize = 0;
-            switch (bmp.PixelFormat)
-            {
-                case PixelFormat.Format24bppRgb:
-                    pixelSize = 3;
-                    break;
-                case PixelFormat.Format32bppArgb:
-                case PixelFormat.Format32bppPArgb:
-                case PixelFormat.Format32bppRgb:
-                    pixelSize = 4;
-                    break;
-                default:
-                    throw new ArgumentException($"Bitmap pixel format {bmp.PixelFormat} was not recognised in BitmapToRGBA.");
-            }
+        //public static byte[] BitmapToRGBA(Bitmap bmp, int width, int height)
+        //{
+        //    int pixelSize = 0;
+        //    switch (bmp.PixelFormat)
+        //    {
+        //        case PixelFormat.Format24bppRgb:
+        //            pixelSize = 3;
+        //            break;
+        //        case PixelFormat.Format32bppArgb:
+        //        case PixelFormat.Format32bppPArgb:
+        //        case PixelFormat.Format32bppRgb:
+        //            pixelSize = 4;
+        //            break;
+        //        default:
+        //            throw new ArgumentException($"Bitmap pixel format {bmp.PixelFormat} was not recognised in BitmapToRGBA.");
+        //    }
 
-            BitmapData bmpDate = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
-            IntPtr ptr = bmpDate.Scan0;
-            byte[] buffer = new byte[width * height * 4];
-            int posn = 0;
+        //    BitmapData bmpDate = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
+        //    IntPtr ptr = bmpDate.Scan0;
+        //    byte[] buffer = new byte[width * height * 4];
+        //    int posn = 0;
 
-            for (int y = 0; y <= height - 1; y++)
-            {
-                for (int x = 0; x <= width - 1; x++)
-                {
-                    int pos = y * bmpDate.Stride + x * pixelSize;
+        //    for (int y = 0; y <= height - 1; y++)
+        //    {
+        //        for (int x = 0; x <= width - 1; x++)
+        //        {
+        //            int pos = y * bmpDate.Stride + x * pixelSize;
 
-                    var r = Marshal.ReadByte(ptr, pos + 0);
-                    var g = Marshal.ReadByte(ptr, pos + 1);
-                    var b = Marshal.ReadByte(ptr, pos + 2);
+        //            var r = Marshal.ReadByte(ptr, pos + 0);
+        //            var g = Marshal.ReadByte(ptr, pos + 1);
+        //            var b = Marshal.ReadByte(ptr, pos + 2);
 
-                    buffer[posn++] = r;
-                    buffer[posn++] = g;
-                    buffer[posn++] = b;
-                    buffer[posn++] = 0x00;
-                }
-            }
+        //            buffer[posn++] = r;
+        //            buffer[posn++] = g;
+        //            buffer[posn++] = b;
+        //            buffer[posn++] = 0x00;
+        //        }
+        //    }
 
-            bmp.UnlockBits(bmpDate);
+        //    bmp.UnlockBits(bmpDate);
 
-            return buffer;
-        }
+        //    return buffer;
+        //}
 
         // https://msdn.microsoft.com/ja-jp/library/hh394035(v=vs.92).aspx
         // http://qiita.com/gomachan7/items/54d43693f943a0986e95
