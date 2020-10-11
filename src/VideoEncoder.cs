@@ -59,6 +59,10 @@ namespace SIPSorceryMedia.Encoders
 
                 switch (pixelFormat)
                 {
+                    case VideoPixelFormatsEnum.I420:
+                        // No conversion needed.
+                        i420Buffer = sample;
+                        break;
                     case VideoPixelFormatsEnum.Bgra:
                         i420Buffer = PixelConverter.RGBAtoI420(sample, width, height);
                         break;
