@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using SIPSorceryMedia.Abstractions;
 using SIPSorceryMedia.Abstractions.V1;
 using SIPSorceryMedia.Encoders.Codecs;
 
@@ -55,25 +56,7 @@ namespace SIPSorceryMedia.Encoders
                     _vp8Encoder.InitialiseEncoder((uint)width, (uint)height);
                 }
 
-                byte[] i420Buffer = null;
-
-                switch (pixelFormat)
-                {
-                    case VideoPixelFormatsEnum.I420:
-                        // No conversion needed.
-                        i420Buffer = sample;
-                        break;
-                    case VideoPixelFormatsEnum.Bgra:
-                        i420Buffer = PixelConverter.RGBAtoI420(sample, width, height);
-                        break;
-                    case VideoPixelFormatsEnum.Bgr:
-                        i420Buffer = PixelConverter.BGRtoI420(sample, width, height);
-                        break;
-                    default:
-                        i420Buffer = PixelConverter.RGBtoI420(sample, width, height);
-                        break;
-                }
-
+                var i420Buffer = PixelConverter.ToI420(width, height, sample, pixelFormat);
                 var encodedBuffer = _vp8Encoder.Encode(i420Buffer, _forceKeyFrame);
 
                 //SetBitmapData(sample, _encodeBmp, pixelFormat);
