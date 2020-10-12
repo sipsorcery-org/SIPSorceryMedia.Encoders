@@ -16,15 +16,16 @@
 	<dependencies>
       <group targetFramework="netstandard2.0">
 	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.8" />
-		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.14-pre" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.15-pre" />
 	  </group>
 	 <group targetFramework="net461">
 	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="3.1.8" />
-		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.14-pre" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.15-pre" />
 	  </group>
     </dependencies>
-	<releaseNotes>-v0.0.1-pre: Initial pre-release</releaseNotes>
-	<version>0.0.1-pre</version>
+	<releaseNotes>-v0.0.2-pre: Added support for I420 input samples.
+-v0.0.1-pre: Initial pre-release</releaseNotes>
+	<version>0.0.2-pre</version>
   </metadata>
   <files>
     <file src="icon.png" target="icon.png" />
