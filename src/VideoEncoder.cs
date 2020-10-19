@@ -59,29 +59,6 @@ namespace SIPSorceryMedia.Encoders
                 var i420Buffer = PixelConverter.ToI420(width, height, sample, pixelFormat);
                 var encodedBuffer = _vp8Encoder.Encode(i420Buffer, _forceKeyFrame);
 
-                //SetBitmapData(sample, _encodeBmp, pixelFormat);
-
-                //var nv12bmp = SoftwareBitmap.Convert(_encodeBmp, BitmapPixelFormat.Nv12);
-                //byte[] nv12Buffer = null;
-
-                //using (BitmapBuffer buffer = nv12bmp.LockBuffer(BitmapBufferAccessMode.Read))
-                //{
-                //    using (var reference = buffer.CreateReference())
-                //    {
-                //        unsafe
-                //        {
-                //            byte* dataInBytes;
-                //            uint capacity;
-                //            ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
-
-                //            nv12Buffer = new byte[capacity];
-                //            Marshal.Copy((IntPtr)dataInBytes, nv12Buffer, 0, (int)capacity);
-                //        }
-                //    }
-                //}
-
-                //byte[] encodedBuffer = _vp8Encoder.Encode(nv12Buffer, _forceKeyFrame);
-
                 if (_forceKeyFrame)
                 {
                     _forceKeyFrame = false;
@@ -99,7 +76,6 @@ namespace SIPSorceryMedia.Encoders
                 {
                     _vp8Decoder = new Vp8Codec();
                     _vp8Decoder.InitialiseDecoder();
-                    //DateTime startTime = DateTime.Now;
                 }
 
                 List<byte[]> decodedFrames = _vp8Decoder.Decode(frame, frame.Length, out var width, out var height);
@@ -113,8 +89,6 @@ namespace SIPSorceryMedia.Encoders
                     foreach (var decodedFrame in decodedFrames)
                     {
                         byte[] rgb = PixelConverter.I420toBGR(decodedFrame, (int)width, (int)height);
-                        //Console.WriteLine($"VP8 decode took {DateTime.Now.Subtract(startTime).TotalMilliseconds}ms.");
-                        //OnVideoSinkDecodedSample(rgb, width, height, (int)(width * 3), VideoPixelFormatsEnum.Bgr);
                         yield return new VideoSample { Width = width, Height = height, Sample = rgb };
                     }
                 }

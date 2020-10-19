@@ -30,15 +30,16 @@ namespace SIPSorceryMedia.Encoders
     {
         private const int VIDEO_SAMPLING_RATE = 90000;
         private const int DEFAULT_FRAMES_PER_SECOND = 30;
+        private const int VP8_FORMAT_ID = 96;
 
         private ILogger logger = SIPSorcery.LogFactory.CreateLogger<VideoEncoderEndPoint>();
 
-        public static readonly List<VideoCodecsEnum> SupportedCodecs = new List<VideoCodecsEnum>
+        public static readonly List<VideoFormat> SupportedFormats = new List<VideoFormat>
         {
-            VideoCodecsEnum.VP8
+            new VideoFormat(VideoCodecsEnum.VP8, VP8_FORMAT_ID, VIDEO_SAMPLING_RATE)
         };
 
-        private CodecManager<VideoCodecsEnum> _codecManager;
+        private MediaFormatManager<VideoFormat> _formatManager;
         private VideoEncoder _videoEncoder;
         private bool _isClosed;
 
@@ -68,15 +69,15 @@ namespace SIPSorceryMedia.Encoders
         /// </summary>
         public VideoEncoderEndPoint()
         {
-            _codecManager = new CodecManager<VideoCodecsEnum>(SupportedCodecs);
+            _formatManager = new MediaFormatManager<VideoFormat>(SupportedFormats);
             _videoEncoder = new VideoEncoder();
         }
 
-        public void RestrictCodecs(List<VideoCodecsEnum> codecs) => _codecManager.RestrictCodecs(codecs);
-        public List<VideoCodecsEnum> GetVideoSourceFormats() => _codecManager.GetSourceFormats();
-        public void SetVideoSourceFormat(VideoCodecsEnum videoFormat) => _codecManager.SetSelectedCodec(videoFormat);
-        public List<VideoCodecsEnum> GetVideoSinkFormats() => _codecManager.GetSourceFormats();
-        public void SetVideoSinkFormat(VideoCodecsEnum videoFormat) => _codecManager.SetSelectedCodec(videoFormat);
+        public void RestrictFormats(Func<VideoFormat, bool> filter) => _formatManager.RestrictFormats(filter);
+        public List<VideoFormat> GetVideoSourceFormats() => _formatManager.GetSourceFormats();
+        public void SetVideoSourceFormat(VideoFormat videoFormat) => _formatManager.SetSelectedFormat(videoFormat);
+        public List<VideoFormat> GetVideoSinkFormats() => _formatManager.GetSourceFormats();
+        public void SetVideoSinkFormat(VideoFormat videoFormat) => _formatManager.SetSelectedFormat(videoFormat);
 
         public void ForceKeyFrame() => _videoEncoder.ForceKeyFrame();
         public void GotVideoRtp(IPEndPoint remoteEndPoint, uint ssrc, uint seqnum, uint timestamp, int payloadID, bool marker, byte[] payload) =>
@@ -86,6 +87,10 @@ namespace SIPSorceryMedia.Encoders
         public Task PauseVideo() => Task.CompletedTask;
         public Task ResumeVideo() => Task.CompletedTask;
         public Task StartVideo() => Task.CompletedTask;
+        public Task CloseVideoSink() => Task.CompletedTask;
+        public Task PauseVideoSink() => Task.CompletedTask;
+        public Task ResumeVideoSink() => Task.CompletedTask;
+        public Task StartVideoSink() => Task.CompletedTask;
 
         public MediaEndPoints ToMediaEndPoints()
         {
@@ -100,73 +105,17 @@ namespace SIPSorceryMedia.Encoders
         {
             if (!_isClosed)
             {
-
-
-                //lock (_encoderLock)
-                //{
-                //    if (_vp8Encoder == null)
-                //    {
-                //        _vp8Encoder = new Vp8Codec();
-                //        _vp8Encoder.InitialiseEncoder((uint)width, (uint)height);
-                //    }
-
                 if (OnVideoSourceEncodedSample != null)
                 {
-                    //byte[] i420Buffer = null;
-
-                    //switch(pixelFormat)
-                    //{
-                    //    case VideoPixelFormatsEnum.Bgra:
-                    //        i420Buffer = PixelConverter.RGBAtoI420(sample, width, height);
-                    //        break;
-                    //    case VideoPixelFormatsEnum.Bgr:
-                    //        i420Buffer = PixelConverter.BGRtoI420(sample, width, height);
-                    //        break;
-                    //    default:
-                    //        i420Buffer = PixelConverter.RGBtoI420(sample, width, height);
-                    //        break;
-                    //}
-
-                    //var encodedBuffer = _vp8Encoder.Encode(i420Buffer, _forceKeyFrame);
                     var encodedBuffer = _videoEncoder.EncodeVideo(width, height, sample, pixelFormat, VideoCodecsEnum.VP8);
-
-                    //SetBitmapData(sample, _encodeBmp, pixelFormat);
-
-                    //var nv12bmp = SoftwareBitmap.Convert(_encodeBmp, BitmapPixelFormat.Nv12);
-                    //byte[] nv12Buffer = null;
-
-                    //using (BitmapBuffer buffer = nv12bmp.LockBuffer(BitmapBufferAccessMode.Read))
-                    //{
-                    //    using (var reference = buffer.CreateReference())
-                    //    {
-                    //        unsafe
-                    //        {
-                    //            byte* dataInBytes;
-                    //            uint capacity;
-                    //            ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
-
-                    //            nv12Buffer = new byte[capacity];
-                    //            Marshal.Copy((IntPtr)dataInBytes, nv12Buffer, 0, (int)capacity);
-                    //        }
-                    //    }
-                    //}
-
-                    //byte[] encodedBuffer = _vp8Encoder.Encode(nv12Buffer, _forceKeyFrame);
 
                     if (encodedBuffer != null)
                     {
-                        //Console.WriteLine($"encoded buffer: {encodedBuffer.HexStr()}");
                         uint fps = (durationMilliseconds > 0) ? 1000 / durationMilliseconds : DEFAULT_FRAMES_PER_SECOND;
                         uint durationRtpTS = VIDEO_SAMPLING_RATE / fps;
                         OnVideoSourceEncodedSample.Invoke(durationRtpTS, encodedBuffer);
                     }
-
-                    //if (_forceKeyFrame)
-                    //{
-                    //    _forceKeyFrame = false;
-                    //}
                 }
-                //}
             }
         }
 
@@ -174,32 +123,11 @@ namespace SIPSorceryMedia.Encoders
         {
             if (!_isClosed)
             {
-                //lock (_decoderLock)
-                //{
-                //    if (_vp8Decoder == null)
-                //    {
-                //        _vp8Decoder = new Vp8Codec();
-                //        _vp8Decoder.InitialiseDecoder();
-                //        //DateTime startTime = DateTime.Now;
-                //    }
-
-                    //List<byte[]> decodedFrames = _vp8Decoder.Decode(frame, frame.Length, out var width, out var height);
-
-                    //if (decodedFrames == null)
-                    //{
-                    //    logger.LogWarning("VPX decode of video sample failed.");
-                    //}
-                    //else
-                    //{
-                        foreach (var decoded in _videoEncoder.DecodeVideo(frame, VideoPixelFormatsEnum.Bgr, VideoCodecsEnum.VP8))
-                        {
-                            //byte[] rgb = PixelConverter.I420toBGR(decodedFrame, (int)decodedFrame.Width, (int)decodedFrame.Height);
-                            //Console.WriteLine($"VP8 decode took {DateTime.Now.Subtract(startTime).TotalMilliseconds}ms.");
-                            OnVideoSinkDecodedSample(decoded.Sample, decoded.Width, decoded.Height, (int)(decoded.Width * 3), VideoPixelFormatsEnum.Bgr);
-                        }
-                   // }
+                foreach (var decoded in _videoEncoder.DecodeVideo(frame, VideoPixelFormatsEnum.Bgr, VideoCodecsEnum.VP8))
+                {
+                    OnVideoSinkDecodedSample(decoded.Sample, decoded.Width, decoded.Height, (int)(decoded.Width * 3), VideoPixelFormatsEnum.Bgr);
                 }
-           //}
+            }
         }
 
         public Task CloseVideo()

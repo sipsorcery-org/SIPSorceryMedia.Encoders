@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6A1C76F8-7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelConvertTest", "..\test\PixelConvertTest\PixelConvertTest.csproj", "{5B1DB1BF-A7D2-4B80-8A51-9278784FF87B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIPSorceryMedia.Abstractions", "..\..\SIPSorceryMedia.Abstractions\src\SIPSorceryMedia.Abstractions.csproj", "{D26CAA32-C31D-4026-B64E-04CA15FEACAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,18 @@ Global
 		{5B1DB1BF-A7D2-4B80-8A51-9278784FF87B}.Release|x64.Build.0 = Release|Any CPU
 		{5B1DB1BF-A7D2-4B80-8A51-9278784FF87B}.Release|x86.ActiveCfg = Release|Any CPU
 		{5B1DB1BF-A7D2-4B80-8A51-9278784FF87B}.Release|x86.Build.0 = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|x64.Build.0 = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Debug|x86.Build.0 = Debug|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|x64.ActiveCfg = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|x64.Build.0 = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|x86.ActiveCfg = Release|Any CPU
+		{D26CAA32-C31D-4026-B64E-04CA15FEACAB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
