@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="0.0.18-pre" />
+    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="0.0.20-pre" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +27,7 @@
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
-
+  
   <!--<PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
