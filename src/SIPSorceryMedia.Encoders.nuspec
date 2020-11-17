@@ -23,12 +23,13 @@
 		<dependency id="SIPSorceryMedia.Abstractions" version="0.0.20-pre" />
 	  </group>
     </dependencies>
-	<releaseNotes>-v0.0.5-pre: Updated to use latest abstractions nuget package.
+	<releaseNotes>-v0.0.6-pre: Updated to use latest abstractions nuget package.
+-v0.0.5-pre: Updated to use latest abstractions nuget package.
 -v0.0.4-pre: Updated to use latest abstractions nuget package.
 -v0.0.3-pre: Use pixel conversion class from abstractions package.
 -v0.0.2-pre: Added support for I420 input samples.
 -v0.0.1-pre: Initial pre-release</releaseNotes>
-	<version>0.0.5-pre</version>
+	<version>0.0.6-pre</version>
   </metadata>
   <files>
     <file src="icon.png" target="icon.png" />
