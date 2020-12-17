@@ -40,7 +40,7 @@ namespace SIPSorceryMedia.Encoders
         };
 
         private MediaFormatManager<VideoFormat> _formatManager;
-        private VideoEncoder _videoEncoder;
+        private VpxVideoEncoder _videoEncoder;
         private bool _isClosed;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SIPSorceryMedia.Encoders
         public VideoEncoderEndPoint()
         {
             _formatManager = new MediaFormatManager<VideoFormat>(SupportedFormats);
-            _videoEncoder = new VideoEncoder();
+            _videoEncoder = new VpxVideoEncoder();
         }
 
         public void RestrictFormats(Func<VideoFormat, bool> filter) => _formatManager.RestrictFormats(filter);

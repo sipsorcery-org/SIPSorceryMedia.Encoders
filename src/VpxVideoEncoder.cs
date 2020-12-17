@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// Filename: VideoEncoder.cs
+// Filename: VpxVideoEncoder.cs
 //
 // Description: Implements a VP8 video encoder.
 //
@@ -8,6 +8,7 @@
 //
 // History:
 // 20 Aug 2020  Aaron Clauson	Created, Dublin, Ireland.
+// 17 Dec 2020  Aaron Clauson   Renamed from VideoEncoder to VpxVideoEncoder.
 //
 // License: 
 // BSD 3-Clause "New" or "Revised" License, see included LICENSE.md file.
@@ -22,9 +23,9 @@ using SIPSorceryMedia.Encoders.Codecs;
 
 namespace SIPSorceryMedia.Encoders
 {
-    public class VideoEncoder : IVideoEncoder, IDisposable
+    public class VpxVideoEncoder : IVideoEncoder, IDisposable
     {
-        private ILogger logger = SIPSorcery.LogFactory.CreateLogger<VideoEncoder>();
+        private ILogger logger = SIPSorcery.LogFactory.CreateLogger<VpxVideoEncoder>();
 
         public static readonly List<VideoCodecsEnum> SupportedCodecs = new List<VideoCodecsEnum>
         {
@@ -40,7 +41,7 @@ namespace SIPSorceryMedia.Encoders
         /// <summary>
         /// Creates a new video encoder can encode and decode samples.
         /// </summary>
-        public VideoEncoder()
+        public VpxVideoEncoder()
         { }
 
         public void ForceKeyFrame() => _forceKeyFrame = true;
@@ -56,8 +57,21 @@ namespace SIPSorceryMedia.Encoders
                     _vp8Encoder.InitialiseEncoder((uint)width, (uint)height);
                 }
 
-                var i420Buffer = PixelConverter.ToI420(width, height, sample, pixelFormat);
-                var encodedBuffer = _vp8Encoder.Encode(i420Buffer, _forceKeyFrame);
+                byte[] encodedBuffer = null;
+
+                if (pixelFormat == VideoPixelFormatsEnum.NV12)
+                {
+                    encodedBuffer = _vp8Encoder.Encode(sample, vpxmd.VpxImgFmt.VPX_IMG_FMT_NV12, _forceKeyFrame);
+                }
+                else if (pixelFormat == VideoPixelFormatsEnum.I420)
+                {
+                    encodedBuffer = _vp8Encoder.Encode(sample, vpxmd.VpxImgFmt.VPX_IMG_FMT_I420, _forceKeyFrame);
+                }
+                else
+                {
+                    var i420Buffer = PixelConverter.ToI420(width, height, sample, pixelFormat);
+                    encodedBuffer = _vp8Encoder.Encode(i420Buffer, vpxmd.VpxImgFmt.VPX_IMG_FMT_I420, _forceKeyFrame);
+                }
 
                 if (_forceKeyFrame)
                 {

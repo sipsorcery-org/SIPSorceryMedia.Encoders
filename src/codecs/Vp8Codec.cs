@@ -47,8 +47,8 @@ namespace SIPSorceryMedia.Encoders.Codecs
         private VpxCodecCtx _vpxEncodeCtx;
         private VpxImage _vpxEncodeImg;
         private VpxCodecCtx _vpxDecodeCtx;
+        private bool _isVpxImageAllocated;
         private bool _isDisposing;
-        private VpxImgFmt _encoderInputFormat;
 
         uint _encodeWidth = 0;
         uint _encodeHeight = 0;
@@ -62,11 +62,10 @@ namespace SIPSorceryMedia.Encoders.Codecs
         // https://chromium.googlesource.com/external/webrtc/stable/src/+/b8671cb0516ec9f6c7fe22a6bbe331d5b091cdbb/modules/video_coding/codecs/vp8/vp8.cc
         // Updated link 15 Jun 2020.
         // https://chromium.googlesource.com/external/webrtc/stable/src/+/refs/heads/master/modules/video_coding/codecs/vp8/vp8_impl.cc
-        public void InitialiseEncoder(uint width, uint height, VpxImgFmt encoderInputFormat = VpxImgFmt.VPX_IMG_FMT_I420)
+        public void InitialiseEncoder(uint width, uint height)
         {
             _encodeWidth = width;
             _encodeHeight = height;
-            _encoderInputFormat = encoderInputFormat;
 
             _vpxEncodeCtx = new VpxCodecCtx();
             _vpxEncodeImg = new VpxImage();
@@ -107,8 +106,6 @@ namespace SIPSorceryMedia.Encoders.Codecs
             {
                 throw new ApplicationException($"Failed to initialise VP8 encoder, {vpx_codec.VpxCodecErrToString(initEncoderRes)}.");
             }
-
-            VpxImage.VpxImgAlloc(_vpxEncodeImg, encoderInputFormat, _encodeWidth, _encodeHeight, 1);
         }
 
         public void InitialiseDecoder()
@@ -122,15 +119,21 @@ namespace SIPSorceryMedia.Encoders.Codecs
             }
         }
 
-        public byte[] Encode(byte[] i420, bool forceKeyFrame = false)
+        public byte[] Encode(byte[] frame, VpxImgFmt inputPixelFormat = VpxImgFmt.VPX_IMG_FMT_I420, bool forceKeyFrame = false)
         {
+            if(!_isVpxImageAllocated)
+            {
+                _isVpxImageAllocated = true;
+                VpxImage.VpxImgAlloc(_vpxEncodeImg, inputPixelFormat, _encodeWidth, _encodeHeight, 1);
+            }
+
             byte[] encodedSample = null;
 
             unsafe
             {
-                fixed (byte* pI420 = i420)
+                fixed (byte* pFrame = frame)
                 {
-                    VpxImage.VpxImgWrap(_vpxEncodeImg, _encoderInputFormat, _encodeWidth, _encodeHeight, 1, pI420);
+                    VpxImage.VpxImgWrap(_vpxEncodeImg, inputPixelFormat, _encodeWidth, _encodeHeight, 1, pFrame);
 
                     int flags = (forceKeyFrame) ? VPX_EFLAG_FORCE_KF : 0;
 
