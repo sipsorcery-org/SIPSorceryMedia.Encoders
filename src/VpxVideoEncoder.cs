@@ -69,7 +69,8 @@ namespace SIPSorceryMedia.Encoders
                 }
                 else
                 {
-                    var i420Buffer = PixelConverter.ToI420(width, height, sample, pixelFormat);
+                    int stride = pixelFormat == VideoPixelFormatsEnum.Bgra ? width * 4 : width * 3;
+                    var i420Buffer = PixelConverter.ToI420(width, height, stride, sample, pixelFormat);
                     encodedBuffer = _vp8Encoder.Encode(i420Buffer, vpxmd.VpxImgFmt.VPX_IMG_FMT_I420, _forceKeyFrame);
                 }
 
@@ -102,7 +103,7 @@ namespace SIPSorceryMedia.Encoders
                 {
                     foreach (var decodedFrame in decodedFrames)
                     {
-                        byte[] rgb = PixelConverter.I420toBGR(decodedFrame, (int)width, (int)height);
+                        byte[] rgb = PixelConverter.I420toBGR(decodedFrame, (int)width, (int)height, out _);
                         yield return new VideoSample { Width = width, Height = height, Sample = rgb };
                     }
                 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -15,8 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
-    <!--<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />-->
-    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="2.0.4" />
@@ -36,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SIPSorceryMedia.Abstractions\src\SIPSorceryMedia.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\SIPSorceryMedia.Encoders.csproj" />
   </ItemGroup>
 

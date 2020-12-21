@@ -179,14 +179,15 @@ namespace SIPSorceryMedia.Encoders.UnitTest
             }
         }
 
-        private static byte[] BitmapToByteArray(Bitmap bitmap)
+        private static byte[] BitmapToByteArray(Bitmap bitmap, out int stride)
         {
             BitmapData bmpdata = null;
 
             try
             {
                 bmpdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-                int numbytes = bmpdata.Stride * bitmap.Height;
+                stride = bmpdata.Stride;
+                int numbytes = stride * bitmap.Height;
                 byte[] bytedata = new byte[numbytes];
                 IntPtr ptr = bmpdata.Scan0;
 
@@ -205,7 +206,8 @@ namespace SIPSorceryMedia.Encoders.UnitTest
 
         private static byte[] BitmapToI420(Bitmap bmp)
         {
-            return PixelConverter.BGRtoI420(BitmapToByteArray(bmp), bmp.Width, bmp.Height);
+            var buffer = BitmapToByteArray(bmp, out int stride);
+            return PixelConverter.BGRtoI420(buffer, bmp.Width, bmp.Height, stride);
         }
     }
 }
