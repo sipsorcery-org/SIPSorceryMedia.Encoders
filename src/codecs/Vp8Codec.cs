@@ -199,61 +199,26 @@ namespace SIPSorceryMedia.Encoders.Codecs
                                 // Convert the VPX image buffer to an I420 buffer WITHOUT the stride.
                                 width = img.DW;
                                 height = img.DH;
-                                int sz = (int)(width * height);
+                                int ySize = (int)(width * height);
+                                int uvSize = (int)(((width + 1) / 2) * ((height + 1) / 2) * 2);
+                                int uvWidth = (int)(width + 1) / 2;
 
                                 var yPlane = (byte*)img.PlaneY;
                                 var uPlane = (byte*)img.PlaneU;
                                 var vPlane = (byte*)img.PlaneV;
 
-                                byte[] decodedBuffer = new byte[width * height * 3 / 2];
+                                byte[] decodedBuffer = new byte[ySize + uvSize];
 
-                                for (uint row = 0; row < height; row++)
+                                for (int row = 0; row < height; row++)
                                 {
                                     Marshal.Copy((IntPtr)(yPlane + row * img.Stride[0]), decodedBuffer, (int)(row * width), (int)width);
 
                                     if (row < height / 2)
                                     {
-                                        Marshal.Copy((IntPtr)(uPlane + row * img.Stride[1]), decodedBuffer, (int)(sz + row * (width / 2)), (int)width / 2);
-                                        Marshal.Copy((IntPtr)(vPlane + row * img.Stride[2]), decodedBuffer, (int)(sz + sz / 4 + row * (width / 2)), (int)width / 2);
+                                        Marshal.Copy((IntPtr)(uPlane + row * img.Stride[1]), decodedBuffer, ySize + row * uvWidth, uvWidth);
+                                        Marshal.Copy((IntPtr)(vPlane + row * img.Stride[2]), decodedBuffer, ySize + uvSize / 2 + row * uvWidth, uvWidth);
                                     }
                                 }
-
-                                // This block converts the VPX image buffer directly to RGB24 but it's way too slow.
-                                // Was taking 60 to 90ms on Win10 i7 CPU.
-                                //byte[] data = new byte[width * height * 3];
-                                //int i = 0;
-                                //for (uint imgY = 0; imgY < height; imgY++)
-                                //{
-                                //    for (uint imgX = 0; imgX < width; imgX++)
-                                //    {
-                                //        int y = yPlane[imgY * img.Stride[0] + imgX];
-                                //        int u = uPlane[(imgY / 2) * img.Stride[1] + (imgX / 2)];
-                                //        int v = vPlane[(imgY / 2) * img.Stride[2] + (imgX / 2)];
-
-                                //        int c = y - 16;
-                                //        int d = (u - 128);
-                                //        int e = (v - 128);
-
-                                //        // TODO: adjust colors ?
-
-                                //        int r = (298 * c + 409 * e + 128) >> 8;
-                                //        int g = (298 * c - 100 * d - 208 * e + 128) >> 8;
-                                //        int b = (298 * c + 516 * d + 128) >> 8;
-
-                                //        r = r < 0 ? 0 : r > 255 ? 255 : r;
-                                //        g = g < 0 ? 0 : g > 255 ? 255 : g;
-                                //        b = b < 0 ? 0 : b > 255 ? 255 : b;
-
-                                //        // TODO: cast instead of clamp8
-
-                                //        data[i + 0] = (byte)(b);
-                                //        data[i + 1] = (byte)(g);
-                                //        data[i + 2] = (byte)(r);
-
-                                //        i += 3;
-                                //    }
-                                //}
-                                //decodedBuffers.Add(data);
 
                                 decodedBuffers.Add(decodedBuffer);
                                

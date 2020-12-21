@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.0.1" />
+    <!--<PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.0.1" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +26,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </ContentWithTargetPath>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SIPSorceryMedia.Abstractions\src\SIPSorceryMedia.Abstractions.csproj" />
   </ItemGroup>
   
   <!--<PropertyGroup>
