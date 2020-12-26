@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SIPSorceryMedia.Abstractions.V1;
 using SIPSorceryMedia.Abstractions;
 
 namespace SIPSorceryMedia.Encoders
@@ -119,7 +118,7 @@ namespace SIPSorceryMedia.Encoders
             }
         }
 
-        public void GotVideoFrame(IPEndPoint remoteEndPoint, uint timestamp, byte[] frame)
+        public void GotVideoFrame(IPEndPoint remoteEndPoint, uint timestamp, byte[] frame, VideoFormat format)
         {
             if (!_isClosed)
             {

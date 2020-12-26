@@ -20,7 +20,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using SIPSorceryMedia.Abstractions;
-using SIPSorceryMedia.Abstractions.V1;
 using Xunit;
 
 namespace SIPSorceryMedia.Encoders.UnitTest

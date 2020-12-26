@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using SIPSorceryMedia.Abstractions;
-using SIPSorceryMedia.Abstractions.V1;
 using SIPSorceryMedia.Encoders.Codecs;
 
 namespace SIPSorceryMedia.Encoders
