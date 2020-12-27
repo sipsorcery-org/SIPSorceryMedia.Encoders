@@ -24,12 +24,19 @@ namespace SIPSorceryMedia.Encoders
 {
     public class VpxVideoEncoder : IVideoEncoder, IDisposable
     {
+        public const int VP8_FORMATID = 96;
+
         private ILogger logger = SIPSorcery.LogFactory.CreateLogger<VpxVideoEncoder>();
 
-        public static readonly List<VideoCodecsEnum> SupportedCodecs = new List<VideoCodecsEnum>
+        private static readonly List<VideoFormat> _supportedFormats = new List<VideoFormat>
         {
-            VideoCodecsEnum.VP8
+            new VideoFormat(VideoCodecsEnum.VP8, VP8_FORMATID)
         };
+
+        public List<VideoFormat> SupportedFormats
+        {
+            get => _supportedFormats;
+        }
 
         private Vp8Codec _vp8Encoder;
         private Vp8Codec _vp8Decoder;
@@ -44,7 +51,6 @@ namespace SIPSorceryMedia.Encoders
         { }
 
         public void ForceKeyFrame() => _forceKeyFrame = true;
-        public bool IsSupported(VideoCodecsEnum codec) => codec == VideoCodecsEnum.VP8;
 
         public byte[] EncodeVideo(int width, int height, byte[] sample, VideoPixelFormatsEnum pixelFormat, VideoCodecsEnum codec)
         {

@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.0.3-pre" />
+    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.0.4-pre" />
   </ItemGroup>
 
   <ItemGroup>
