@@ -61,6 +61,8 @@ namespace SIPSorceryMedia.Encoders
 
 #pragma warning disable CS0067
         public event SourceErrorDelegate OnVideoSourceError;
+        public event RawVideoSampleFasterDelegate OnVideoSourceRawSampleFaster;
+        public event VideoSinkSampleDecodedFasterDelegate OnVideoSinkDecodedSampleFaster;
 #pragma warning restore CS0067
 
         /// <summary>
@@ -143,6 +145,11 @@ namespace SIPSorceryMedia.Encoders
         public void Dispose()
         {
             _videoEncoder?.Dispose();
+        }
+
+        public void ExternalVideoSourceRawSampleFaster(uint durationMilliseconds, RawImage rawImage)
+        {
+            throw new NotImplementedException();
         }
     }
 }
