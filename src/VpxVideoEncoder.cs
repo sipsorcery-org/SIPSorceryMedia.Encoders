@@ -120,5 +120,15 @@ namespace SIPSorceryMedia.Encoders
             _vp8Encoder?.Dispose();
             _vp8Decoder?.Dispose();
         }
+
+        public byte[] EncodeVideoFaster(RawImage rawImage, VideoCodecsEnum codec)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<RawImage> DecodeVideoFaster(byte[] encodedSample, VideoPixelFormatsEnum pixelFormat, VideoCodecsEnum codec)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
