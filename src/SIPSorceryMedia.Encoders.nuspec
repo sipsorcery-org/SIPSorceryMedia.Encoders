@@ -3,7 +3,7 @@
   <metadata>
     <id>SIPSorceryMedia.Encoders</id>
     <authors>Aaron Clauson</authors>
-    <copyright>Copyright © 2020 Aaron Clauson</copyright>
+    <copyright>Copyright © 2020-2023 Aaron Clauson</copyright>
     <license type="expression">BSD-3-Clause</license>
     <title>SIPSorceryMedia.Encoders</title>
     <summary>Audio and video codecs with media end point wrappers.</summary>
@@ -16,14 +16,15 @@
 	<dependencies>
       <group targetFramework="netstandard2.0">
 	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="5.0.0" />
-		<dependency id="SIPSorceryMedia.Abstractions" version="1.0.4-pre" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="1.2.0" />
 	  </group>
 	 <group>
 	    <dependency id="Microsoft.Extensions.Logging.Abstractions" version="5.0.0" />
-		<dependency id="SIPSorceryMedia.Abstractions" version="1.0.4-pre" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="1.2.0" />
 	  </group>
     </dependencies>
-	<releaseNotes>-v0.0.10-pre: Updated to use latest abstractons package with change to IAudioEncoder and IVideoEncoder interfaces.
+	<releaseNotes>-v0.0.11-pre: Bug fixes.
+-v0.0.10-pre: Updated to use latest abstractons package with change to IAudioEncoder and IVideoEncoder interfaces.
 -v0.0.9-pre: Updated to use latest abstractions nuget package and video format parameter on IVideoSink.GotVideoFrame.
 -v0.0.8-pre: Updated VP8 codec to handle frames with uneven dimensions.
 -v0.0.7-pre: Updated VP8 video encoder class to support the IVideoEncoder interface.
@@ -33,7 +34,7 @@
 -v0.0.3-pre: Use pixel conversion class from abstractions package.
 -v0.0.2-pre: Added support for I420 input samples.
 -v0.0.1-pre: Initial pre-release</releaseNotes>
-	<version>0.0.10-pre</version>
+	<version>0.0.11-pre</version>
   </metadata>
   <files>
     <file src="icon.png" target="icon.png" />
