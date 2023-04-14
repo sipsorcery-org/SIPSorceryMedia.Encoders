@@ -23,7 +23,7 @@
 		<dependency id="SIPSorceryMedia.Abstractions" version="1.2.0" />
 	  </group>
     </dependencies>
-	<releaseNotes>-v0.0.11-pre: Bug fixes.
+	<releaseNotes>-v0.0.12-pre: Bug fixes.
 -v0.0.10-pre: Updated to use latest abstractons package with change to IAudioEncoder and IVideoEncoder interfaces.
 -v0.0.9-pre: Updated to use latest abstractions nuget package and video format parameter on IVideoSink.GotVideoFrame.
 -v0.0.8-pre: Updated VP8 codec to handle frames with uneven dimensions.
@@ -34,7 +34,7 @@
 -v0.0.3-pre: Use pixel conversion class from abstractions package.
 -v0.0.2-pre: Added support for I420 input samples.
 -v0.0.1-pre: Initial pre-release</releaseNotes>
-	<version>0.0.11-pre</version>
+	<version>0.0.12-pre</version>
   </metadata>
   <files>
     <file src="icon.png" target="icon.png" />
