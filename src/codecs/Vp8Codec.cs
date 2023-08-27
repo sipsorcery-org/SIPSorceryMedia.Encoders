@@ -62,7 +62,7 @@ namespace SIPSorceryMedia.Encoders.Codecs
         // https://chromium.googlesource.com/external/webrtc/stable/src/+/b8671cb0516ec9f6c7fe22a6bbe331d5b091cdbb/modules/video_coding/codecs/vp8/vp8.cc
         // Updated link 15 Jun 2020.
         // https://chromium.googlesource.com/external/webrtc/stable/src/+/refs/heads/master/modules/video_coding/codecs/vp8/vp8_impl.cc
-        public void InitialiseEncoder(uint width, uint height)
+        public void InitialiseEncoder(uint width, uint height, uint? targetKbps = null)
         {
             _encodeWidth = width;
             _encodeHeight = height;
@@ -71,6 +71,10 @@ namespace SIPSorceryMedia.Encoders.Codecs
             _vpxEncodeImg = new VpxImage();
 
             VpxCodecEncCfg vp8EncoderCfg = new VpxCodecEncCfg();
+            if (targetKbps is { } kbps)
+            {
+                vp8EncoderCfg.RcTargetBitrate = kbps;
+            }
 
             var setConfigRes = vpx_encoder.VpxCodecEncConfigDefault(vp8cx.VpxCodecVp8Cx(), vp8EncoderCfg, 0);
             if (setConfigRes != VpxCodecErrT.VPX_CODEC_OK)

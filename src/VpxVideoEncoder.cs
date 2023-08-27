@@ -38,6 +38,26 @@ namespace SIPSorceryMedia.Encoders
             get => _supportedFormats;
         }
 
+        uint? _targetKbps;
+        public uint? TargetKbps
+        {
+            get => _targetKbps;
+            set
+            {
+                lock (_encoderLock)
+                {
+                    if (_vp8Encoder != null)
+                    {
+                        _vp8Encoder.Dispose();
+                        _vp8Encoder = null;
+                    }
+
+                    _forceKeyFrame = true;
+                    _targetKbps = value;
+                }
+            }
+        }
+
         private Vp8Codec _vp8Encoder;
         private Vp8Codec _vp8Decoder;
         private bool _forceKeyFrame = false;
@@ -59,7 +79,7 @@ namespace SIPSorceryMedia.Encoders
                 if (_vp8Encoder == null)
                 {
                     _vp8Encoder = new Vp8Codec();
-                    _vp8Encoder.InitialiseEncoder((uint)width, (uint)height);
+                    _vp8Encoder.InitialiseEncoder((uint)width, (uint)height, targetKbps: _targetKbps);
                 }
 
                 byte[] encodedBuffer = null;

@@ -39,7 +39,9 @@ namespace SIPSorceryMedia.Encoders.UnitTest
         [Fact]
         public void Encode_I420_640x480()
         {
-            VpxVideoEncoder vpxEncoder = new VpxVideoEncoder();
+            VpxVideoEncoder vpxEncoder = new VpxVideoEncoder {
+                TargetKbps = 400,
+            };
 
             using (StreamReader sr = new StreamReader("img/testpattern_640x480.i420"))
             {
