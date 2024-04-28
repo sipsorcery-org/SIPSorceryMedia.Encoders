@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net8.0</TargetFrameworks>
-    <LangVersion>10.0</LangVersion> 
+    <LangVersion>10.0</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Disable warning for missing XML doc comments. -->
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
