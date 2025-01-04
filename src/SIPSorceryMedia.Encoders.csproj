@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="1.2.1" />
+    <PackageReference Include="SIPSorceryMedia.Abstractions" Version="8.0.7" />
   </ItemGroup>
   
   <!--<PropertyGroup>

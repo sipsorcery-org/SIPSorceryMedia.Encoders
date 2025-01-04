@@ -3,22 +3,23 @@
   <metadata>
     <id>SIPSorceryMedia.Encoders</id>
     <authors>Aaron Clauson</authors>
-    <copyright>Copyright © 2020-2024 Aaron Clauson</copyright>
+    <copyright>Copyright © 2020-2025 Aaron Clauson</copyright>
     <license type="expression">BSD-3-Clause</license>
     <title>SIPSorceryMedia.Encoders</title>
     <summary>Audio and video codecs with media end point wrappers.</summary>
 	<description>Provides audio and video encode and decode capabilities plus media end points that can be used with the main SIPSorcery real-time communications library.</description>
 	<iconUrl>http://www.sipsorcery.com/mainsite/favicon.ico</iconUrl>
 	<icon>icon.png</icon>
-    <projectUrl>https://github.com/sipsorcery/SIPSorceryMedia.Encoders</projectUrl>
+    <projectUrl>https://github.com/sipsorcery-org/SIPSorceryMedia.Encoders</projectUrl>
 	<repository type="git" url="https://github.com/sipsorcery/SIPSorceryMedia.Encoders" branch="master" />
 	<tags>WebRTC VoIP SIPSorcery Audio Video Codecs Encoders Decoders</tags>
 	<dependencies>
 	 <group>
-		<dependency id="SIPSorceryMedia.Abstractions" version="1.2.1" />
+		<dependency id="SIPSorceryMedia.Abstractions" version="8.0.7" />
 	  </group>
     </dependencies>
-	<releaseNotes>-v0.0.13: Updated to use latest abstractions nuget package.
+	<releaseNotes>-v8.0.7: Updated to use latest abstractions nuget package.
+-v0.0.13: Updated to use latest abstractions nuget package.
 -v0.0.12-pre: Bug fixes.
 -v0.0.10-pre: Updated to use latest abstractons package with change to IAudioEncoder and IVideoEncoder interfaces.
 -v0.0.9-pre: Updated to use latest abstractions nuget package and video format parameter on IVideoSink.GotVideoFrame.
@@ -30,7 +31,7 @@
 -v0.0.3-pre: Use pixel conversion class from abstractions package.
 -v0.0.2-pre: Added support for I420 input samples.
 -v0.0.1-pre: Initial pre-release</releaseNotes>
-	<version>0.0.13</version>
+	<version>8.0.7</version>
   </metadata>
   <files>
     <file src="icon.png" target="icon.png" />
