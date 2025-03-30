@@ -7,6 +7,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using __CallingConvention = global::System.Runtime.InteropServices.CallingConvention;
+using __IntPtr = global::System.IntPtr;
+
+#pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 
 namespace vpxmd
 {
@@ -55,8 +59,7 @@ namespace vpxmd
     /// <summary>Encoder output packet variants</summary>
     /// <remarks>
     /// <para>This enumeration lists the different kinds of data packets that can be</para>
-    /// <para>returned by calls to vpx_codec_get_cx_data(). Algorithms</para>
-    /// <para>extend this list to provide additional functionality.</para>
+    /// <para>returned by calls to vpx_codec_get_cx_data(). Algorithmsextend this list to provide additional functionality.</para>
     /// </remarks>
     public enum VpxCodecCxPktKind
     {
@@ -80,6 +83,8 @@ namespace vpxmd
     /// </remarks>
     /// <summary>Generic fixed size buffer structure</summary>
     /// <remarks>This structure is able to hold a reference to any fixed size buffer.</remarks>
+    /// <summary>Rational Number</summary>
+    /// <remarks>This structure holds a fractional value.</remarks>
     /// <summary>Time Stamp Type</summary>
     /// <remarks>
     /// <para>An integer, which when multiplied by the stream's time base, provides</para>
@@ -102,12 +107,10 @@ namespace vpxmd
     /// <para>This callback function, when registered, returns with packets when each</para>
     /// <para>spatial layer is encoded.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void VpxCodecEncOutputCxPktCbFnT(global::System.IntPtr pkt, global::System.IntPtr user_data);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate void VpxCodecEncOutputCxPktCbFnT(__IntPtr pkt, __IntPtr user_data);
 
     /// <summary>Callback function pointer / user data pair storage</summary>
-    /// <summary>Rational Number</summary>
-    /// <remarks>This structure holds a fractional value.</remarks>
     /// <summary>Multi-pass Encoding Pass</summary>
     /// <summary>Encoded Frame Flags</summary>
     /// <remarks>
@@ -128,112 +131,137 @@ namespace vpxmd
     /// <remarks>This structure is able to hold a reference to any fixed size buffer.</remarks>
     public unsafe partial class VpxFixedBuf : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr buf;
-
-            [FieldOffset(8)]
+            internal __IntPtr buf;
             internal ulong sz;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_fixed_buf@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_fixed_buf@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxFixedBuf> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxFixedBuf>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxFixedBuf> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxFixedBuf>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxFixedBuf managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxFixedBuf managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxFixedBuf __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxFixedBuf __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxFixedBuf(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxFixedBuf(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxFixedBuf __CreateInstance(global::vpxmd.VpxFixedBuf.__Internal native, bool skipVTables = false)
+        internal static VpxFixedBuf __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxFixedBuf(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxFixedBuf)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxFixedBuf.__Internal native)
+        internal static VpxFixedBuf __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxFixedBuf.__Internal));
-            *(global::vpxmd.VpxFixedBuf.__Internal*) ret = native;
+            return new VpxFixedBuf(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxFixedBuf(global::vpxmd.VpxFixedBuf.__Internal native, bool skipVTables = false)
+        private VpxFixedBuf(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxFixedBuf(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxFixedBuf()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxFixedBuf.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxFixedBuf(global::vpxmd.VpxFixedBuf _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxFixedBuf.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxFixedBuf.__Internal*) __Instance) = *((global::vpxmd.VpxFixedBuf.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxFixedBuf __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
-        public global::System.IntPtr Buf
+        /// <summary>Pointer to the data</summary>
+        public __IntPtr Buf
         {
             get
             {
-                return ((global::vpxmd.VpxFixedBuf.__Internal*) __Instance)->buf;
+                return ((__Internal*)__Instance)->buf;
             }
 
             set
             {
-                ((global::vpxmd.VpxFixedBuf.__Internal*)__Instance)->buf = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->buf = (__IntPtr) value;
             }
         }
 
+        /// <summary>Length of the buffer, in chars</summary>
         public ulong Sz
         {
             get
             {
-                return ((global::vpxmd.VpxFixedBuf.__Internal*) __Instance)->sz;
+                return ((__Internal*)__Instance)->sz;
             }
 
             set
             {
-                ((global::vpxmd.VpxFixedBuf.__Internal*)__Instance)->sz = value;
+                ((__Internal*)__Instance)->sz = value;
             }
         }
     }
@@ -245,19 +273,14 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecCxPkt : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 136)]
+        [StructLayout(LayoutKind.Sequential, Size = 136)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal global::vpxmd.VpxCodecCxPktKind kind;
-
-            [FieldOffset(8)]
             internal global::vpxmd.VpxCodecCxPkt.Data.__Internal data;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_cx_pkt@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_cx_pkt@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
         public unsafe partial struct Data
@@ -283,208 +306,219 @@ namespace vpxmd
                 [FieldOffset(0)]
                 internal fixed sbyte pad[124];
 
-                [SuppressUnmanagedCodeSecurity]
-                [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                    EntryPoint="??0<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBT01@@Z")]
-                internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+                [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBT01@@Z", CallingConvention = __CallingConvention.Cdecl)]
+                internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
             }
 
             public unsafe partial class Frame : IDisposable
             {
-                [StructLayout(LayoutKind.Explicit, Size = 88)]
+                [StructLayout(LayoutKind.Sequential, Size = 88)]
                 public partial struct __Internal
                 {
-                    [FieldOffset(0)]
-                    internal global::System.IntPtr buf;
-
-                    [FieldOffset(8)]
+                    internal __IntPtr buf;
                     internal ulong sz;
-
-                    [FieldOffset(16)]
                     internal long pts;
-
-                    [FieldOffset(24)]
                     internal uint duration;
-
-                    [FieldOffset(28)]
                     internal uint flags;
-
-                    [FieldOffset(32)]
                     internal int partition_id;
-
-                    [FieldOffset(36)]
                     internal fixed uint width[5];
-
-                    [FieldOffset(56)]
                     internal fixed uint height[5];
-
-                    [FieldOffset(76)]
                     internal fixed byte spatial_layer_encoded[5];
 
-                    [SuppressUnmanagedCodeSecurity]
-                    [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                        EntryPoint="??0<unnamed-type-frame>@<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBU012@@Z")]
-                    internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+                    [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0<unnamed-type-frame>@<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBU012@@Z", CallingConvention = __CallingConvention.Cdecl)]
+                    internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
                 }
 
-                public global::System.IntPtr __Instance { get; protected set; }
+                public __IntPtr __Instance { get; protected set; }
 
-                internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.Frame> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.Frame>();
+                internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.Frame> NativeToManagedMap =
+                    new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.Frame>();
+
+                internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecCxPkt.Data.Frame managed)
+                {
+                    NativeToManagedMap[native] = managed;
+                }
+
+                internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecCxPkt.Data.Frame managed)
+                {
+    
+                    return NativeToManagedMap.TryGetValue(native, out managed);
+                }
 
                 protected bool __ownsNativeInstance;
 
-                internal static global::vpxmd.VpxCodecCxPkt.Data.Frame __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+                internal static Frame __CreateInstance(__IntPtr native, bool skipVTables = false)
                 {
-                    return new global::vpxmd.VpxCodecCxPkt.Data.Frame(native.ToPointer(), skipVTables);
+                    if (native == __IntPtr.Zero)
+                        return null;
+                    return new Frame(native.ToPointer(), skipVTables);
                 }
 
-                internal static global::vpxmd.VpxCodecCxPkt.Data.Frame __CreateInstance(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal native, bool skipVTables = false)
+                internal static Frame __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
                 {
-                    return new global::vpxmd.VpxCodecCxPkt.Data.Frame(native, skipVTables);
+                    if (native == __IntPtr.Zero)
+                        return null;
+                    if (__TryGetNativeToManagedMapping(native, out var managed))
+                        return (Frame)managed;
+                    var result = __CreateInstance(native, skipVTables);
+                    if (saveInstance)
+                        __RecordNativeToManagedMapping(native, result);
+                    return result;
                 }
 
-                private static void* __CopyValue(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal native)
+                internal static Frame __CreateInstance(__Internal native, bool skipVTables = false)
                 {
-                    var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal));
-                    *(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) ret = native;
+                    return new Frame(native, skipVTables);
+                }
+
+                private static void* __CopyValue(__Internal native)
+                {
+                    var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+                    *(__Internal*) ret = native;
                     return ret.ToPointer();
                 }
 
-                private Frame(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal native, bool skipVTables = false)
+                private Frame(__Internal native, bool skipVTables = false)
                     : this(__CopyValue(native), skipVTables)
                 {
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                 }
 
                 protected Frame(void* native, bool skipVTables = false)
                 {
                     if (native == null)
                         return;
-                    __Instance = new global::System.IntPtr(native);
+                    __Instance = new __IntPtr(native);
                 }
 
                 public Frame()
                 {
                     __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal));
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                 }
 
                 public Frame(global::vpxmd.VpxCodecCxPkt.Data.Frame _0)
                 {
                     __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal));
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                     *((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance) = *((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) _0.__Instance);
                 }
 
                 public void Dispose()
                 {
-                    Dispose(disposing: true);
+                    Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
                 }
 
-                public virtual void Dispose(bool disposing)
+                partial void DisposePartial(bool disposing);
+
+                internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
                 {
                     if (__Instance == IntPtr.Zero)
                         return;
-                    global::vpxmd.VpxCodecCxPkt.Data.Frame __dummy;
-                    NativeToManagedMap.TryRemove(__Instance, out __dummy);
+                    NativeToManagedMap.TryRemove(__Instance, out _);
+                    DisposePartial(disposing);
                     if (__ownsNativeInstance)
                         Marshal.FreeHGlobal(__Instance);
                     __Instance = IntPtr.Zero;
                 }
 
-                public global::System.IntPtr Buf
+                /// <summary>compressed data buffer</summary>
+                public __IntPtr Buf
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->buf;
+                        return ((__Internal*)__Instance)->buf;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->buf = (global::System.IntPtr) value;
+                        ((__Internal*)__Instance)->buf = (__IntPtr) value;
                     }
                 }
 
+                /// <summary>length of compressed data</summary>
                 public ulong Sz
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->sz;
+                        return ((__Internal*)__Instance)->sz;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->sz = value;
+                        ((__Internal*)__Instance)->sz = value;
                     }
                 }
 
+                /// <summary>time stamp to show frame (in timebase units)</summary>
                 public long Pts
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->pts;
+                        return ((__Internal*)__Instance)->pts;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->pts = value;
+                        ((__Internal*)__Instance)->pts = value;
                     }
                 }
 
+                /// <summary>duration to show frame (in timebase units)</summary>
                 public uint Duration
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->duration;
+                        return ((__Internal*)__Instance)->duration;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->duration = value;
+                        ((__Internal*)__Instance)->duration = value;
                     }
                 }
 
+                /// <summary>flags for this frame</summary>
                 public uint Flags
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->flags;
+                        return ((__Internal*)__Instance)->flags;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->flags = value;
+                        ((__Internal*)__Instance)->flags = value;
                     }
                 }
 
+                /// <summary>
+                /// <para>the partition id defines the decoding order of the partitions.</para>
+                /// <para>Only applicable when &quot;output partition&quot; mode is enabled. First</para>
+                /// <para>partition has id 0.</para>
+                /// </summary>
                 public int PartitionId
                 {
                     get
                     {
-                        return ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->partition_id;
+                        return ((__Internal*)__Instance)->partition_id;
                     }
 
                     set
                     {
-                        ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->partition_id = value;
+                        ((__Internal*)__Instance)->partition_id = value;
                     }
                 }
 
+                /// <summary>frame width</summary>
                 public uint[] Width
                 {
                     get
                     {
-                        uint[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->width != null)
-                        {
-                            __value = new uint[5];
-                            for (int i = 0; i < 5; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->width[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->width, 5);
                     }
 
                     set
@@ -492,23 +526,17 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 5; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->width[i] = value[i];
+                                ((__Internal*)__Instance)->width[i] = value[i];
                         }
                     }
                 }
 
+                /// <summary>frame height</summary>
                 public uint[] Height
                 {
                     get
                     {
-                        uint[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->height != null)
-                        {
-                            __value = new uint[5];
-                            for (int i = 0; i < 5; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->height[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->height, 5);
                     }
 
                     set
@@ -516,23 +544,20 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 5; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->height[i] = value[i];
+                                ((__Internal*)__Instance)->height[i] = value[i];
                         }
                     }
                 }
 
+                /// <summary>
+                /// <para>Flag to indicate if spatial layer frame in this packet is</para>
+                /// <para>encoded or dropped. VP8 will always be set to 1.</para>
+                /// </summary>
                 public byte[] SpatialLayerEncoded
                 {
                     get
                     {
-                        byte[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->spatial_layer_encoded != null)
-                        {
-                            __value = new byte[5];
-                            for (int i = 0; i < 5; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*) __Instance)->spatial_layer_encoded[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<byte>(((__Internal*)__Instance)->spatial_layer_encoded, 5);
                     }
 
                     set
@@ -540,7 +565,7 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 5; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.Frame.__Internal*)__Instance)->spatial_layer_encoded[i] = value[i];
+                                ((__Internal*)__Instance)->spatial_layer_encoded[i] = value[i];
                         }
                     }
                 }
@@ -548,104 +573,119 @@ namespace vpxmd
 
             public unsafe partial class VpxPsnrPkt : IDisposable
             {
-                [StructLayout(LayoutKind.Explicit, Size = 80)]
+                [StructLayout(LayoutKind.Sequential, Size = 80)]
                 public partial struct __Internal
                 {
-                    [FieldOffset(0)]
                     internal fixed uint samples[4];
-
-                    [FieldOffset(16)]
                     internal fixed ulong sse[4];
-
-                    [FieldOffset(48)]
                     internal fixed double psnr[4];
 
-                    [SuppressUnmanagedCodeSecurity]
-                    [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                        EntryPoint="??0vpx_psnr_pkt@<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBU012@@Z")]
-                    internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+                    [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_psnr_pkt@<unnamed-type-data>@vpx_codec_cx_pkt@@QEAA@AEBU012@@Z", CallingConvention = __CallingConvention.Cdecl)]
+                    internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
                 }
 
-                public global::System.IntPtr __Instance { get; protected set; }
+                public __IntPtr __Instance { get; protected set; }
 
-                internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt>();
+                internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt> NativeToManagedMap =
+                    new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt>();
+
+                internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt managed)
+                {
+                    NativeToManagedMap[native] = managed;
+                }
+
+                internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt managed)
+                {
+    
+                    return NativeToManagedMap.TryGetValue(native, out managed);
+                }
 
                 protected bool __ownsNativeInstance;
 
-                internal static global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+                internal static VpxPsnrPkt __CreateInstance(__IntPtr native, bool skipVTables = false)
                 {
-                    return new global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt(native.ToPointer(), skipVTables);
+                    if (native == __IntPtr.Zero)
+                        return null;
+                    return new VpxPsnrPkt(native.ToPointer(), skipVTables);
                 }
 
-                internal static global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt __CreateInstance(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal native, bool skipVTables = false)
+                internal static VpxPsnrPkt __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
                 {
-                    return new global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt(native, skipVTables);
+                    if (native == __IntPtr.Zero)
+                        return null;
+                    if (__TryGetNativeToManagedMapping(native, out var managed))
+                        return (VpxPsnrPkt)managed;
+                    var result = __CreateInstance(native, skipVTables);
+                    if (saveInstance)
+                        __RecordNativeToManagedMapping(native, result);
+                    return result;
                 }
 
-                private static void* __CopyValue(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal native)
+                internal static VpxPsnrPkt __CreateInstance(__Internal native, bool skipVTables = false)
                 {
-                    var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal));
-                    *(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) ret = native;
+                    return new VpxPsnrPkt(native, skipVTables);
+                }
+
+                private static void* __CopyValue(__Internal native)
+                {
+                    var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+                    *(__Internal*) ret = native;
                     return ret.ToPointer();
                 }
 
-                private VpxPsnrPkt(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal native, bool skipVTables = false)
+                private VpxPsnrPkt(__Internal native, bool skipVTables = false)
                     : this(__CopyValue(native), skipVTables)
                 {
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                 }
 
                 protected VpxPsnrPkt(void* native, bool skipVTables = false)
                 {
                     if (native == null)
                         return;
-                    __Instance = new global::System.IntPtr(native);
+                    __Instance = new __IntPtr(native);
                 }
 
                 public VpxPsnrPkt()
                 {
                     __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal));
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                 }
 
                 public VpxPsnrPkt(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt _0)
                 {
                     __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal));
                     __ownsNativeInstance = true;
-                    NativeToManagedMap[__Instance] = this;
+                    __RecordNativeToManagedMapping(__Instance, this);
                     *((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance) = *((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) _0.__Instance);
                 }
 
                 public void Dispose()
                 {
-                    Dispose(disposing: true);
+                    Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
                 }
 
-                public virtual void Dispose(bool disposing)
+                partial void DisposePartial(bool disposing);
+
+                internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
                 {
                     if (__Instance == IntPtr.Zero)
                         return;
-                    global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt __dummy;
-                    NativeToManagedMap.TryRemove(__Instance, out __dummy);
+                    NativeToManagedMap.TryRemove(__Instance, out _);
+                    DisposePartial(disposing);
                     if (__ownsNativeInstance)
                         Marshal.FreeHGlobal(__Instance);
                     __Instance = IntPtr.Zero;
                 }
 
+                /// <summary>Number of samples, total/y/u/v</summary>
                 public uint[] Samples
                 {
                     get
                     {
-                        uint[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->samples != null)
-                        {
-                            __value = new uint[4];
-                            for (int i = 0; i < 4; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->samples[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->samples, 4);
                     }
 
                     set
@@ -653,23 +693,17 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 4; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*)__Instance)->samples[i] = value[i];
+                                ((__Internal*)__Instance)->samples[i] = value[i];
                         }
                     }
                 }
 
+                /// <summary>sum squared error, total/y/u/v</summary>
                 public ulong[] Sse
                 {
                     get
                     {
-                        ulong[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->sse != null)
-                        {
-                            __value = new ulong[4];
-                            for (int i = 0; i < 4; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->sse[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<ulong>(((__Internal*)__Instance)->sse, 4);
                     }
 
                     set
@@ -677,23 +711,17 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 4; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*)__Instance)->sse[i] = value[i];
+                                ((__Internal*)__Instance)->sse[i] = value[i];
                         }
                     }
                 }
 
+                /// <summary>PSNR, total/y/u/v</summary>
                 public double[] Psnr
                 {
                     get
                     {
-                        double[] __value = null;
-                        if (((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->psnr != null)
-                        {
-                            __value = new double[4];
-                            for (int i = 0; i < 4; i++)
-                                __value[i] = ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*) __Instance)->psnr[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<double>(((__Internal*)__Instance)->psnr, 4);
                     }
 
                     set
@@ -701,26 +729,26 @@ namespace vpxmd
                         if (value != null)
                         {
                             for (int i = 0; i < 4; i++)
-                                ((global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt.__Internal*)__Instance)->psnr[i] = value[i];
+                                ((__Internal*)__Instance)->psnr[i] = value[i];
                         }
                     }
                 }
             }
 
             private Data.__Internal __instance;
-            internal Data.__Internal __Instance { get { return __instance; } }
+            internal ref Data.__Internal __Instance => ref __instance;
 
-            internal static global::vpxmd.VpxCodecCxPkt.Data __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+            internal static Data __CreateInstance(__IntPtr native, bool skipVTables = false)
             {
-                return new global::vpxmd.VpxCodecCxPkt.Data(native.ToPointer(), skipVTables);
+                return new Data(native.ToPointer(), skipVTables);
             }
 
-            internal static global::vpxmd.VpxCodecCxPkt.Data __CreateInstance(global::vpxmd.VpxCodecCxPkt.Data.__Internal native, bool skipVTables = false)
+            internal static Data __CreateInstance(__Internal native, bool skipVTables = false)
             {
-                return new global::vpxmd.VpxCodecCxPkt.Data(native, skipVTables);
+                return new Data(native, skipVTables);
             }
 
-            private Data(global::vpxmd.VpxCodecCxPkt.Data.__Internal native, bool skipVTables = false)
+            private Data(__Internal native, bool skipVTables = false)
                 : this()
             {
                 __instance = native;
@@ -735,13 +763,14 @@ namespace vpxmd
                 : this()
             {
                 var ____arg0 = _0.__Instance;
-                var __arg0 = new global::System.IntPtr(&____arg0);
+                var __arg0 = new __IntPtr(&____arg0);
                 fixed (__Internal* __instancePtr = &__instance)
                 {
-                    __Internal.cctor(new global::System.IntPtr(__instancePtr), __arg0);
+                    __Internal.cctor(new __IntPtr(__instancePtr), __arg0);
                 }
             }
 
+            /// <summary>data for compressed frame packet</summary>
             public global::vpxmd.VpxCodecCxPkt.Data.Frame frame
             {
                 get
@@ -757,6 +786,7 @@ namespace vpxmd
                 }
             }
 
+            /// <summary>data for two-pass packet</summary>
             public global::vpxmd.VpxFixedBuf TwopassStats
             {
                 get
@@ -772,6 +802,7 @@ namespace vpxmd
                 }
             }
 
+            /// <summary>first pass mb packet</summary>
             public global::vpxmd.VpxFixedBuf FirstpassMbStats
             {
                 get
@@ -787,6 +818,7 @@ namespace vpxmd
                 }
             }
 
+            /// <summary>data for PSNR packet</summary>
             public global::vpxmd.VpxCodecCxPkt.Data.VpxPsnrPkt Psnr
             {
                 get
@@ -802,6 +834,7 @@ namespace vpxmd
                 }
             }
 
+            /// <summary>data for arbitrary packets</summary>
             public global::vpxmd.VpxFixedBuf Raw
             {
                 get
@@ -817,20 +850,14 @@ namespace vpxmd
                 }
             }
 
+            /// <summary>fixed sz</summary>
             public sbyte[] Pad
             {
                 get
                 {
                     fixed (sbyte* __arrPtr = __instance.pad)
                     {
-                        sbyte[] __value = null;
-                        if (__arrPtr != null)
-                        {
-                            __value = new sbyte[124];
-                            for (int i = 0; i < 124; i++)
-                                __value[i] = __arrPtr[i];
-                        }
-                        return __value;
+                        return CppSharp.Runtime.MarshalUtil.GetArray<sbyte>(__arrPtr, 124);
                     }
                 }
 
@@ -848,97 +875,127 @@ namespace vpxmd
             }
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCxPkt>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecCxPkt managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecCxPkt managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecCxPkt __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecCxPkt __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecCxPkt(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecCxPkt(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecCxPkt __CreateInstance(global::vpxmd.VpxCodecCxPkt.__Internal native, bool skipVTables = false)
+        internal static VpxCodecCxPkt __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecCxPkt(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecCxPkt)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecCxPkt.__Internal native)
+        internal static VpxCodecCxPkt __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.__Internal));
-            *(global::vpxmd.VpxCodecCxPkt.__Internal*) ret = native;
+            return new VpxCodecCxPkt(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecCxPkt(global::vpxmd.VpxCodecCxPkt.__Internal native, bool skipVTables = false)
+        private VpxCodecCxPkt(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecCxPkt(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecCxPkt()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecCxPkt(global::vpxmd.VpxCodecCxPkt _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCxPkt.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecCxPkt.__Internal*) __Instance) = *((global::vpxmd.VpxCodecCxPkt.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecCxPkt __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>packet variant</summary>
         public global::vpxmd.VpxCodecCxPktKind Kind
         {
             get
             {
-                return ((global::vpxmd.VpxCodecCxPkt.__Internal*) __Instance)->kind;
+                return ((__Internal*)__Instance)->kind;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCxPkt.__Internal*)__Instance)->kind = value;
+                ((__Internal*)__Instance)->kind = value;
             }
         }
 
+        /// <summary>packet data</summary>
         public global::vpxmd.VpxCodecCxPkt.Data data
         {
             get
             {
-                return global::vpxmd.VpxCodecCxPkt.Data.__CreateInstance(((global::vpxmd.VpxCodecCxPkt.__Internal*) __Instance)->data);
+                return global::vpxmd.VpxCodecCxPkt.Data.__CreateInstance(((__Internal*)__Instance)->data);
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCxPkt.__Internal*)__Instance)->data = value.__Instance;
+                ((__Internal*)__Instance)->data = value.__Instance;
             }
         }
     }
@@ -946,113 +1003,138 @@ namespace vpxmd
     /// <summary>Callback function pointer / user data pair storage</summary>
     public unsafe partial class VpxCodecEncOutputCxCbPair : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr output_cx_pkt;
+            internal __IntPtr output_cx_pkt;
+            internal __IntPtr user_priv;
 
-            [FieldOffset(8)]
-            internal global::System.IntPtr user_priv;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_enc_output_cx_cb_pair@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_enc_output_cx_cb_pair@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncOutputCxCbPair> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncOutputCxCbPair>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncOutputCxCbPair> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncOutputCxCbPair>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecEncOutputCxCbPair managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecEncOutputCxCbPair managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecEncOutputCxCbPair __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecEncOutputCxCbPair __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecEncOutputCxCbPair(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecEncOutputCxCbPair(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecEncOutputCxCbPair __CreateInstance(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal native, bool skipVTables = false)
+        internal static VpxCodecEncOutputCxCbPair __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecEncOutputCxCbPair(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecEncOutputCxCbPair)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal native)
+        internal static VpxCodecEncOutputCxCbPair __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal));
-            *(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*) ret = native;
+            return new VpxCodecEncOutputCxCbPair(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecEncOutputCxCbPair(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal native, bool skipVTables = false)
+        private VpxCodecEncOutputCxCbPair(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecEncOutputCxCbPair(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecEncOutputCxCbPair()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecEncOutputCxCbPair(global::vpxmd.VpxCodecEncOutputCxCbPair _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*) __Instance) = *((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecEncOutputCxCbPair __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Callback function</summary>
         public global::vpxmd.VpxCodecEncOutputCxPktCbFnT OutputCxPkt
         {
             get
             {
-                var __ptr0 = ((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*) __Instance)->output_cx_pkt;
+                var __ptr0 = ((__Internal*)__Instance)->output_cx_pkt;
                 return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxCodecEncOutputCxPktCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxCodecEncOutputCxPktCbFnT));
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*)__Instance)->output_cx_pkt = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+                ((__Internal*)__Instance)->output_cx_pkt = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
             }
         }
 
-        public global::System.IntPtr UserPriv
+        /// <summary>Pointer to private data</summary>
+        public __IntPtr UserPriv
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*) __Instance)->user_priv;
+                return ((__Internal*)__Instance)->user_priv;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncOutputCxCbPair.__Internal*)__Instance)->user_priv = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->user_priv = (__IntPtr) value;
             }
         }
     }
@@ -1061,112 +1143,137 @@ namespace vpxmd
     /// <remarks>This structure holds a fractional value.</remarks>
     public unsafe partial class VpxRational : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 8)]
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal int num;
-
-            [FieldOffset(4)]
             internal int den;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_rational@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rational@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRational> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRational>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRational> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRational>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRational managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRational managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxRational __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxRational __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRational(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRational(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxRational __CreateInstance(global::vpxmd.VpxRational.__Internal native, bool skipVTables = false)
+        internal static VpxRational __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRational(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRational)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxRational.__Internal native)
+        internal static VpxRational __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRational.__Internal));
-            *(global::vpxmd.VpxRational.__Internal*) ret = native;
+            return new VpxRational(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxRational(global::vpxmd.VpxRational.__Internal native, bool skipVTables = false)
+        private VpxRational(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxRational(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxRational()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRational.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxRational(global::vpxmd.VpxRational _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRational.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxRational.__Internal*) __Instance) = *((global::vpxmd.VpxRational.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxRational __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>fraction numerator</summary>
         public int Num
         {
             get
             {
-                return ((global::vpxmd.VpxRational.__Internal*) __Instance)->num;
+                return ((__Internal*)__Instance)->num;
             }
 
             set
             {
-                ((global::vpxmd.VpxRational.__Internal*)__Instance)->num = value;
+                ((__Internal*)__Instance)->num = value;
             }
         }
 
+        /// <summary>fraction denominator</summary>
         public int Den
         {
             get
             {
-                return ((global::vpxmd.VpxRational.__Internal*) __Instance)->den;
+                return ((__Internal*)__Instance)->den;
             }
 
             set
             {
-                ((global::vpxmd.VpxRational.__Internal*)__Instance)->den = value;
+                ((__Internal*)__Instance)->den = value;
             }
         }
     }
@@ -1179,704 +1286,893 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecEncCfg : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 384)]
+        [StructLayout(LayoutKind.Sequential, Size = 504)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal uint g_usage;
-
-            [FieldOffset(4)]
             internal uint g_threads;
-
-            [FieldOffset(8)]
             internal uint g_profile;
-
-            [FieldOffset(12)]
             internal uint g_w;
-
-            [FieldOffset(16)]
             internal uint g_h;
-
-            [FieldOffset(20)]
             internal global::vpxmd.VpxBitDepth g_bit_depth;
-
-            [FieldOffset(24)]
             internal uint g_input_bit_depth;
-
-            [FieldOffset(28)]
             internal global::vpxmd.VpxRational.__Internal g_timebase;
-
-            [FieldOffset(36)]
             internal uint g_error_resilient;
-
-            [FieldOffset(40)]
             internal global::vpxmd.VpxEncPass g_pass;
-
-            [FieldOffset(44)]
             internal uint g_lag_in_frames;
-
-            [FieldOffset(48)]
             internal uint rc_dropframe_thresh;
-
-            [FieldOffset(52)]
             internal uint rc_resize_allowed;
-
-            [FieldOffset(56)]
             internal uint rc_scaled_width;
-
-            [FieldOffset(60)]
             internal uint rc_scaled_height;
-
-            [FieldOffset(64)]
             internal uint rc_resize_up_thresh;
-
-            [FieldOffset(68)]
             internal uint rc_resize_down_thresh;
-
-            [FieldOffset(72)]
             internal global::vpxmd.VpxRcMode rc_end_usage;
-
-            [FieldOffset(80)]
             internal global::vpxmd.VpxFixedBuf.__Internal rc_twopass_stats_in;
-
-            [FieldOffset(96)]
             internal global::vpxmd.VpxFixedBuf.__Internal rc_firstpass_mb_stats_in;
-
-            [FieldOffset(112)]
             internal uint rc_target_bitrate;
-
-            [FieldOffset(116)]
             internal uint rc_min_quantizer;
-
-            [FieldOffset(120)]
             internal uint rc_max_quantizer;
-
-            [FieldOffset(124)]
             internal uint rc_undershoot_pct;
-
-            [FieldOffset(128)]
             internal uint rc_overshoot_pct;
-
-            [FieldOffset(132)]
             internal uint rc_buf_sz;
-
-            [FieldOffset(136)]
             internal uint rc_buf_initial_sz;
-
-            [FieldOffset(140)]
             internal uint rc_buf_optimal_sz;
-
-            [FieldOffset(144)]
             internal uint rc_2pass_vbr_bias_pct;
-
-            [FieldOffset(148)]
             internal uint rc_2pass_vbr_minsection_pct;
-
-            [FieldOffset(152)]
             internal uint rc_2pass_vbr_maxsection_pct;
-
-            [FieldOffset(156)]
             internal uint rc_2pass_vbr_corpus_complexity;
-
-            [FieldOffset(160)]
             internal global::vpxmd.VpxKfMode kf_mode;
-
-            [FieldOffset(164)]
             internal uint kf_min_dist;
-
-            [FieldOffset(168)]
             internal uint kf_max_dist;
-
-            [FieldOffset(172)]
             internal uint ss_number_layers;
-
-            [FieldOffset(176)]
             internal fixed int ss_enable_auto_alt_ref[5];
-
-            [FieldOffset(196)]
             internal fixed uint ss_target_bitrate[5];
-
-            [FieldOffset(216)]
             internal uint ts_number_layers;
-
-            [FieldOffset(220)]
             internal fixed uint ts_target_bitrate[5];
-
-            [FieldOffset(240)]
             internal fixed uint ts_rate_decimator[5];
-
-            [FieldOffset(260)]
             internal uint ts_periodicity;
-
-            [FieldOffset(264)]
             internal fixed uint ts_layer_id[16];
-
-            [FieldOffset(328)]
             internal fixed uint layer_target_bitrate[12];
-
-            [FieldOffset(376)]
             internal int temporal_layering_mode;
+            internal int use_vizier_rc_params;
+            internal global::vpxmd.VpxRational.__Internal active_wq_factor;
+            internal global::vpxmd.VpxRational.__Internal err_per_mb_factor;
+            internal global::vpxmd.VpxRational.__Internal sr_default_decay_limit;
+            internal global::vpxmd.VpxRational.__Internal sr_diff_factor;
+            internal global::vpxmd.VpxRational.__Internal kf_err_per_mb_factor;
+            internal global::vpxmd.VpxRational.__Internal kf_frame_min_boost_factor;
+            internal global::vpxmd.VpxRational.__Internal kf_frame_max_boost_first_factor;
+            internal global::vpxmd.VpxRational.__Internal kf_frame_max_boost_subs_factor;
+            internal global::vpxmd.VpxRational.__Internal kf_max_total_boost_factor;
+            internal global::vpxmd.VpxRational.__Internal gf_max_total_boost_factor;
+            internal global::vpxmd.VpxRational.__Internal gf_frame_max_boost_factor;
+            internal global::vpxmd.VpxRational.__Internal zm_factor;
+            internal global::vpxmd.VpxRational.__Internal rd_mult_inter_qp_fac;
+            internal global::vpxmd.VpxRational.__Internal rd_mult_arf_qp_fac;
+            internal global::vpxmd.VpxRational.__Internal rd_mult_key_qp_fac;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_enc_cfg@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_enc_cfg@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncCfg> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncCfg>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncCfg> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecEncCfg>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecEncCfg managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecEncCfg managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecEncCfg __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecEncCfg __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecEncCfg(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecEncCfg(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecEncCfg __CreateInstance(global::vpxmd.VpxCodecEncCfg.__Internal native, bool skipVTables = false)
+        internal static VpxCodecEncCfg __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecEncCfg(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecEncCfg)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecEncCfg.__Internal native)
+        internal static VpxCodecEncCfg __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncCfg.__Internal));
-            *(global::vpxmd.VpxCodecEncCfg.__Internal*) ret = native;
+            return new VpxCodecEncCfg(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecEncCfg(global::vpxmd.VpxCodecEncCfg.__Internal native, bool skipVTables = false)
+        private VpxCodecEncCfg(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecEncCfg(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecEncCfg()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecEncCfg(global::vpxmd.VpxCodecEncCfg _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecEncCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance) = *((global::vpxmd.VpxCodecEncCfg.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecEncCfg __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Deprecated: Algorithm specific &quot;usage&quot; value</summary>
+        /// <remarks>This value must be zero.</remarks>
         public uint GUsage
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_usage;
+                return ((__Internal*)__Instance)->g_usage;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_usage = value;
+                ((__Internal*)__Instance)->g_usage = value;
             }
         }
 
+        /// <summary>Maximum number of threads to use</summary>
+        /// <remarks>
+        /// <para>For multi-threaded implementations, use no more than this number of</para>
+        /// <para>threads. The codec may use fewer threads than allowed. The value</para>
+        /// <para>0 is equivalent to the value 1.</para>
+        /// </remarks>
         public uint GThreads
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_threads;
+                return ((__Internal*)__Instance)->g_threads;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_threads = value;
+                ((__Internal*)__Instance)->g_threads = value;
             }
         }
 
+        /// <summary>profile of bitstream to use</summary>
         public uint GProfile
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_profile;
+                return ((__Internal*)__Instance)->g_profile;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_profile = value;
+                ((__Internal*)__Instance)->g_profile = value;
             }
         }
 
+        /// <summary>Width of the frame</summary>
+        /// <remarks>
+        /// <para>This value identifies the presentation resolution of the frame,</para>
+        /// <para>in pixels. Note that the frames passed as input to the encoder must</para>
+        /// <para>have this resolution. Frames will be presented by the decoder in this</para>
+        /// <para>resolution, independent of any spatial resampling the encoder may do.</para>
+        /// </remarks>
         public uint GW
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_w;
+                return ((__Internal*)__Instance)->g_w;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_w = value;
+                ((__Internal*)__Instance)->g_w = value;
             }
         }
 
+        /// <summary>Height of the frame</summary>
+        /// <remarks>
+        /// <para>This value identifies the presentation resolution of the frame,</para>
+        /// <para>in pixels. Note that the frames passed as input to the encoder must</para>
+        /// <para>have this resolution. Frames will be presented by the decoder in this</para>
+        /// <para>resolution, independent of any spatial resampling the encoder may do.</para>
+        /// </remarks>
         public uint GH
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_h;
+                return ((__Internal*)__Instance)->g_h;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_h = value;
+                ((__Internal*)__Instance)->g_h = value;
             }
         }
 
+        /// <summary>Bit-depth of the codec</summary>
+        /// <remarks>
+        /// <para>This value identifies the bit_depth of the codec,</para>
+        /// <para>Only certain bit-depths are supported as identified in the</para>
+        /// <para>vpx_bit_depth_t enum.</para>
+        /// </remarks>
         public global::vpxmd.VpxBitDepth GBitDepth
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_bit_depth;
+                return ((__Internal*)__Instance)->g_bit_depth;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_bit_depth = value;
+                ((__Internal*)__Instance)->g_bit_depth = value;
             }
         }
 
+        /// <summary>Bit-depth of the input frames</summary>
+        /// <remarks>
+        /// <para>This value identifies the bit_depth of the input frames in bits.</para>
+        /// <para>Note that the frames passed as input to the encoder must have</para>
+        /// <para>this bit-depth.</para>
+        /// </remarks>
         public uint GInputBitDepth
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_input_bit_depth;
+                return ((__Internal*)__Instance)->g_input_bit_depth;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_input_bit_depth = value;
+                ((__Internal*)__Instance)->g_input_bit_depth = value;
             }
         }
 
+        /// <summary>Stream timebase units</summary>
+        /// <remarks>
+        /// <para>Indicates the smallest interval of time, in seconds, used by the stream.</para>
+        /// <para>For fixed frame rate material, or variable frame rate material where</para>
+        /// <para>frames are timed at a multiple of a given clock (ex: video capture),</para>
+        /// <para>themethod is to set the timebase to the reciprocal</para>
+        /// <para>of the frame rate (ex: 1001/30000 for 29.970 Hz NTSC). This allows the</para>
+        /// <para>pts to correspond to the frame number, which can be handy. For</para>
+        /// <para>re-encoding video from containers with absolute time timestamps, the</para>
+        /// <para>method is to set the timebase to that of the parent</para>
+        /// <para>container or multimedia framework (ex: 1/1000 for ms, as in FLV).</para>
+        /// </remarks>
         public global::vpxmd.VpxRational GTimebase
         {
             get
             {
-                return global::vpxmd.VpxRational.__CreateInstance(new global::System.IntPtr(&((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_timebase));
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->g_timebase));
             }
 
             set
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_timebase = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+                ((__Internal*)__Instance)->g_timebase = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
             }
         }
 
+        /// <summary>Enable error resilient modes.</summary>
+        /// <remarks>
+        /// <para>The error resilient bitfield indicates to the encoder which features</para>
+        /// <para>it should enable to take measures for streaming over lossy or noisy</para>
+        /// <para>links.</para>
+        /// </remarks>
         public uint GErrorResilient
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_error_resilient;
+                return ((__Internal*)__Instance)->g_error_resilient;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_error_resilient = value;
+                ((__Internal*)__Instance)->g_error_resilient = value;
             }
         }
 
+        /// <summary>Multi-pass Encoding Mode</summary>
+        /// <remarks>
+        /// <para>This value should be set to the current phase for multi-pass encoding.</para>
+        /// <para>For single pass, set to #VPX_RC_ONE_PASS.</para>
+        /// </remarks>
         public global::vpxmd.VpxEncPass GPass
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_pass;
+                return ((__Internal*)__Instance)->g_pass;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_pass = value;
+                ((__Internal*)__Instance)->g_pass = value;
             }
         }
 
+        /// <summary>Allow lagged encoding</summary>
+        /// <remarks>
+        /// <para>If set, this value allows the encoder to consume a number of input</para>
+        /// <para>frames before producing output frames. This allows the encoder to</para>
+        /// <para>base decisions for the current frame on future frames. This does</para>
+        /// <para>increase the latency of the encoding pipeline, so it is not appropriate</para>
+        /// <para>in all situations (ex: realtime encoding).</para>
+        /// <para>Note that this is a maximum value -- the encoder may produce frames</para>
+        /// <para>sooner than the given limit. Set this value to 0 to disable this</para>
+        /// <para>feature.</para>
+        /// </remarks>
         public uint GLagInFrames
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->g_lag_in_frames;
+                return ((__Internal*)__Instance)->g_lag_in_frames;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->g_lag_in_frames = value;
+                ((__Internal*)__Instance)->g_lag_in_frames = value;
             }
         }
 
+        /// <summary>Temporal resampling configuration, if supported by the codec.</summary>
+        /// <remarks>
+        /// <para>Temporal resampling allows the codec to &quot;drop&quot; frames as a strategy to</para>
+        /// <para>meet its target data rate. This can cause temporal discontinuities in</para>
+        /// <para>the encoded video, which may appear as stuttering during playback. This</para>
+        /// <para>trade-off is often acceptable, but for many applications is not. It can</para>
+        /// <para>be disabled in these cases.</para>
+        /// <para>This threshold is described as a percentage of the target data buffer.</para>
+        /// <para>When the data buffer falls below this percentage of fullness, a</para>
+        /// <para>dropped frame is indicated. Set the threshold to zero (0) to disable</para>
+        /// <para>this feature.</para>
+        /// </remarks>
         public uint RcDropframeThresh
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_dropframe_thresh;
+                return ((__Internal*)__Instance)->rc_dropframe_thresh;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_dropframe_thresh = value;
+                ((__Internal*)__Instance)->rc_dropframe_thresh = value;
             }
         }
 
+        /// <summary>Enable/disable spatial resampling, if supported by the codec.</summary>
+        /// <remarks>
+        /// <para>Spatial resampling allows the codec to compress a lower resolution</para>
+        /// <para>version of the frame, which is then upscaled by the encoder to the</para>
+        /// <para>correct presentation resolution. This increases visual quality at</para>
+        /// <para>low data rates, at the expense of CPU time on the encoder/decoder.</para>
+        /// </remarks>
         public uint RcResizeAllowed
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_resize_allowed;
+                return ((__Internal*)__Instance)->rc_resize_allowed;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_resize_allowed = value;
+                ((__Internal*)__Instance)->rc_resize_allowed = value;
             }
         }
 
+        /// <summary>Internal coded frame width.</summary>
+        /// <remarks>
+        /// <para>If spatial resampling is enabled this specifies the width of the</para>
+        /// <para>encoded frame.</para>
+        /// </remarks>
         public uint RcScaledWidth
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_scaled_width;
+                return ((__Internal*)__Instance)->rc_scaled_width;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_scaled_width = value;
+                ((__Internal*)__Instance)->rc_scaled_width = value;
             }
         }
 
+        /// <summary>Internal coded frame height.</summary>
+        /// <remarks>
+        /// <para>If spatial resampling is enabled this specifies the height of the</para>
+        /// <para>encoded frame.</para>
+        /// </remarks>
         public uint RcScaledHeight
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_scaled_height;
+                return ((__Internal*)__Instance)->rc_scaled_height;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_scaled_height = value;
+                ((__Internal*)__Instance)->rc_scaled_height = value;
             }
         }
 
+        /// <summary>Spatial resampling up watermark.</summary>
+        /// <remarks>
+        /// <para>This threshold is described as a percentage of the target data buffer.</para>
+        /// <para>When the data buffer rises above this percentage of fullness, the</para>
+        /// <para>encoder will step up to a higher resolution version of the frame.</para>
+        /// </remarks>
         public uint RcResizeUpThresh
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_resize_up_thresh;
+                return ((__Internal*)__Instance)->rc_resize_up_thresh;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_resize_up_thresh = value;
+                ((__Internal*)__Instance)->rc_resize_up_thresh = value;
             }
         }
 
+        /// <summary>Spatial resampling down watermark.</summary>
+        /// <remarks>
+        /// <para>This threshold is described as a percentage of the target data buffer.</para>
+        /// <para>When the data buffer falls below this percentage of fullness, the</para>
+        /// <para>encoder will step down to a lower resolution version of the frame.</para>
+        /// </remarks>
         public uint RcResizeDownThresh
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_resize_down_thresh;
+                return ((__Internal*)__Instance)->rc_resize_down_thresh;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_resize_down_thresh = value;
+                ((__Internal*)__Instance)->rc_resize_down_thresh = value;
             }
         }
 
+        /// <summary>Rate control algorithm to use.</summary>
+        /// <remarks>
+        /// <para>Indicates whether the end usage of this stream is to be streamed over</para>
+        /// <para>a bandwidth constrained link, indicating that Constant Bit Rate (CBR)</para>
+        /// <para>mode should be used, or whether it will be played back on a high</para>
+        /// <para>bandwidth link, as from a local disk, where higher variations in</para>
+        /// <para>bitrate are acceptable.</para>
+        /// </remarks>
         public global::vpxmd.VpxRcMode RcEndUsage
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_end_usage;
+                return ((__Internal*)__Instance)->rc_end_usage;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_end_usage = value;
+                ((__Internal*)__Instance)->rc_end_usage = value;
             }
         }
 
+        /// <summary>Two-pass stats buffer.</summary>
+        /// <remarks>
+        /// <para>A buffer containing all of the stats packets produced in the first</para>
+        /// <para>pass, concatenated.</para>
+        /// </remarks>
         public global::vpxmd.VpxFixedBuf RcTwopassStatsIn
         {
             get
             {
-                return global::vpxmd.VpxFixedBuf.__CreateInstance(new global::System.IntPtr(&((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_twopass_stats_in));
+                return global::vpxmd.VpxFixedBuf.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->rc_twopass_stats_in));
             }
 
             set
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_twopass_stats_in = *(global::vpxmd.VpxFixedBuf.__Internal*) value.__Instance;
+                ((__Internal*)__Instance)->rc_twopass_stats_in = *(global::vpxmd.VpxFixedBuf.__Internal*) value.__Instance;
             }
         }
 
+        /// <summary>first pass mb stats buffer.</summary>
+        /// <remarks>
+        /// <para>A buffer containing all of the first pass mb stats packets produced</para>
+        /// <para>in the first pass, concatenated.</para>
+        /// </remarks>
         public global::vpxmd.VpxFixedBuf RcFirstpassMbStatsIn
         {
             get
             {
-                return global::vpxmd.VpxFixedBuf.__CreateInstance(new global::System.IntPtr(&((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_firstpass_mb_stats_in));
+                return global::vpxmd.VpxFixedBuf.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->rc_firstpass_mb_stats_in));
             }
 
             set
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_firstpass_mb_stats_in = *(global::vpxmd.VpxFixedBuf.__Internal*) value.__Instance;
+                ((__Internal*)__Instance)->rc_firstpass_mb_stats_in = *(global::vpxmd.VpxFixedBuf.__Internal*) value.__Instance;
             }
         }
 
+        /// <summary>Target data rate</summary>
+        /// <remarks>Target bitrate to use for this stream, in kilobits per second.</remarks>
         public uint RcTargetBitrate
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_target_bitrate;
+                return ((__Internal*)__Instance)->rc_target_bitrate;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_target_bitrate = value;
+                ((__Internal*)__Instance)->rc_target_bitrate = value;
             }
         }
 
+        /// <summary>Minimum (Best Quality) Quantizer</summary>
+        /// <remarks>
+        /// <para>The quantizer is the most direct control over the quality of the</para>
+        /// <para>encoded image. The range of valid values for the quantizer is codec</para>
+        /// <para>specific. Consult the documentation for the codec to determine the</para>
+        /// <para>values to use.</para>
+        /// </remarks>
         public uint RcMinQuantizer
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_min_quantizer;
+                return ((__Internal*)__Instance)->rc_min_quantizer;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_min_quantizer = value;
+                ((__Internal*)__Instance)->rc_min_quantizer = value;
             }
         }
 
+        /// <summary>Maximum (Worst Quality) Quantizer</summary>
+        /// <remarks>
+        /// <para>The quantizer is the most direct control over the quality of the</para>
+        /// <para>encoded image. The range of valid values for the quantizer is codec</para>
+        /// <para>specific. Consult the documentation for the codec to determine the</para>
+        /// <para>values to use.</para>
+        /// </remarks>
         public uint RcMaxQuantizer
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_max_quantizer;
+                return ((__Internal*)__Instance)->rc_max_quantizer;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_max_quantizer = value;
+                ((__Internal*)__Instance)->rc_max_quantizer = value;
             }
         }
 
+        /// <summary>Rate control adaptation undershoot control</summary>
+        /// <remarks>
+        /// <para>VP8: Expressed as a percentage of the target bitrate,</para>
+        /// <para>controls the maximum allowed adaptation speed of the codec.</para>
+        /// <para>This factor controls the maximum amount of bits that can</para>
+        /// <para>be subtracted from the target bitrate in order to compensate</para>
+        /// <para>for prior overshoot.</para>
+        /// <para>VP9: Expressed as a percentage of the target bitrate, a threshold</para>
+        /// <para>undershoot level (current rate vs target) beyond which more aggressive</para>
+        /// <para>corrective measures are taken.</para>
+        /// <para>*</para>
+        /// <para>Valid values in the range VP8:0-100 VP9: 0-100.</para>
+        /// </remarks>
         public uint RcUndershootPct
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_undershoot_pct;
+                return ((__Internal*)__Instance)->rc_undershoot_pct;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_undershoot_pct = value;
+                ((__Internal*)__Instance)->rc_undershoot_pct = value;
             }
         }
 
+        /// <summary>Rate control adaptation overshoot control</summary>
+        /// <remarks>
+        /// <para>VP8: Expressed as a percentage of the target bitrate,</para>
+        /// <para>controls the maximum allowed adaptation speed of the codec.</para>
+        /// <para>This factor controls the maximum amount of bits that can</para>
+        /// <para>be added to the target bitrate in order to compensate for</para>
+        /// <para>prior undershoot.</para>
+        /// <para>VP9: Expressed as a percentage of the target bitrate, a threshold</para>
+        /// <para>overshoot level (current rate vs target) beyond which more aggressive</para>
+        /// <para>corrective measures are taken.</para>
+        /// <para>Valid values in the range VP8:0-100 VP9: 0-100.</para>
+        /// </remarks>
         public uint RcOvershootPct
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_overshoot_pct;
+                return ((__Internal*)__Instance)->rc_overshoot_pct;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_overshoot_pct = value;
+                ((__Internal*)__Instance)->rc_overshoot_pct = value;
             }
         }
 
+        /// <summary>Decoder Buffer Size</summary>
+        /// <remarks>
+        /// <para>This value indicates the amount of data that may be buffered by the</para>
+        /// <para>decoding application. Note that this value is expressed in units of</para>
+        /// <para>time (milliseconds). For example, a value of 5000 indicates that the</para>
+        /// <para>client will buffer (at least) 5000ms worth of encoded data. Use the</para>
+        /// <para>target bitrate (#rc_target_bitrate) to convert to bits/bytes, if</para>
+        /// <para>necessary.</para>
+        /// </remarks>
         public uint RcBufSz
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_buf_sz;
+                return ((__Internal*)__Instance)->rc_buf_sz;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_buf_sz = value;
+                ((__Internal*)__Instance)->rc_buf_sz = value;
             }
         }
 
+        /// <summary>Decoder Buffer Initial Size</summary>
+        /// <remarks>
+        /// <para>This value indicates the amount of data that will be buffered by the</para>
+        /// <para>decoding application prior to beginning playback. This value is</para>
+        /// <para>expressed in units of time (milliseconds). Use the target bitrate</para>
+        /// <para>(#rc_target_bitrate) to convert to bits/bytes, if necessary.</para>
+        /// </remarks>
         public uint RcBufInitialSz
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_buf_initial_sz;
+                return ((__Internal*)__Instance)->rc_buf_initial_sz;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_buf_initial_sz = value;
+                ((__Internal*)__Instance)->rc_buf_initial_sz = value;
             }
         }
 
+        /// <summary>Decoder Buffer Optimal Size</summary>
+        /// <remarks>
+        /// <para>This value indicates the amount of data that the encoder should try</para>
+        /// <para>to maintain in the decoder's buffer. This value is expressed in units</para>
+        /// <para>of time (milliseconds). Use the target bitrate (#rc_target_bitrate)</para>
+        /// <para>to convert to bits/bytes, if necessary.</para>
+        /// </remarks>
         public uint RcBufOptimalSz
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_buf_optimal_sz;
+                return ((__Internal*)__Instance)->rc_buf_optimal_sz;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_buf_optimal_sz = value;
+                ((__Internal*)__Instance)->rc_buf_optimal_sz = value;
             }
         }
 
+        /// <summary>Two-pass mode CBR/VBR bias</summary>
+        /// <remarks>
+        /// <para>Bias, expressed on a scale of 0 to 100, for determining target size</para>
+        /// <para>for the current frame. The value 0 indicates the optimal CBR mode</para>
+        /// <para>value should be used. The value 100 indicates the optimal VBR mode</para>
+        /// <para>value should be used. Values in between indicate which way the</para>
+        /// <para>encoder should &quot;lean.&quot;</para>
+        /// </remarks>
         public uint Rc2passVbrBiasPct
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_2pass_vbr_bias_pct;
+                return ((__Internal*)__Instance)->rc_2pass_vbr_bias_pct;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_2pass_vbr_bias_pct = value;
+                ((__Internal*)__Instance)->rc_2pass_vbr_bias_pct = value;
             }
         }
 
+        /// <summary>Two-pass mode per-GOP minimum bitrate</summary>
+        /// <remarks>
+        /// <para>This value, expressed as a percentage of the target bitrate, indicates</para>
+        /// <para>the minimum bitrate to be used for a single GOP (aka &quot;section&quot;)</para>
+        /// </remarks>
         public uint Rc2passVbrMinsectionPct
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_2pass_vbr_minsection_pct;
+                return ((__Internal*)__Instance)->rc_2pass_vbr_minsection_pct;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_2pass_vbr_minsection_pct = value;
+                ((__Internal*)__Instance)->rc_2pass_vbr_minsection_pct = value;
             }
         }
 
+        /// <summary>Two-pass mode per-GOP maximum bitrate</summary>
+        /// <remarks>
+        /// <para>This value, expressed as a percentage of the target bitrate, indicates</para>
+        /// <para>the maximum bitrate to be used for a single GOP (aka &quot;section&quot;)</para>
+        /// </remarks>
         public uint Rc2passVbrMaxsectionPct
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_2pass_vbr_maxsection_pct;
+                return ((__Internal*)__Instance)->rc_2pass_vbr_maxsection_pct;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_2pass_vbr_maxsection_pct = value;
+                ((__Internal*)__Instance)->rc_2pass_vbr_maxsection_pct = value;
             }
         }
 
+        /// <summary>
+        /// <para>Two-pass corpus vbr mode complexity control</para>
+        /// <para>Used only in VP9: A value representing the corpus midpoint complexity</para>
+        /// <para>for corpus vbr mode. This value defaults to 0 which disables corpus vbr</para>
+        /// <para>mode in favour of normal vbr mode.</para>
+        /// </summary>
         public uint Rc2passVbrCorpusComplexity
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->rc_2pass_vbr_corpus_complexity;
+                return ((__Internal*)__Instance)->rc_2pass_vbr_corpus_complexity;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->rc_2pass_vbr_corpus_complexity = value;
+                ((__Internal*)__Instance)->rc_2pass_vbr_corpus_complexity = value;
             }
         }
 
+        /// <summary>Keyframe placement mode</summary>
+        /// <remarks>
+        /// <para>This value indicates whether the encoder should place keyframes at a</para>
+        /// <para>fixed interval, or determine the optimal placement automatically</para>
+        /// <para>(as governed by the #kf_min_dist and #kf_max_dist parameters)</para>
+        /// </remarks>
         public global::vpxmd.VpxKfMode KfMode
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->kf_mode;
+                return ((__Internal*)__Instance)->kf_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->kf_mode = value;
+                ((__Internal*)__Instance)->kf_mode = value;
             }
         }
 
+        /// <summary>Keyframe minimum interval</summary>
+        /// <remarks>
+        /// <para>This value, expressed as a number of frames, prevents the encoder from</para>
+        /// <para>placing a keyframe nearer than kf_min_dist to the previous keyframe. At</para>
+        /// <para>least kf_min_dist frames non-keyframes will be coded before the next</para>
+        /// <para>keyframe. Set kf_min_dist equal to kf_max_dist for a fixed interval.</para>
+        /// </remarks>
         public uint KfMinDist
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->kf_min_dist;
+                return ((__Internal*)__Instance)->kf_min_dist;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->kf_min_dist = value;
+                ((__Internal*)__Instance)->kf_min_dist = value;
             }
         }
 
+        /// <summary>Keyframe maximum interval</summary>
+        /// <remarks>
+        /// <para>This value, expressed as a number of frames, forces the encoder to code</para>
+        /// <para>a keyframe if one has not been coded in the last kf_max_dist frames.</para>
+        /// <para>A value of 0 implies all frames will be keyframes. Set kf_min_dist</para>
+        /// <para>equal to kf_max_dist for a fixed interval.</para>
+        /// </remarks>
         public uint KfMaxDist
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->kf_max_dist;
+                return ((__Internal*)__Instance)->kf_max_dist;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->kf_max_dist = value;
+                ((__Internal*)__Instance)->kf_max_dist = value;
             }
         }
 
+        /// <summary>Number of spatial coding layers.</summary>
+        /// <remarks>This value specifies the number of spatial coding layers to be used.</remarks>
         public uint SsNumberLayers
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ss_number_layers;
+                return ((__Internal*)__Instance)->ss_number_layers;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ss_number_layers = value;
+                ((__Internal*)__Instance)->ss_number_layers = value;
             }
         }
 
+        /// <summary>Enable auto alt reference flags for each spatial layer.</summary>
+        /// <remarks>
+        /// <para>These values specify if auto alt reference frame is enabled for each</para>
+        /// <para>spatial layer.</para>
+        /// </remarks>
         public int[] SsEnableAutoAltRef
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ss_enable_auto_alt_ref != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ss_enable_auto_alt_ref[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->ss_enable_auto_alt_ref, 5);
             }
 
             set
@@ -1884,23 +2180,21 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ss_enable_auto_alt_ref[i] = value[i];
+                        ((__Internal*)__Instance)->ss_enable_auto_alt_ref[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Target bitrate for each spatial layer.</summary>
+        /// <remarks>
+        /// <para>These values specify the target coding bitrate to be used for each</para>
+        /// <para>spatial layer. (in kbps)</para>
+        /// </remarks>
         public uint[] SsTargetBitrate
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ss_target_bitrate != null)
-                {
-                    __value = new uint[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ss_target_bitrate[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->ss_target_bitrate, 5);
             }
 
             set
@@ -1908,36 +2202,36 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ss_target_bitrate[i] = value[i];
+                        ((__Internal*)__Instance)->ss_target_bitrate[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Number of temporal coding layers.</summary>
+        /// <remarks>This value specifies the number of temporal layers to be used.</remarks>
         public uint TsNumberLayers
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_number_layers;
+                return ((__Internal*)__Instance)->ts_number_layers;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ts_number_layers = value;
+                ((__Internal*)__Instance)->ts_number_layers = value;
             }
         }
 
+        /// <summary>Target bitrate for each temporal layer.</summary>
+        /// <remarks>
+        /// <para>These values specify the target coding bitrate to be used for each</para>
+        /// <para>temporal layer. (in kbps)</para>
+        /// </remarks>
         public uint[] TsTargetBitrate
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_target_bitrate != null)
-                {
-                    __value = new uint[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_target_bitrate[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->ts_target_bitrate, 5);
             }
 
             set
@@ -1945,23 +2239,21 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ts_target_bitrate[i] = value[i];
+                        ((__Internal*)__Instance)->ts_target_bitrate[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Frame rate decimation factor for each temporal layer.</summary>
+        /// <remarks>
+        /// <para>These values specify the frame rate decimation factors to apply</para>
+        /// <para>to each temporal layer.</para>
+        /// </remarks>
         public uint[] TsRateDecimator
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_rate_decimator != null)
-                {
-                    __value = new uint[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_rate_decimator[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->ts_rate_decimator, 5);
             }
 
             set
@@ -1969,36 +2261,43 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ts_rate_decimator[i] = value[i];
+                        ((__Internal*)__Instance)->ts_rate_decimator[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Length of the sequence defining frame temporal layer membership.</summary>
+        /// <remarks>
+        /// <para>This value specifies the length of the sequence that defines the</para>
+        /// <para>membership of frames to temporal layers. For example, if the</para>
+        /// <para>ts_periodicity = 8, then the frames are assigned to coding layers with a</para>
+        /// <para>repeated sequence of length 8.</para>
+        /// </remarks>
         public uint TsPeriodicity
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_periodicity;
+                return ((__Internal*)__Instance)->ts_periodicity;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ts_periodicity = value;
+                ((__Internal*)__Instance)->ts_periodicity = value;
             }
         }
 
+        /// <summary>Template defining the membership of frames to temporal layers.</summary>
+        /// <remarks>
+        /// <para>This array defines the membership of frames to temporal coding layers.</para>
+        /// <para>For a 2-layer encoding that assigns even numbered frames to one temporal</para>
+        /// <para>layer (0) and odd numbered frames to a second temporal layer (1) with</para>
+        /// <para>ts_periodicity=8, then ts_layer_id = (0,1,0,1,0,1,0,1).</para>
+        /// </remarks>
         public uint[] TsLayerId
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_layer_id != null)
-                {
-                    __value = new uint[16];
-                    for (int i = 0; i < 16; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->ts_layer_id[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->ts_layer_id, 16);
             }
 
             set
@@ -2006,23 +2305,21 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 16; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->ts_layer_id[i] = value[i];
+                        ((__Internal*)__Instance)->ts_layer_id[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Target bitrate for each spatial/temporal layer.</summary>
+        /// <remarks>
+        /// <para>These values specify the target coding bitrate to be used for each</para>
+        /// <para>spatial/temporal layer. (in kbps)</para>
+        /// </remarks>
         public uint[] LayerTargetBitrate
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->layer_target_bitrate != null)
-                {
-                    __value = new uint[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->layer_target_bitrate[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->layer_target_bitrate, 12);
             }
 
             set
@@ -2030,21 +2327,371 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->layer_target_bitrate[i] = value[i];
+                        ((__Internal*)__Instance)->layer_target_bitrate[i] = value[i];
                 }
             }
         }
 
+        /// <summary>
+        /// <para>Temporal layering mode indicating which temporal layering scheme to</para>
+        /// <para>use.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>The value (refer to VP9E_TEMPORAL_LAYERING_MODE) specifies the</para>
+        /// <para>temporal layering mode to use.</para>
+        /// </remarks>
         public int TemporalLayeringMode
         {
             get
             {
-                return ((global::vpxmd.VpxCodecEncCfg.__Internal*) __Instance)->temporal_layering_mode;
+                return ((__Internal*)__Instance)->temporal_layering_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecEncCfg.__Internal*)__Instance)->temporal_layering_mode = value;
+                ((__Internal*)__Instance)->temporal_layering_mode = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>A flag indicating whether to use external rate control parameters.</para>
+        /// <para>By default is 0. If set to 1, the following parameters will be used in the</para>
+        /// <para>rate control system.</para>
+        /// </summary>
+        public int UseVizierRcParams
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->use_vizier_rc_params;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->use_vizier_rc_params = value;
+            }
+        }
+
+        /// <summary>Active worst quality factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational ActiveWqFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->active_wq_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->active_wq_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Error per macroblock adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational ErrPerMbFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->err_per_mb_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->err_per_mb_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Second reference default decay limit.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational SrDefaultDecayLimit
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->sr_default_decay_limit));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->sr_default_decay_limit = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Second reference difference factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational SrDiffFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->sr_diff_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->sr_diff_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Keyframe error per macroblock adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational KfErrPerMbFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->kf_err_per_mb_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->kf_err_per_mb_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Keyframe minimum boost adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational KfFrameMinBoostFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->kf_frame_min_boost_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->kf_frame_min_boost_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>
+        /// <para>Keyframe maximum boost adjustment factor, for the first keyframe</para>
+        /// <para>in a chunk.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational KfFrameMaxBoostFirstFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->kf_frame_max_boost_first_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->kf_frame_max_boost_first_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Keyframe maximum boost adjustment factor, for subsequent keyframes.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational KfFrameMaxBoostSubsFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->kf_frame_max_boost_subs_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->kf_frame_max_boost_subs_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Keyframe maximum total boost adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational KfMaxTotalBoostFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->kf_max_total_boost_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->kf_max_total_boost_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Golden frame maximum total boost adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational GfMaxTotalBoostFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->gf_max_total_boost_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->gf_max_total_boost_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Golden frame maximum boost adjustment factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational GfFrameMaxBoostFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->gf_frame_max_boost_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->gf_frame_max_boost_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>Zero motion power factor.</summary>
+        /// <remarks>
+        /// <para>Rate control parameters, set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </remarks>
+        public global::vpxmd.VpxRational ZmFactor
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->zm_factor));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->zm_factor = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>
+        /// <para>Rate-distortion multiplier for inter frames.</para>
+        /// <para>The multiplier is a crucial parameter in the calculation of rate distortion</para>
+        /// <para>cost. It is often related to the qp (qindex) value.</para>
+        /// <para>Rate control parameters, could be set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </summary>
+        public global::vpxmd.VpxRational RdMultInterQpFac
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->rd_mult_inter_qp_fac));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->rd_mult_inter_qp_fac = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>
+        /// <para>Rate-distortion multiplier for alt-ref frames.</para>
+        /// <para>The multiplier is a crucial parameter in the calculation of rate distortion</para>
+        /// <para>cost. It is often related to the qp (qindex) value.</para>
+        /// <para>Rate control parameters, could be set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </summary>
+        public global::vpxmd.VpxRational RdMultArfQpFac
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->rd_mult_arf_qp_fac));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->rd_mult_arf_qp_fac = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
+            }
+        }
+
+        /// <summary>
+        /// <para>Rate-distortion multiplier for key frames.</para>
+        /// <para>The multiplier is a crucial parameter in the calculation of rate distortion</para>
+        /// <para>cost. It is often related to the qp (qindex) value.</para>
+        /// <para>Rate control parameters, could be set from external experiment results.</para>
+        /// <para>Only when |use_vizier_rc_params| is set to 1, the pass in value will be</para>
+        /// <para>used. Otherwise, the default value is used.</para>
+        /// </summary>
+        public global::vpxmd.VpxRational RdMultKeyQpFac
+        {
+            get
+            {
+                return global::vpxmd.VpxRational.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->rd_mult_key_qp_fac));
+            }
+
+            set
+            {
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
+                ((__Internal*)__Instance)->rd_mult_key_qp_fac = *(global::vpxmd.VpxRational.__Internal*) value.__Instance;
             }
         }
     }
@@ -2053,113 +2700,123 @@ namespace vpxmd
     /// <remarks>This defines max/min quantizers and scale factors for each layer</remarks>
     public unsafe partial class VpxSvcParameters : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 244)]
+        [StructLayout(LayoutKind.Sequential, Size = 292)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal fixed int max_quantizers[12];
-
-            [FieldOffset(48)]
             internal fixed int min_quantizers[12];
-
-            [FieldOffset(96)]
             internal fixed int scaling_factor_num[12];
-
-            [FieldOffset(144)]
             internal fixed int scaling_factor_den[12];
-
-            [FieldOffset(192)]
             internal fixed int speed_per_layer[12];
-
-            [FieldOffset(240)]
             internal int temporal_layering_mode;
+            internal fixed int loopfilter_ctrl[12];
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_svc_parameters@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_svc_parameters@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcParameters> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcParameters>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcParameters> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcParameters>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxSvcParameters managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxSvcParameters managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxSvcParameters __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxSvcParameters __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcParameters(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxSvcParameters(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxSvcParameters __CreateInstance(global::vpxmd.VpxSvcParameters.__Internal native, bool skipVTables = false)
+        internal static VpxSvcParameters __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcParameters(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxSvcParameters)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxSvcParameters.__Internal native)
+        internal static VpxSvcParameters __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcParameters.__Internal));
-            *(global::vpxmd.VpxSvcParameters.__Internal*) ret = native;
+            return new VpxSvcParameters(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxSvcParameters(global::vpxmd.VpxSvcParameters.__Internal native, bool skipVTables = false)
+        private VpxSvcParameters(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxSvcParameters(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxSvcParameters()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcParameters.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxSvcParameters(global::vpxmd.VpxSvcParameters _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcParameters.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxSvcParameters.__Internal*) __Instance) = *((global::vpxmd.VpxSvcParameters.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxSvcParameters __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Max Q for each layer</summary>
         public int[] MaxQuantizers
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->max_quantizers != null)
-                {
-                    __value = new int[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->max_quantizers[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->max_quantizers, 12);
             }
 
             set
@@ -2167,23 +2824,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->max_quantizers[i] = value[i];
+                        ((__Internal*)__Instance)->max_quantizers[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Min Q for each layer</summary>
         public int[] MinQuantizers
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->min_quantizers != null)
-                {
-                    __value = new int[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->min_quantizers[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->min_quantizers, 12);
             }
 
             set
@@ -2191,23 +2842,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->min_quantizers[i] = value[i];
+                        ((__Internal*)__Instance)->min_quantizers[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Scaling factor-numerator</summary>
         public int[] ScalingFactorNum
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->scaling_factor_num != null)
-                {
-                    __value = new int[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->scaling_factor_num[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->scaling_factor_num, 12);
             }
 
             set
@@ -2215,23 +2860,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->scaling_factor_num[i] = value[i];
+                        ((__Internal*)__Instance)->scaling_factor_num[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Scaling factor-denominator</summary>
         public int[] ScalingFactorDen
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->scaling_factor_den != null)
-                {
-                    __value = new int[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->scaling_factor_den[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->scaling_factor_den, 12);
             }
 
             set
@@ -2239,23 +2878,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->scaling_factor_den[i] = value[i];
+                        ((__Internal*)__Instance)->scaling_factor_den[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Speed setting for each sl</summary>
         public int[] SpeedPerLayer
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->speed_per_layer != null)
-                {
-                    __value = new int[12];
-                    for (int i = 0; i < 12; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->speed_per_layer[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->speed_per_layer, 12);
             }
 
             set
@@ -2263,21 +2896,40 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 12; i++)
-                        ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->speed_per_layer[i] = value[i];
+                        ((__Internal*)__Instance)->speed_per_layer[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Temporal layering mode</summary>
         public int TemporalLayeringMode
         {
             get
             {
-                return ((global::vpxmd.VpxSvcParameters.__Internal*) __Instance)->temporal_layering_mode;
+                return ((__Internal*)__Instance)->temporal_layering_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcParameters.__Internal*)__Instance)->temporal_layering_mode = value;
+                ((__Internal*)__Instance)->temporal_layering_mode = value;
+            }
+        }
+
+        /// <summary>Loopfilter ctrl for each sl</summary>
+        public int[] LoopfilterCtrl
+        {
+            get
+            {
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->loopfilter_ctrl, 12);
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    for (int i = 0; i < 12; i++)
+                        ((__Internal*)__Instance)->loopfilter_ctrl[i] = value[i];
+                }
             }
         }
     }
@@ -2286,50 +2938,32 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_enc_init_ver")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncInitVer(global::System.IntPtr ctx, global::System.IntPtr iface, global::System.IntPtr cfg, int flags, int ver);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_enc_init_ver", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncInitVer(__IntPtr ctx, __IntPtr iface, __IntPtr cfg, int flags, int ver);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_enc_init_multi_ver")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncInitMultiVer(global::System.IntPtr ctx, global::System.IntPtr iface, global::System.IntPtr cfg, int num_enc, int flags, global::System.IntPtr dsf, int ver);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_enc_init_multi_ver", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncInitMultiVer(__IntPtr ctx, __IntPtr iface, __IntPtr cfg, int num_enc, int flags, __IntPtr dsf, int ver);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_enc_config_default")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncConfigDefault(global::System.IntPtr iface, global::System.IntPtr cfg, uint usage);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_enc_config_default", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncConfigDefault(__IntPtr iface, __IntPtr cfg, uint usage);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_enc_config_set")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncConfigSet(global::System.IntPtr ctx, global::System.IntPtr cfg);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_enc_config_set", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncConfigSet(__IntPtr ctx, __IntPtr cfg);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_global_headers")]
-            internal static extern global::System.IntPtr VpxCodecGetGlobalHeaders(global::System.IntPtr ctx);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_global_headers", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecGetGlobalHeaders(__IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_encode")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncode(global::System.IntPtr ctx, global::System.IntPtr img, long pts, uint duration, int flags, uint deadline);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_encode", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecEncode(__IntPtr ctx, __IntPtr img, long pts, uint duration, int flags, uint deadline);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_set_cx_data_buf")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecSetCxDataBuf(global::System.IntPtr ctx, global::System.IntPtr buf, uint pad_before, uint pad_after);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_set_cx_data_buf", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecSetCxDataBuf(__IntPtr ctx, __IntPtr buf, uint pad_before, uint pad_after);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_cx_data")]
-            internal static extern global::System.IntPtr VpxCodecGetCxData(global::System.IntPtr ctx, void** iter);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_cx_data", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecGetCxData(__IntPtr ctx, __IntPtr* iter);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_preview_frame")]
-            internal static extern global::System.IntPtr VpxCodecGetPreviewFrame(global::System.IntPtr ctx);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_preview_frame", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecGetPreviewFrame(__IntPtr ctx);
         }
 
         /// <summary>Initialize an encoder instance</summary>
@@ -2342,25 +2976,25 @@ namespace vpxmd
         /// <para>VPX_ENCODER_ABI_VERSION</para>
         /// </param>
         /// <remarks>
-        /// <para>Initializes a encoder context using the given interface. Applications</para>
+        /// <para>Initializes an encoder context using the given interface. Applications</para>
         /// <para>should call the vpx_codec_enc_init convenience macro instead of this</para>
         /// <para>function directly, to ensure that the ABI version number parameter</para>
         /// <para>is properly initialized.</para>
         /// <para>If the library was configured with --disable-multithread, this call</para>
         /// <para>is not thread safe and should be guarded with a lock if being used</para>
         /// <para>in a multithreaded context.</para>
-        /// <para>#VPX_CODEC_OK</para>
+        /// <para>If vpx_codec_enc_init_ver() fails, it is not necessary to call</para>
+        /// <para>vpx_codec_destroy() on the encoder context.</para>
         /// <para>The decoder algorithm initialized.</para>
-        /// <para>#VPX_CODEC_MEM_ERROR</para>
         /// <para>Memory allocation failed.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecEncInitVer(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecIface iface, global::vpxmd.VpxCodecEncCfg cfg, int flags, int ver)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __arg2 = ReferenceEquals(cfg, null) ? global::System.IntPtr.Zero : cfg.__Instance;
-            var __ret = __Internal.VpxCodecEncInitVer(__arg0, __arg1, __arg2, flags, ver);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var __arg2 = cfg is null ? __IntPtr.Zero : cfg.__Instance;
+            var ___ret = __Internal.VpxCodecEncInitVer(__arg0, __arg1, __arg2, flags, ver);
+            return ___ret;
         }
 
         /// <summary>Initialize multi-encoder instance</summary>
@@ -2379,19 +3013,17 @@ namespace vpxmd
         /// <para>Applications should call the vpx_codec_enc_init_multi convenience macro</para>
         /// <para>instead of this function directly, to ensure that the ABI version number</para>
         /// <para>parameter is properly initialized.</para>
-        /// <para>#VPX_CODEC_OK</para>
-        /// <para>The decoder algorithm initialized.</para>
-        /// <para>#VPX_CODEC_MEM_ERROR</para>
+        /// <para>The encoder algorithm has been initialized.</para>
         /// <para>Memory allocation failed.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecEncInitMultiVer(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecIface iface, global::vpxmd.VpxCodecEncCfg cfg, int num_enc, int flags, global::vpxmd.VpxRational dsf, int ver)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __arg2 = ReferenceEquals(cfg, null) ? global::System.IntPtr.Zero : cfg.__Instance;
-            var __arg5 = ReferenceEquals(dsf, null) ? global::System.IntPtr.Zero : dsf.__Instance;
-            var __ret = __Internal.VpxCodecEncInitMultiVer(__arg0, __arg1, __arg2, num_enc, flags, __arg5, ver);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var __arg2 = cfg is null ? __IntPtr.Zero : cfg.__Instance;
+            var __arg5 = dsf is null ? __IntPtr.Zero : dsf.__Instance;
+            var ___ret = __Internal.VpxCodecEncInitMultiVer(__arg0, __arg1, __arg2, num_enc, flags, __arg5, ver);
+            return ___ret;
         }
 
         /// <summary>Get a default configuration</summary>
@@ -2401,22 +3033,18 @@ namespace vpxmd
         /// <remarks>
         /// <para>Initializes a encoder configuration structure with default values. Supports</para>
         /// <para>the notion of &quot;usages&quot; so that an algorithm may offer different default</para>
-        /// <para>settings depending on the user's intended goal. This function</para>
-        /// <para>be called by all applications to initialize the configuration structure</para>
+        /// <para>settings depending on the user's intended goal. This functionbe called by all applications to initialize the configuration structure</para>
         /// <para>before specializing the configuration with application specific values.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>The configuration was populated.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Interface is not an encoder interface.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>A parameter was NULL, or the usage value was not recognized.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecEncConfigDefault(global::vpxmd.VpxCodecIface iface, global::vpxmd.VpxCodecEncCfg cfg, uint usage)
         {
-            var __arg0 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __arg1 = ReferenceEquals(cfg, null) ? global::System.IntPtr.Zero : cfg.__Instance;
-            var __ret = __Internal.VpxCodecEncConfigDefault(__arg0, __arg1, usage);
-            return __ret;
+            var __arg0 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var __arg1 = cfg is null ? __IntPtr.Zero : cfg.__Instance;
+            var ___ret = __Internal.VpxCodecEncConfigDefault(__arg0, __arg1, usage);
+            return ___ret;
         }
 
         /// <summary>Set or change configuration</summary>
@@ -2424,39 +3052,30 @@ namespace vpxmd
         /// <param name="cfg">Configuration buffer to use</param>
         /// <remarks>
         /// <para>Reconfigures an encoder instance according to the given configuration.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>The configuration was populated.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Interface is not an encoder interface.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>A parameter was NULL, or the usage value was not recognized.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecEncConfigSet(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecEncCfg cfg)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(cfg, null) ? global::System.IntPtr.Zero : cfg.__Instance;
-            var __ret = __Internal.VpxCodecEncConfigSet(__arg0, __arg1);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = cfg is null ? __IntPtr.Zero : cfg.__Instance;
+            var ___ret = __Internal.VpxCodecEncConfigSet(__arg0, __arg1);
+            return ___ret;
         }
 
         /// <summary>Get global stream headers</summary>
         /// <param name="ctx">Pointer to this instance's context</param>
         /// <remarks>
         /// <para>Retrieves a stream level global header packet, if supported by the codec.</para>
-        /// <para>NULL</para>
         /// <para>Encoder does not support global header</para>
-        /// <para>Non-NULL</para>
         /// <para>Pointer to buffer containing global header packet</para>
         /// </remarks>
         public static global::vpxmd.VpxFixedBuf VpxCodecGetGlobalHeaders(global::vpxmd.VpxCodecCtx ctx)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecGetGlobalHeaders(__arg0);
-            global::vpxmd.VpxFixedBuf __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxFixedBuf.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxFixedBuf) global::vpxmd.VpxFixedBuf.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxFixedBuf.__CreateInstance(__ret);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecGetGlobalHeaders(__arg0);
+            var __result0 = global::vpxmd.VpxFixedBuf.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
@@ -2469,7 +3088,7 @@ namespace vpxmd
         /// <param name="deadline">Time to spend encoding, in microseconds. (0=infinite)</param>
         /// <remarks>
         /// <para>Encodes a video frame at the given &quot;presentation time.&quot; The presentation</para>
-        /// <para>time stamp (PTS)</para>
+        /// <para>time stamp (PTS)be strictly increasing.</para>
         /// <para>The encoder supports the notion of a soft real-time deadline. Given a</para>
         /// <para>non-zero value to the deadline parameter, the encoder will make a &quot;best</para>
         /// <para>effort&quot; guarantee to  return before the given time slice expires. It is</para>
@@ -2485,19 +3104,16 @@ namespace vpxmd
         /// <para>signal the end-of-stream condition to the encoder and allow it to encode</para>
         /// <para>any held buffers. Encoding is complete when vpx_codec_encode() is called</para>
         /// <para>and vpx_codec_get_cx_data() returns no data.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>The configuration was populated.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Interface is not an encoder interface.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>A parameter was NULL, the image format is unsupported, etc.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecEncode(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxImage img, long pts, uint duration, int flags, uint deadline)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
-            var __ret = __Internal.VpxCodecEncode(__arg0, __arg1, pts, duration, flags, deadline);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = img is null ? __IntPtr.Zero : img.__Instance;
+            var ___ret = __Internal.VpxCodecEncode(__arg0, __arg1, pts, duration, flags, deadline);
+            return ___ret;
         }
 
         /// <summary>Set compressed data output buffer</summary>
@@ -2521,7 +3137,7 @@ namespace vpxmd
         /// <para>Note that calling this function does not guarantee that the returned</para>
         /// <para>compressed data will be placed into the specified buffer. In the</para>
         /// <para>event that the encoded data will not fit into the buffer provided,</para>
-        /// <para>the returned packet</para>
+        /// <para>the returned packetpoint to an internal buffer, as it would</para>
         /// <para>if this call were never used. In this event, the output packet will</para>
         /// <para>NOT have any padding, and the application must free space and copy it</para>
         /// <para>to the proper place. This is of particular note in configurations</para>
@@ -2530,19 +3146,17 @@ namespace vpxmd
         /// <para>Applications may restore the default behavior of the codec providing</para>
         /// <para>the compressed data buffer by calling this function with a NULL</para>
         /// <para>buffer.</para>
-        /// <para>Applications</para>
+        /// <para>Applicationscall this function during iteration of</para>
         /// <para>vpx_codec_get_cx_data().</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>The buffer was set successfully.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>A parameter was NULL, the image format is unsupported, etc.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecSetCxDataBuf(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxFixedBuf buf, uint pad_before, uint pad_after)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(buf, null) ? global::System.IntPtr.Zero : buf.__Instance;
-            var __ret = __Internal.VpxCodecSetCxDataBuf(__arg0, __arg1, pad_before, pad_after);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = buf is null ? __IntPtr.Zero : buf.__Instance;
+            var ___ret = __Internal.VpxCodecSetCxDataBuf(__arg0, __arg1, pad_before, pad_after);
+            return ___ret;
         }
 
         /// <summary>Encoded data iterator</summary>
@@ -2559,20 +3173,16 @@ namespace vpxmd
         /// <para>#VPX_CODEC_CX_FRAME_PKT packets should be passed to the application's</para>
         /// <para>muxer. Multiple compressed frames may be in the list.</para>
         /// <para>#VPX_CODEC_STATS_PKT packets should be appended to a global buffer.</para>
-        /// <para>The application</para>
+        /// <para>The applicationsilently ignore any packet kinds that it does</para>
         /// <para>not recognize or support.</para>
         /// <para>The data buffers returned from this function are only guaranteed to be</para>
         /// <para>valid until the application makes another call to any vpx_codec_* function.</para>
         /// </remarks>
-        public static global::vpxmd.VpxCodecCxPkt VpxCodecGetCxData(global::vpxmd.VpxCodecCtx ctx, void** iter)
+        public static global::vpxmd.VpxCodecCxPkt VpxCodecGetCxData(global::vpxmd.VpxCodecCtx ctx, __IntPtr* iter)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecGetCxData(__arg0, iter);
-            global::vpxmd.VpxCodecCxPkt __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxCodecCxPkt.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxCodecCxPkt) global::vpxmd.VpxCodecCxPkt.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxCodecCxPkt.__CreateInstance(__ret);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecGetCxData(__arg0, iter);
+            var __result0 = global::vpxmd.VpxCodecCxPkt.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
@@ -2584,18 +3194,14 @@ namespace vpxmd
         /// </returns>
         /// <remarks>
         /// <para>Returns an image that can be used as a preview. Shows the image as it would</para>
-        /// <para>exist at the decompressor. The application</para>
+        /// <para>exist at the decompressor. The applicationNOT write into this</para>
         /// <para>image buffer.</para>
         /// </remarks>
         public static global::vpxmd.VpxImage VpxCodecGetPreviewFrame(global::vpxmd.VpxCodecCtx ctx)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecGetPreviewFrame(__arg0);
-            global::vpxmd.VpxImage __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxImage.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxImage) global::vpxmd.VpxImage.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxImage.__CreateInstance(__ret);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecGetPreviewFrame(__arg0);
+            var __result0 = global::vpxmd.VpxImage.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
     }
@@ -2616,7 +3222,7 @@ namespace vpxmd
         /// <summary>The given bitstream is not supported.</summary>
         /// <remarks>
         /// <para>The bitstream was unable to be parsed at the highest level. The decoder</para>
-        /// <para>is unable to proceed. This error</para>
+        /// <para>is unable to proceed. This errorbe treated as fatal to the</para>
         /// <para>stream.</para>
         /// </remarks>
         VPX_CODEC_UNSUP_BITSTREAM = 5,
@@ -2624,16 +3230,16 @@ namespace vpxmd
         /// <remarks>
         /// <para>The decoder does not implement a feature required by the encoder. This</para>
         /// <para>return code should only be used for features that prevent future</para>
-        /// <para>pictures from being properly decoded. This error</para>
-        /// <para>fatal to the stream or</para>
+        /// <para>pictures from being properly decoded. This errorbe treated as</para>
+        /// <para>fatal to the stream orbe treated as fatal to the current GOP.</para>
         /// </remarks>
         VPX_CODEC_UNSUP_FEATURE = 6,
         /// <summary>The coded data for this stream is corrupt or incomplete</summary>
         /// <remarks>
         /// <para>There was a problem decoding the current frame.  This return code</para>
         /// <para>should only be used for failures that prevent future pictures from</para>
-        /// <para>being properly decoded. This error</para>
-        /// <para>stream or</para>
+        /// <para>being properly decoded. This errorbe treated as fatal to the</para>
+        /// <para>stream orbe treated as fatal to the current GOP. If decoding</para>
         /// <para>is continued for the current GOP, artifacts may be present.</para>
         /// </remarks>
         VPX_CODEC_CORRUPT_FRAME = 7,
@@ -2672,16 +3278,6 @@ namespace vpxmd
     /// <para>proper memory allocation.</para>
     /// <para>The available flags are specified by VPX_CODEC_USE_* defines.</para>
     /// </remarks>
-    /// <summary>Codec interface structure.</summary>
-    /// <remarks>
-    /// <para>Contains function pointers and other data private to the codec</para>
-    /// <para>implementation. This structure is opaque to the application.</para>
-    /// </remarks>
-    /// <summary>Codec private data structure.</summary>
-    /// <remarks>
-    /// <para>Contains data private to the codec implementation. This structure is opaque</para>
-    /// <para>to the application.</para>
-    /// </remarks>
     /// <summary>Iterator</summary>
     /// <remarks>Opaque storage used for iterating over lists.</remarks>
     /// <summary>
@@ -2691,7 +3287,7 @@ namespace vpxmd
     /// </summary>
     /// <summary>Codec context structure</summary>
     /// <remarks>
-    /// <para>All codecs</para>
+    /// <para>All codecssupport this context structure fully. In general,</para>
     /// <para>this data should be considered private to the codec algorithm, and</para>
     /// <para>not be manipulated or examined by the calling application. Applications</para>
     /// <para>may reference the 'name' member to get a printable description of the</para>
@@ -2699,97 +3295,147 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecIface
     {
-        [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
         {
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecIface> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecIface>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecIface> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecIface>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecIface managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecIface managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecIface __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecIface __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecIface(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecIface(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecIface __CreateInstance(global::vpxmd.VpxCodecIface.__Internal native, bool skipVTables = false)
+        internal static VpxCodecIface __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecIface(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecIface)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecIface.__Internal native)
+        internal static VpxCodecIface __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecIface.__Internal));
-            *(global::vpxmd.VpxCodecIface.__Internal*) ret = native;
+            return new VpxCodecIface(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecIface(global::vpxmd.VpxCodecIface.__Internal native, bool skipVTables = false)
+        private VpxCodecIface(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecIface(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
     }
 
     public unsafe partial class VpxCodecPriv
     {
-        [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
         {
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecPriv> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecPriv>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecPriv> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecPriv>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecPriv managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecPriv managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecPriv __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecPriv __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecPriv(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecPriv(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecPriv __CreateInstance(global::vpxmd.VpxCodecPriv.__Internal native, bool skipVTables = false)
+        internal static VpxCodecPriv __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecPriv(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecPriv)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecPriv.__Internal native)
+        internal static VpxCodecPriv __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecPriv.__Internal));
-            *(global::vpxmd.VpxCodecPriv.__Internal*) ret = native;
+            return new VpxCodecPriv(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecPriv(global::vpxmd.VpxCodecPriv.__Internal native, bool skipVTables = false)
+        private VpxCodecPriv(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecPriv(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
     }
 
     /// <summary>Codec context structure</summary>
     /// <remarks>
-    /// <para>All codecs</para>
+    /// <para>All codecssupport this context structure fully. In general,</para>
     /// <para>this data should be considered private to the codec algorithm, and</para>
     /// <para>not be manipulated or examined by the calling application. Applications</para>
     /// <para>may reference the 'name' member to get a printable description of the</para>
@@ -2797,34 +3443,19 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecCtx : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 56)]
+        [StructLayout(LayoutKind.Sequential, Size = 56)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr name;
-
-            [FieldOffset(8)]
-            internal global::System.IntPtr iface;
-
-            [FieldOffset(16)]
+            internal __IntPtr name;
+            internal __IntPtr iface;
             internal global::vpxmd.VpxCodecErrT err;
-
-            [FieldOffset(24)]
-            internal global::System.IntPtr err_detail;
-
-            [FieldOffset(32)]
+            internal __IntPtr err_detail;
             internal int init_flags;
-
-            [FieldOffset(40)]
             internal global::vpxmd.VpxCodecCtx.Config.__Internal config;
+            internal __IntPtr priv;
 
-            [FieldOffset(48)]
-            internal global::System.IntPtr priv;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_ctx@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_ctx@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
         public unsafe partial struct Config
@@ -2833,34 +3464,32 @@ namespace vpxmd
             public partial struct __Internal
             {
                 [FieldOffset(0)]
-                internal global::System.IntPtr dec;
+                internal __IntPtr dec;
 
                 [FieldOffset(0)]
-                internal global::System.IntPtr enc;
+                internal __IntPtr enc;
 
                 [FieldOffset(0)]
-                internal global::System.IntPtr raw;
+                internal __IntPtr raw;
 
-                [SuppressUnmanagedCodeSecurity]
-                [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                    EntryPoint="??0<unnamed-type-config>@vpx_codec_ctx@@QEAA@AEBT01@@Z")]
-                internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+                [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0<unnamed-type-config>@vpx_codec_ctx@@QEAA@AEBT01@@Z", CallingConvention = __CallingConvention.Cdecl)]
+                internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
             }
 
             private Config.__Internal __instance;
-            internal Config.__Internal __Instance { get { return __instance; } }
+            internal ref Config.__Internal __Instance => ref __instance;
 
-            internal static global::vpxmd.VpxCodecCtx.Config __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+            internal static Config __CreateInstance(__IntPtr native, bool skipVTables = false)
             {
-                return new global::vpxmd.VpxCodecCtx.Config(native.ToPointer(), skipVTables);
+                return new Config(native.ToPointer(), skipVTables);
             }
 
-            internal static global::vpxmd.VpxCodecCtx.Config __CreateInstance(global::vpxmd.VpxCodecCtx.Config.__Internal native, bool skipVTables = false)
+            internal static Config __CreateInstance(__Internal native, bool skipVTables = false)
             {
-                return new global::vpxmd.VpxCodecCtx.Config(native, skipVTables);
+                return new Config(native, skipVTables);
             }
 
-            private Config(global::vpxmd.VpxCodecCtx.Config.__Internal native, bool skipVTables = false)
+            private Config(__Internal native, bool skipVTables = false)
                 : this()
             {
                 __instance = native;
@@ -2875,10 +3504,10 @@ namespace vpxmd
                 : this()
             {
                 var ____arg0 = _0.__Instance;
-                var __arg0 = new global::System.IntPtr(&____arg0);
+                var __arg0 = new __IntPtr(&____arg0);
                 fixed (__Internal* __instancePtr = &__instance)
                 {
-                    __Internal.cctor(new global::System.IntPtr(__instancePtr), __arg0);
+                    __Internal.cctor(new __IntPtr(__instancePtr), __arg0);
                 }
             }
 
@@ -2886,11 +3515,7 @@ namespace vpxmd
             {
                 get
                 {
-                    global::vpxmd.VpxCodecDecCfg __result0;
-                    if (__instance.dec == IntPtr.Zero) __result0 = null;
-                    else if (global::vpxmd.VpxCodecDecCfg.NativeToManagedMap.ContainsKey(__instance.dec))
-                        __result0 = (global::vpxmd.VpxCodecDecCfg) global::vpxmd.VpxCodecDecCfg.NativeToManagedMap[__instance.dec];
-                    else __result0 = global::vpxmd.VpxCodecDecCfg.__CreateInstance(__instance.dec);
+                    var __result0 = global::vpxmd.VpxCodecDecCfg.__GetOrCreateInstance(__instance.dec, false);
                     return __result0;
                 }
             }
@@ -2899,16 +3524,12 @@ namespace vpxmd
             {
                 get
                 {
-                    global::vpxmd.VpxCodecEncCfg __result0;
-                    if (__instance.enc == IntPtr.Zero) __result0 = null;
-                    else if (global::vpxmd.VpxCodecEncCfg.NativeToManagedMap.ContainsKey(__instance.enc))
-                        __result0 = (global::vpxmd.VpxCodecEncCfg) global::vpxmd.VpxCodecEncCfg.NativeToManagedMap[__instance.enc];
-                    else __result0 = global::vpxmd.VpxCodecEncCfg.__CreateInstance(__instance.enc);
+                    var __result0 = global::vpxmd.VpxCodecEncCfg.__GetOrCreateInstance(__instance.enc, false);
                     return __result0;
                 }
             }
 
-            public global::System.IntPtr Raw
+            public __IntPtr Raw
             {
                 get
                 {
@@ -2917,190 +3538,233 @@ namespace vpxmd
             }
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCtx> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCtx>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCtx> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecCtx>();
 
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecCtx managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecCtx managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        private bool __name_OwnsNativeMemory = false;
+        private bool __err_detail_OwnsNativeMemory = false;
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecCtx __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecCtx __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecCtx(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecCtx(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecCtx __CreateInstance(global::vpxmd.VpxCodecCtx.__Internal native, bool skipVTables = false)
+        internal static VpxCodecCtx __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecCtx(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecCtx)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecCtx.__Internal native)
+        internal static VpxCodecCtx __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCtx.__Internal));
-            *(global::vpxmd.VpxCodecCtx.__Internal*) ret = native;
+            return new VpxCodecCtx(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecCtx(global::vpxmd.VpxCodecCtx.__Internal native, bool skipVTables = false)
+        private VpxCodecCtx(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecCtx(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecCtx()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCtx.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecCtx(global::vpxmd.VpxCodecCtx _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecCtx.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecCtx.__Internal*) __Instance) = *((global::vpxmd.VpxCodecCtx.__Internal*) _0.__Instance);
+            if (_0.__name_OwnsNativeMemory)
+                this.Name = _0.Name;
+            if (_0.__err_detail_OwnsNativeMemory)
+                this.ErrDetail = _0.ErrDetail;
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecCtx __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__name_OwnsNativeMemory)
+                Marshal.FreeHGlobal(((__Internal*)__Instance)->name);
+            if (__err_detail_OwnsNativeMemory)
+                Marshal.FreeHGlobal(((__Internal*)__Instance)->err_detail);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Printable interface name</summary>
         public string Name
         {
             get
             {
-                if (((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->name == global::System.IntPtr.Zero)
-                    return default(string);
-                var __retPtr = (byte*) ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->name;
-                int __length = 0;
-                while (*(__retPtr++) != 0) __length += sizeof(byte);
-                return global::System.Text.Encoding.UTF8.GetString((byte*) ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->name, __length);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ((__Internal*)__Instance)->name);
             }
 
             set
             {
-                byte[] __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(value);
-                fixed (byte* __bytePtr0 = __bytes0)
+                if (__name_OwnsNativeMemory)
+                    Marshal.FreeHGlobal(((__Internal*)__Instance)->name);
+                __name_OwnsNativeMemory = true;
+                if (value == null)
                 {
-                    ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->name = (global::System.IntPtr) new global::System.IntPtr(__bytePtr0);
+                    ((__Internal*)__Instance)->name = global::System.IntPtr.Zero;
+                    return;
                 }
+                var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(value);
+                var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+                Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+                Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+                ((__Internal*)__Instance)->name = (__IntPtr) __bytePtr0;
             }
         }
 
+        /// <summary>Interface pointers</summary>
         public global::vpxmd.VpxCodecIface Iface
         {
             get
             {
-                global::vpxmd.VpxCodecIface __result0;
-                if (((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->iface == IntPtr.Zero) __result0 = null;
-                else if (global::vpxmd.VpxCodecIface.NativeToManagedMap.ContainsKey(((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->iface))
-                    __result0 = (global::vpxmd.VpxCodecIface) global::vpxmd.VpxCodecIface.NativeToManagedMap[((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->iface];
-                else __result0 = global::vpxmd.VpxCodecIface.__CreateInstance(((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->iface);
+                var __result0 = global::vpxmd.VpxCodecIface.__GetOrCreateInstance(((__Internal*)__Instance)->iface, false);
                 return __result0;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->iface = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((__Internal*)__Instance)->iface = value is null ? __IntPtr.Zero : value.__Instance;
             }
         }
 
+        /// <summary>Last returned error</summary>
         public global::vpxmd.VpxCodecErrT Err
         {
             get
             {
-                return ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->err;
+                return ((__Internal*)__Instance)->err;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->err = value;
+                ((__Internal*)__Instance)->err = value;
             }
         }
 
+        /// <summary>Detailed info, if available</summary>
         public string ErrDetail
         {
             get
             {
-                if (((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->err_detail == global::System.IntPtr.Zero)
-                    return default(string);
-                var __retPtr = (byte*) ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->err_detail;
-                int __length = 0;
-                while (*(__retPtr++) != 0) __length += sizeof(byte);
-                return global::System.Text.Encoding.UTF8.GetString((byte*) ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->err_detail, __length);
+                return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ((__Internal*)__Instance)->err_detail);
             }
 
             set
             {
-                byte[] __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(value);
-                fixed (byte* __bytePtr0 = __bytes0)
+                if (__err_detail_OwnsNativeMemory)
+                    Marshal.FreeHGlobal(((__Internal*)__Instance)->err_detail);
+                __err_detail_OwnsNativeMemory = true;
+                if (value == null)
                 {
-                    ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->err_detail = (global::System.IntPtr) new global::System.IntPtr(__bytePtr0);
+                    ((__Internal*)__Instance)->err_detail = global::System.IntPtr.Zero;
+                    return;
                 }
+                var __bytes0 = global::System.Text.Encoding.UTF8.GetBytes(value);
+                var __bytePtr0 = Marshal.AllocHGlobal(__bytes0.Length + 1);
+                Marshal.Copy(__bytes0, 0, __bytePtr0, __bytes0.Length);
+                Marshal.WriteByte(__bytePtr0 + __bytes0.Length, 0);
+                ((__Internal*)__Instance)->err_detail = (__IntPtr) __bytePtr0;
             }
         }
 
+        /// <summary>Flags passed at init time</summary>
         public int InitFlags
         {
             get
             {
-                return ((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->init_flags;
+                return ((__Internal*)__Instance)->init_flags;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->init_flags = value;
+                ((__Internal*)__Instance)->init_flags = value;
             }
         }
 
+        /// <summary>Configuration pointer aliasing union</summary>
         public global::vpxmd.VpxCodecCtx.Config config
         {
             get
             {
-                return global::vpxmd.VpxCodecCtx.Config.__CreateInstance(((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->config);
+                return global::vpxmd.VpxCodecCtx.Config.__CreateInstance(((__Internal*)__Instance)->config);
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->config = value.__Instance;
+                ((__Internal*)__Instance)->config = value.__Instance;
             }
         }
 
+        /// <summary>Algorithm private storage</summary>
         public global::vpxmd.VpxCodecPriv Priv
         {
             get
             {
-                global::vpxmd.VpxCodecPriv __result0;
-                if (((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->priv == IntPtr.Zero) __result0 = null;
-                else if (global::vpxmd.VpxCodecPriv.NativeToManagedMap.ContainsKey(((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->priv))
-                    __result0 = (global::vpxmd.VpxCodecPriv) global::vpxmd.VpxCodecPriv.NativeToManagedMap[((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->priv];
-                else __result0 = global::vpxmd.VpxCodecPriv.__CreateInstance(((global::vpxmd.VpxCodecCtx.__Internal*) __Instance)->priv);
+                var __result0 = global::vpxmd.VpxCodecPriv.__GetOrCreateInstance(((__Internal*)__Instance)->priv, false);
                 return __result0;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecCtx.__Internal*)__Instance)->priv = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((__Internal*)__Instance)->priv = value is null ? __IntPtr.Zero : value.__Instance;
             }
         }
     }
@@ -3109,60 +3773,38 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_version")]
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_version", CallingConvention = __CallingConvention.Cdecl)]
             internal static extern int VpxCodecVersion();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_version_str")]
-            internal static extern global::System.IntPtr VpxCodecVersionStr();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_version_str", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVersionStr();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_version_extra_str")]
-            internal static extern global::System.IntPtr VpxCodecVersionExtraStr();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_version_extra_str", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVersionExtraStr();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_build_config")]
-            internal static extern global::System.IntPtr VpxCodecBuildConfig();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_build_config", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecBuildConfig();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_iface_name")]
-            internal static extern global::System.IntPtr VpxCodecIfaceName(global::System.IntPtr iface);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_iface_name", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecIfaceName(__IntPtr iface);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_err_to_string")]
-            internal static extern global::System.IntPtr VpxCodecErrToString(global::vpxmd.VpxCodecErrT err);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_err_to_string", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecErrToString(global::vpxmd.VpxCodecErrT err);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_error")]
-            internal static extern global::System.IntPtr VpxCodecError(global::System.IntPtr ctx);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_error", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecError(__IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_error_detail")]
-            internal static extern global::System.IntPtr VpxCodecErrorDetail(global::System.IntPtr ctx);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_error_detail", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecErrorDetail(__IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_destroy")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDestroy(global::System.IntPtr ctx);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_destroy", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDestroy(__IntPtr ctx);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_caps")]
-            internal static extern int VpxCodecGetCaps(global::System.IntPtr iface);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_caps", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern int VpxCodecGetCaps(__IntPtr iface);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_control_")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControl(global::System.IntPtr ctx, int ctrl_id);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_control_", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControl(__IntPtr ctx, int ctrl_id);
         }
 
         /// <summary>Return the version information (as an integer)</summary>
@@ -3176,8 +3818,8 @@ namespace vpxmd
         /// </remarks>
         public static int VpxCodecVersion()
         {
-            var __ret = __Internal.VpxCodecVersion();
-            return __ret;
+            var ___ret = __Internal.VpxCodecVersion();
+            return ___ret;
         }
 
         /// <summary>Return the version information (as a string)</summary>
@@ -3190,13 +3832,8 @@ namespace vpxmd
         /// </remarks>
         public static string VpxCodecVersionStr()
         {
-            var __ret = __Internal.VpxCodecVersionStr();
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var ___ret = __Internal.VpxCodecVersionStr();
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Return the version information (as a string)</summary>
@@ -3207,13 +3844,8 @@ namespace vpxmd
         /// </remarks>
         public static string VpxCodecVersionExtraStr()
         {
-            var __ret = __Internal.VpxCodecVersionExtraStr();
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var ___ret = __Internal.VpxCodecVersionExtraStr();
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Return the build configuration</summary>
@@ -3223,13 +3855,8 @@ namespace vpxmd
         /// </remarks>
         public static string VpxCodecBuildConfig()
         {
-            var __ret = __Internal.VpxCodecBuildConfig();
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var ___ret = __Internal.VpxCodecBuildConfig();
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Return the name for a given interface</summary>
@@ -3237,14 +3864,9 @@ namespace vpxmd
         /// <remarks>Returns a human readable string for name of the given codec interface.</remarks>
         public static string VpxCodecIfaceName(global::vpxmd.VpxCodecIface iface)
         {
-            var __arg0 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __ret = __Internal.VpxCodecIfaceName(__arg0);
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var __arg0 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var ___ret = __Internal.VpxCodecIfaceName(__arg0);
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Convert error number to printable string</summary>
@@ -3256,13 +3878,8 @@ namespace vpxmd
         /// </remarks>
         public static string VpxCodecErrToString(global::vpxmd.VpxCodecErrT err)
         {
-            var __ret = __Internal.VpxCodecErrToString(err);
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var ___ret = __Internal.VpxCodecErrToString(err);
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Retrieve error synopsis for codec context</summary>
@@ -3274,50 +3891,40 @@ namespace vpxmd
         /// </remarks>
         public static string VpxCodecError(global::vpxmd.VpxCodecCtx ctx)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecError(__arg0);
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecError(__arg0);
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Retrieve detailed error information for codec context</summary>
         /// <param name="ctx">Pointer to this instance's context.</param>
         /// <remarks>
         /// <para>Returns a human readable string providing detailed information about</para>
-        /// <para>the last error.</para>
-        /// <para>NULL</para>
+        /// <para>the last error. The returned string is only valid until the next</para>
+        /// <para>vpx_codec_* function call (except vpx_codec_error and</para>
+        /// <para>vpx_codec_error_detail) on the codec context.</para>
         /// <para>No detailed information is available.</para>
         /// </remarks>
         public static string VpxCodecErrorDetail(global::vpxmd.VpxCodecCtx ctx)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecErrorDetail(__arg0);
-            if (__ret == global::System.IntPtr.Zero)
-                return default(string);
-            var __retPtr = (byte*) __ret;
-            int __length = 0;
-            while (*(__retPtr++) != 0) __length += sizeof(byte);
-            return global::System.Text.Encoding.UTF8.GetString((byte*) __ret, __length);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecErrorDetail(__arg0);
+            return CppSharp.Runtime.MarshalUtil.GetString(global::System.Text.Encoding.UTF8, ___ret);
         }
 
         /// <summary>Destroy a codec instance</summary>
         /// <param name="ctx">Pointer to this instance's context</param>
         /// <remarks>
         /// <para>Destroys a codec context, freeing any associated memory buffers.</para>
-        /// <para>#VPX_CODEC_OK</para>
-        /// <para>The codec algorithm initialized.</para>
-        /// <para>#VPX_CODEC_MEM_ERROR</para>
-        /// <para>Memory allocation failed.</para>
+        /// <para>The codec instance has been destroyed.</para>
+        /// <para>ctx is a null pointer.</para>
+        /// <para>Codec context not initialized.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecDestroy(global::vpxmd.VpxCodecCtx ctx)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecDestroy(__arg0);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecDestroy(__arg0);
+            return ___ret;
         }
 
         /// <summary>Get the capabilities of an algorithm.</summary>
@@ -3325,9 +3932,9 @@ namespace vpxmd
         /// <remarks>Retrieves the capabilities bitfield from the algorithm's interface.</remarks>
         public static int VpxCodecGetCaps(global::vpxmd.VpxCodecIface iface)
         {
-            var __arg0 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __ret = __Internal.VpxCodecGetCaps(__arg0);
-            return __ret;
+            var __arg0 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var ___ret = __Internal.VpxCodecGetCaps(__arg0);
+            return ___ret;
         }
 
         /// <summary>Control algorithm</summary>
@@ -3343,18 +3950,15 @@ namespace vpxmd
         /// <para>be dispatched.</para>
         /// <para>Note that this function should not be used directly. Call the</para>
         /// <para>#vpx_codec_control wrapper macro instead.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>The control request was processed.</para>
-        /// <para>#VPX_CODEC_ERROR</para>
         /// <para>The control request was not processed.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>The data was not valid.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecControl(global::vpxmd.VpxCodecCtx ctx, int ctrl_id)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecControl(__arg0, ctrl_id);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecControl(__arg0, ctrl_id);
+            return ___ret;
         }
     }
 
@@ -3412,172 +4016,140 @@ namespace vpxmd
     /// <summary>Image Descriptor</summary>
     public unsafe partial class VpxImage : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 136)]
+        [StructLayout(LayoutKind.Sequential, Size = 136)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal global::vpxmd.VpxImgFmt fmt;
-
-            [FieldOffset(4)]
             internal global::vpxmd.VpxColorSpace cs;
-
-            [FieldOffset(8)]
             internal global::vpxmd.VpxColorRange range;
-
-            [FieldOffset(12)]
             internal uint w;
-
-            [FieldOffset(16)]
             internal uint h;
-
-            [FieldOffset(20)]
             internal uint bit_depth;
-
-            [FieldOffset(24)]
             internal uint d_w;
-
-            [FieldOffset(28)]
             internal uint d_h;
-
-            [FieldOffset(32)]
             internal uint r_w;
-
-            [FieldOffset(36)]
             internal uint r_h;
-
-            [FieldOffset(40)]
             internal uint x_chroma_shift;
-
-            [FieldOffset(44)]
             internal uint y_chroma_shift;
-
-            [FieldOffset(48)]
-            internal global::System.IntPtr planeY;
-
-            [FieldOffset(56)]
-            internal global::System.IntPtr planeU;
-
-            [FieldOffset(64)]
-            internal global::System.IntPtr planeV;
-
-            [FieldOffset(72)]
-            internal global::System.IntPtr planeT;
-
-            [FieldOffset(80)]
+            internal __IntPtr planes;
             internal fixed int stride[4];
-
-            [FieldOffset(96)]
             internal int bps;
-
-            [FieldOffset(104)]
-            internal global::System.IntPtr user_priv;
-
-            [FieldOffset(112)]
-            internal global::System.IntPtr img_data;
-
-            [FieldOffset(120)]
+            internal __IntPtr user_priv;
+            internal __IntPtr img_data;
             internal int img_data_owner;
-
-            [FieldOffset(124)]
             internal int self_allocd;
+            internal __IntPtr fb_priv;
 
-            [FieldOffset(128)]
-            internal global::System.IntPtr fb_priv;
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_image@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_image@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_img_alloc", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxImgAlloc(__IntPtr img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint align);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_img_alloc")]
-            internal static extern global::System.IntPtr VpxImgAlloc(global::System.IntPtr img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint align);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_img_wrap", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxImgWrap(__IntPtr img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint stride_align, byte* img_data);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_img_wrap")]
-            internal static extern global::System.IntPtr VpxImgWrap(global::System.IntPtr img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint stride_align, byte* img_data);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_img_set_rect", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern int VpxImgSetRect(__IntPtr img, uint x, uint y, uint w, uint h);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_img_set_rect")]
-            internal static extern int VpxImgSetRect(global::System.IntPtr img, uint x, uint y, uint w, uint h);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_img_flip", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern void VpxImgFlip(__IntPtr img);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_img_flip")]
-            internal static extern void VpxImgFlip(global::System.IntPtr img);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_img_free")]
-            internal static extern void VpxImgFree(global::System.IntPtr img);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_img_free", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern void VpxImgFree(__IntPtr img);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImage> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImage>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImage> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImage>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxImage managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxImage managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxImage __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxImage __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxImage(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxImage(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxImage __CreateInstance(global::vpxmd.VpxImage.__Internal native, bool skipVTables = false)
+        internal static VpxImage __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxImage(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxImage)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxImage.__Internal native)
+        internal static VpxImage __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImage.__Internal));
-            *(global::vpxmd.VpxImage.__Internal*) ret = native;
+            return new VpxImage(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxImage(global::vpxmd.VpxImage.__Internal native, bool skipVTables = false)
+        private VpxImage(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxImage(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxImage()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImage.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxImage(global::vpxmd.VpxImage _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImage.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxImage.__Internal*) __Instance) = *((global::vpxmd.VpxImage.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxImage __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
@@ -3607,13 +4179,9 @@ namespace vpxmd
         /// </remarks>
         public static global::vpxmd.VpxImage VpxImgAlloc(global::vpxmd.VpxImage img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint align)
         {
-            var __arg0 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
-            var __ret = __Internal.VpxImgAlloc(__arg0, fmt, d_w, d_h, align);
-            global::vpxmd.VpxImage __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxImage.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxImage) global::vpxmd.VpxImage.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxImage.__CreateInstance(__ret);
+            var __arg0 = img is null ? __IntPtr.Zero : img.__Instance;
+            var ___ret = __Internal.VpxImgAlloc(__arg0, fmt, d_w, d_h, align);
+            var __result0 = global::vpxmd.VpxImage.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
@@ -3640,13 +4208,9 @@ namespace vpxmd
         /// </remarks>
         public static global::vpxmd.VpxImage VpxImgWrap(global::vpxmd.VpxImage img, global::vpxmd.VpxImgFmt fmt, uint d_w, uint d_h, uint stride_align, byte* img_data)
         {
-            var __arg0 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
-            var __ret = __Internal.VpxImgWrap(__arg0, fmt, d_w, d_h, stride_align, img_data);
-            global::vpxmd.VpxImage __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxImage.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxImage) global::vpxmd.VpxImage.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxImage.__CreateInstance(__ret);
+            var __arg0 = img is null ? __IntPtr.Zero : img.__Instance;
+            var ___ret = __Internal.VpxImgWrap(__arg0, fmt, d_w, d_h, stride_align, img_data);
+            var __result0 = global::vpxmd.VpxImage.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
@@ -3656,16 +4220,17 @@ namespace vpxmd
         /// <param name="y">topmost row</param>
         /// <param name="w">width</param>
         /// <param name="h">height</param>
-        /// <returns>0 if the requested rectangle is valid, nonzero otherwise.</returns>
+        /// <returns>0 if the requested rectangle is valid, nonzero (-1) otherwise.</returns>
         /// <remarks>
         /// <para>Updates the displayed rectangle (aka viewport) on the image surface to</para>
-        /// <para>match the specified coordinates and size.</para>
+        /// <para>match the specified coordinates and size. Specifically, sets img-&gt;d_w,</para>
+        /// <para>img-&gt;d_h, and elements of the img-&gt;planes[] array.</para>
         /// </remarks>
         public static int VpxImgSetRect(global::vpxmd.VpxImage img, uint x, uint y, uint w, uint h)
         {
-            var __arg0 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
-            var __ret = __Internal.VpxImgSetRect(__arg0, x, y, w, h);
-            return __ret;
+            var __arg0 = img is null ? __IntPtr.Zero : img.__Instance;
+            var ___ret = __Internal.VpxImgSetRect(__arg0, x, y, w, h);
+            return ___ret;
         }
 
         /// <summary>Flip the image vertically (top for bottom)</summary>
@@ -3676,7 +4241,7 @@ namespace vpxmd
         /// </remarks>
         public static void VpxImgFlip(global::vpxmd.VpxImage img)
         {
-            var __arg0 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
+            var __arg0 = img is null ? __IntPtr.Zero : img.__Instance;
             __Internal.VpxImgFlip(__arg0);
         }
 
@@ -3685,273 +4250,211 @@ namespace vpxmd
         /// <remarks>Frees all allocated storage associated with an image descriptor.</remarks>
         public static void VpxImgFree(global::vpxmd.VpxImage img)
         {
-            var __arg0 = ReferenceEquals(img, null) ? global::System.IntPtr.Zero : img.__Instance;
+            var __arg0 = img is null ? __IntPtr.Zero : img.__Instance;
             __Internal.VpxImgFree(__arg0);
         }
 
+        /// <summary>Image Format</summary>
         public global::vpxmd.VpxImgFmt Fmt
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->fmt;
+                return ((__Internal*)__Instance)->fmt;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->fmt = value;
+                ((__Internal*)__Instance)->fmt = value;
             }
         }
 
+        /// <summary>Color Space</summary>
         public global::vpxmd.VpxColorSpace Cs
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->cs;
+                return ((__Internal*)__Instance)->cs;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->cs = value;
+                ((__Internal*)__Instance)->cs = value;
             }
         }
 
+        /// <summary>Color Range</summary>
         public global::vpxmd.VpxColorRange Range
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->range;
+                return ((__Internal*)__Instance)->range;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->range = value;
+                ((__Internal*)__Instance)->range = value;
             }
         }
 
+        /// <summary>Stored image width</summary>
         public uint W
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->w;
+                return ((__Internal*)__Instance)->w;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->w = value;
+                ((__Internal*)__Instance)->w = value;
             }
         }
 
+        /// <summary>Stored image height</summary>
         public uint H
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->h;
+                return ((__Internal*)__Instance)->h;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->h = value;
+                ((__Internal*)__Instance)->h = value;
             }
         }
 
+        /// <summary>Stored image bit-depth</summary>
         public uint BitDepth
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->bit_depth;
+                return ((__Internal*)__Instance)->bit_depth;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->bit_depth = value;
+                ((__Internal*)__Instance)->bit_depth = value;
             }
         }
 
+        /// <summary>Displayed image width</summary>
         public uint DW
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->d_w;
+                return ((__Internal*)__Instance)->d_w;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->d_w = value;
+                ((__Internal*)__Instance)->d_w = value;
             }
         }
 
+        /// <summary>Displayed image height</summary>
         public uint DH
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->d_h;
+                return ((__Internal*)__Instance)->d_h;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->d_h = value;
+                ((__Internal*)__Instance)->d_h = value;
             }
         }
 
+        /// <summary>Intended rendering image width</summary>
         public uint RW
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->r_w;
+                return ((__Internal*)__Instance)->r_w;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->r_w = value;
+                ((__Internal*)__Instance)->r_w = value;
             }
         }
 
+        /// <summary>Intended rendering image height</summary>
         public uint RH
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->r_h;
+                return ((__Internal*)__Instance)->r_h;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->r_h = value;
+                ((__Internal*)__Instance)->r_h = value;
             }
         }
 
+        /// <summary>subsampling order, X</summary>
         public uint XChromaShift
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->x_chroma_shift;
+                return ((__Internal*)__Instance)->x_chroma_shift;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->x_chroma_shift = value;
+                ((__Internal*)__Instance)->x_chroma_shift = value;
             }
         }
 
+        /// <summary>subsampling order, Y</summary>
         public uint YChromaShift
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->y_chroma_shift;
+                return ((__Internal*)__Instance)->y_chroma_shift;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->y_chroma_shift = value;
+                ((__Internal*)__Instance)->y_chroma_shift = value;
             }
         }
 
         /// <summary>pointer to the top left pixel for each plane</summary>
-        //private byte*[] __planes;
+        private byte*[] __planes;
 
-        //private bool __planesInitialised;
-        //public byte*[] Planes
-        //{
-        //    get
-        //    {
-        //        if (!__planesInitialised)
-        //        {
-        //            //__planes = null;
-
-        //            if (((global::vpxmd.VpxImage.__Internal*)__Instance)->planes != null)
-        //            {
-        //                __planes = new byte*[4];
-        //                for (int i = 0; i < 4; i++)
-        //                    __planes[i] = ((global::vpxmd.VpxImage.__Internal*)__Instance)->planes[i];
-        //            }
-
-        //            __planesInitialised = true;
-        //        }
-        //        return __planes;
-
-        //        //byte*[] __value = null;
-        //        //if (((global::vpxmd.VpxImage.__Internal*)__Instance)->planes != null)
-        //        //{
-        //        //    __value = new byte*[4];
-        //        //    for (int i = 0; i < 4; i++)
-        //        //        __value[i] = (byte*)((global::vpxmd.VpxImage.__Internal*)__Instance)->planes + i;
-        //        //}
-        //        //return __value;
-        //    }
-
-        //    set
-        //    {
-        //        __planes = value;
-        //        if (!__planesInitialised)
-        //        {
-        //            __planesInitialised = true;
-        //        }
-        //    }
-        //}
-
-        public global::System.IntPtr PlaneY
+        private bool __planesInitialised;
+        /// <summary>pointer to the top left pixel for each plane</summary>
+        public byte*[] Planes
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeY;
+                if (!__planesInitialised)
+                {
+                    __planes = null;
+                    __planesInitialised = true;
+                }
+                return __planes;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeY = (global::System.IntPtr)value;
+                __planes = value;
+                if (!__planesInitialised)
+                {
+                    __planesInitialised = true;
+                }
             }
         }
 
-        public global::System.IntPtr PlaneU
-        {
-            get
-            {
-                return ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeU;
-            }
-
-            set
-            {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeU = (global::System.IntPtr)value;
-            }
-        }
-
-        public global::System.IntPtr PlaneV
-        {
-            get
-            {
-                return ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeV;
-            }
-
-            set
-            {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeV = (global::System.IntPtr)value;
-            }
-        }
-
-        public global::System.IntPtr PlaneT
-        {
-            get
-            {
-                return ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeT;
-            }
-
-            set
-            {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->planeT = (global::System.IntPtr)value;
-            }
-        }
-
+        /// <summary>stride between rows for each plane</summary>
         public int[] Stride
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxImage.__Internal*) __Instance)->stride != null)
-                {
-                    __value = new int[4];
-                    for (int i = 0; i < 4; i++)
-                        __value[i] = ((global::vpxmd.VpxImage.__Internal*) __Instance)->stride[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->stride, 4);
             }
 
             set
@@ -3959,86 +4462,95 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 4; i++)
-                        ((global::vpxmd.VpxImage.__Internal*)__Instance)->stride[i] = value[i];
+                        ((__Internal*)__Instance)->stride[i] = value[i];
                 }
             }
         }
 
+        /// <summary>bits per sample (for packed formats)</summary>
         public int Bps
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->bps;
+                return ((__Internal*)__Instance)->bps;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->bps = value;
+                ((__Internal*)__Instance)->bps = value;
             }
         }
 
-        public global::System.IntPtr UserPriv
+        /// <summary>
+        /// <para>The following member may be set by the application to associate</para>
+        /// <para>data with this image.</para>
+        /// </summary>
+        public __IntPtr UserPriv
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->user_priv;
+                return ((__Internal*)__Instance)->user_priv;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->user_priv = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->user_priv = (__IntPtr) value;
             }
         }
 
+        /// <summary>private</summary>
         public byte* ImgData
         {
             get
             {
-                return (byte*) ((global::vpxmd.VpxImage.__Internal*) __Instance)->img_data;
+                return (byte*) ((__Internal*)__Instance)->img_data;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->img_data = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->img_data = (__IntPtr) value;
             }
         }
 
+        /// <summary>private</summary>
         public int ImgDataOwner
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->img_data_owner;
+                return ((__Internal*)__Instance)->img_data_owner;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->img_data_owner = value;
+                ((__Internal*)__Instance)->img_data_owner = value;
             }
         }
 
+        /// <summary>private</summary>
         public int SelfAllocd
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->self_allocd;
+                return ((__Internal*)__Instance)->self_allocd;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->self_allocd = value;
+                ((__Internal*)__Instance)->self_allocd = value;
             }
         }
 
-        public global::System.IntPtr FbPriv
+        /// <summary>Frame buffer data associated with the image.</summary>
+        public __IntPtr FbPriv
         {
             get
             {
-                return ((global::vpxmd.VpxImage.__Internal*) __Instance)->fb_priv;
+                return ((__Internal*)__Instance)->fb_priv;
             }
 
             set
             {
-                ((global::vpxmd.VpxImage.__Internal*)__Instance)->fb_priv = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->fb_priv = (__IntPtr) value;
             }
         }
     }
@@ -4046,145 +4558,3245 @@ namespace vpxmd
     /// <summary>Representation of a rectangle on a surface</summary>
     public unsafe partial class VpxImageRect : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal uint x;
-
-            [FieldOffset(4)]
             internal uint y;
-
-            [FieldOffset(8)]
             internal uint w;
-
-            [FieldOffset(12)]
             internal uint h;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_image_rect@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_image_rect@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImageRect> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImageRect>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImageRect> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxImageRect>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxImageRect managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxImageRect managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxImageRect __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxImageRect __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxImageRect(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxImageRect(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxImageRect __CreateInstance(global::vpxmd.VpxImageRect.__Internal native, bool skipVTables = false)
+        internal static VpxImageRect __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxImageRect(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxImageRect)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxImageRect.__Internal native)
+        internal static VpxImageRect __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImageRect.__Internal));
-            *(global::vpxmd.VpxImageRect.__Internal*) ret = native;
+            return new VpxImageRect(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxImageRect(global::vpxmd.VpxImageRect.__Internal native, bool skipVTables = false)
+        private VpxImageRect(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxImageRect(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxImageRect()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImageRect.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxImageRect(global::vpxmd.VpxImageRect _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxImageRect.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxImageRect.__Internal*) __Instance) = *((global::vpxmd.VpxImageRect.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxImageRect __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>leftmost column</summary>
         public uint X
         {
             get
             {
-                return ((global::vpxmd.VpxImageRect.__Internal*) __Instance)->x;
+                return ((__Internal*)__Instance)->x;
             }
 
             set
             {
-                ((global::vpxmd.VpxImageRect.__Internal*)__Instance)->x = value;
+                ((__Internal*)__Instance)->x = value;
             }
         }
 
+        /// <summary>topmost row</summary>
         public uint Y
         {
             get
             {
-                return ((global::vpxmd.VpxImageRect.__Internal*) __Instance)->y;
+                return ((__Internal*)__Instance)->y;
             }
 
             set
             {
-                ((global::vpxmd.VpxImageRect.__Internal*)__Instance)->y = value;
+                ((__Internal*)__Instance)->y = value;
             }
         }
 
+        /// <summary>width</summary>
         public uint W
         {
             get
             {
-                return ((global::vpxmd.VpxImageRect.__Internal*) __Instance)->w;
+                return ((__Internal*)__Instance)->w;
             }
 
             set
             {
-                ((global::vpxmd.VpxImageRect.__Internal*)__Instance)->w = value;
+                ((__Internal*)__Instance)->w = value;
             }
         }
 
+        /// <summary>height</summary>
         public uint H
         {
             get
             {
-                return ((global::vpxmd.VpxImageRect.__Internal*) __Instance)->h;
+                return ((__Internal*)__Instance)->h;
             }
 
             set
             {
-                ((global::vpxmd.VpxImageRect.__Internal*)__Instance)->h = value;
+                ((__Internal*)__Instance)->h = value;
             }
+        }
+    }
+
+    /// <summary>
+    /// <para>The control type of the inference API.</para>
+    /// <para>In VPX_RC_QP mode, the external rate control model determines the</para>
+    /// <para>quantization parameter (QP) for each frame.</para>
+    /// <para>In VPX_RC_GOP mode, the external rate control model determines the</para>
+    /// <para>group of picture (GOP) of the video sequence.</para>
+    /// <para>In VPX_RC_RDMULT mode, the external rate control model determines the</para>
+    /// <para>rate-distortion multiplier (rdmult) for the current frame.</para>
+    /// <para>In VPX_RC_GOP_QP mode, the external rate control model determines</para>
+    /// <para>both the QP and the GOP.</para>
+    /// <para>In VPX_RC_GOP_QP_RDMULT mode, the external rate control model determines</para>
+    /// <para>the QP, GOP and the rdmult.</para>
+    /// </summary>
+    public enum VpxRcType
+    {
+        VPX_RC_QP = 1,
+        VPX_RC_GOP = 2,
+        VPX_RC_RDMULT = 4,
+        VPX_RC_GOP_QP = 3,
+        VPX_RC_GOP_QP_RDMULT = 7
+    }
+
+    /// <summary>The rate control mode for the external rate control model.</summary>
+    public enum VpxExtRcMode
+    {
+        VPX_RC_QMODE = 0,
+        VPX_RC_VBR = 1,
+        VPX_RC_CQ = 2
+    }
+
+    /// <summary>Status returned by rate control callback functions.</summary>
+    public enum VpxRcStatus
+    {
+        VPX_RC_OK = 0,
+        VPX_RC_ERROR = 1
+    }
+
+    /// <summary>
+    /// <para>The control type of the inference API.</para>
+    /// <para>In VPX_RC_QP mode, the external rate control model determines the</para>
+    /// <para>quantization parameter (QP) for each frame.</para>
+    /// <para>In VPX_RC_GOP mode, the external rate control model determines the</para>
+    /// <para>group of picture (GOP) of the video sequence.</para>
+    /// <para>In VPX_RC_RDMULT mode, the external rate control model determines the</para>
+    /// <para>rate-distortion multiplier (rdmult) for the current frame.</para>
+    /// <para>In VPX_RC_GOP_QP mode, the external rate control model determines</para>
+    /// <para>both the QP and the GOP.</para>
+    /// <para>In VPX_RC_GOP_QP_RDMULT mode, the external rate control model determines</para>
+    /// <para>the QP, GOP and the rdmult.</para>
+    /// </summary>
+    /// <summary>The rate control mode for the external rate control model.</summary>
+    /// <summary>Abstract rate control model handler</summary>
+    /// <remarks>
+    /// <para>The encoder will receive the model handler from create_model() defined in</para>
+    /// <para>vpx_rc_funcs_t.</para>
+    /// </remarks>
+    /// <summary>Encode frame decision made by the external rate control model</summary>
+    /// <remarks>
+    /// <para>The encoder will receive the decision from the external rate control model</para>
+    /// <para>through get_encodeframe_decision() defined in vpx_rc_funcs_t.</para>
+    /// <para>If q_index = VPX_DEFAULT_Q, the encoder will use libvpx's default q.</para>
+    /// <para>If max_frame_size = 0, the encoding ignores max frame size limit.</para>
+    /// <para>If max_frame_size = -1, the encoding uses VP9's max frame size as the limit.</para>
+    /// <para>If the encoded frame size is larger than max_frame_size, the frame is</para>
+    /// <para>recoded to meet the size limit, following VP9's recoding principles.</para>
+    /// </remarks>
+    /// <summary>Information for the frame to be encoded.</summary>
+    /// <remarks>
+    /// <para>The encoder will send the information to external rate control model through</para>
+    /// <para>get_encodeframe_decision() defined in vpx_rc_funcs_t.</para>
+    /// </remarks>
+    /// <summary>Frame coding result</summary>
+    /// <remarks>
+    /// <para>The encoder will send the result to the external rate control model through</para>
+    /// <para>update_encodeframe_result() defined in vpx_rc_funcs_t.</para>
+    /// </remarks>
+    /// <summary>Status returned by rate control callback functions.</summary>
+    /// <summary>
+    /// <para>First pass frame stats</para>
+    /// <para>This is a mirror of vp9's FIRSTPASS_STATS except that spatial_layer_id is</para>
+    /// <para>omitted</para>
+    /// </summary>
+    /// <summary>Collection of first pass frame stats</summary>
+    /// <summary>Encode config sent to external rate control model</summary>
+    /// <summary>
+    /// <para>Information passed to the external rate control model to</para>
+    /// <para>help make GOP decisions.</para>
+    /// </summary>
+    /// <summary>
+    /// <para>The decision made by the external rate control model to set the</para>
+    /// <para>group of picture.</para>
+    /// </summary>
+    /// <summary>Create an external rate control model callback prototype</summary>
+    /// <param name="priv">Callback's private data</param>
+    /// <param name="ratectrl_config">Pointer to vpx_rc_config_t</param>
+    /// <param name="rate_ctrl_model_ptr">Pointer to vpx_rc_model_t</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to create an external rate control</para>
+    /// <para>model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcCreateModelCbFnT(__IntPtr priv, __IntPtr ratectrl_config, __IntPtr* rate_ctrl_model_ptr);
+
+    /// <summary>
+    /// <para>Send first pass stats to the external rate control model callback</para>
+    /// <para>prototype</para>
+    /// </summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="first_pass_stats">first pass stats</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to send first pass stats to the</para>
+    /// <para>external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcSendFirstpassStatsCbFnT(__IntPtr rate_ctrl_model, __IntPtr first_pass_stats);
+
+    /// <summary>
+    /// <para>Send TPL stats for the current GOP to the external rate control model</para>
+    /// <para>callback prototype</para>
+    /// </summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="tpl_gop_stats">TPL stats for current GOP</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to send TPL stats for the GOP to the</para>
+    /// <para>external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcSendTplGopStatsCbFnT(__IntPtr rate_ctrl_model, __IntPtr tpl_gop_stats);
+
+    /// <summary>Receive encode frame decision callback prototype</summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="encode_frame_info">information of the coding frame</param>
+    /// <param name="frame_decision">encode decision of the coding frame</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to receive encode frame decision from</para>
+    /// <para>the external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcGetEncodeframeDecisionCbFnT(__IntPtr rate_ctrl_model, __IntPtr encode_frame_info, __IntPtr frame_decision);
+
+    /// <summary>Update encode frame result callback prototype</summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="encode_frame_result">encode result of the coding frame</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to update encode frame result to the</para>
+    /// <para>external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcUpdateEncodeframeResultCbFnT(__IntPtr rate_ctrl_model, __IntPtr encode_frame_result);
+
+    /// <summary>Get the GOP structure from the external rate control model.</summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="gop_info">information collected from the encoder</param>
+    /// <param name="gop_decision">GOP decision from the model</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to get GOP decisions from</para>
+    /// <para>the external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcGetGopDecisionCbFnT(__IntPtr rate_ctrl_model, __IntPtr gop_info, __IntPtr gop_decision);
+
+    /// <summary>Get the frame rdmult from the external rate control model.</summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <param name="frame_info">information collected from the encoder</param>
+    /// <param name="rdmult">frame rate-distortion multiplier from the model</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to get rdmult from</para>
+    /// <para>the external rate control model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcGetFrameRdmultCbFnT(__IntPtr rate_ctrl_model, __IntPtr frame_info, int* rdmult);
+
+    /// <summary>Delete the external rate control model callback prototype</summary>
+    /// <param name="rate_ctrl_model">rate control model</param>
+    /// <remarks>
+    /// <para>This callback is invoked by the encoder to delete the external rate control</para>
+    /// <para>model.</para>
+    /// </remarks>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate global::vpxmd.VpxRcStatus VpxRcDeleteModelCbFnT(__IntPtr rate_ctrl_model);
+
+    /// <summary>Callback function set for external rate control.</summary>
+    /// <remarks>
+    /// <para>The user can enable external rate control by registering</para>
+    /// <para>a set of callback functions with the codec control flag</para>
+    /// <para>VP9E_SET_EXTERNAL_RATE_CONTROL.</para>
+    /// </remarks>
+    /// <summary>Encode frame decision made by the external rate control model</summary>
+    /// <remarks>
+    /// <para>The encoder will receive the decision from the external rate control model</para>
+    /// <para>through get_encodeframe_decision() defined in vpx_rc_funcs_t.</para>
+    /// <para>If q_index = VPX_DEFAULT_Q, the encoder will use libvpx's default q.</para>
+    /// <para>If max_frame_size = 0, the encoding ignores max frame size limit.</para>
+    /// <para>If max_frame_size = -1, the encoding uses VP9's max frame size as the limit.</para>
+    /// <para>If the encoded frame size is larger than max_frame_size, the frame is</para>
+    /// <para>recoded to meet the size limit, following VP9's recoding principles.</para>
+    /// </remarks>
+    public unsafe partial class VpxRcEncodeframeDecision : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
+        public partial struct __Internal
+        {
+            internal int q_index;
+            internal int max_frame_size;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_encodeframe_decision@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeDecision> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeDecision>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcEncodeframeDecision managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcEncodeframeDecision managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcEncodeframeDecision __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcEncodeframeDecision(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcEncodeframeDecision __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcEncodeframeDecision)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcEncodeframeDecision __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcEncodeframeDecision(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcEncodeframeDecision(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcEncodeframeDecision(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcEncodeframeDecision()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeDecision.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcEncodeframeDecision(global::vpxmd.VpxRcEncodeframeDecision _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeDecision.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcEncodeframeDecision.__Internal*) __Instance) = *((global::vpxmd.VpxRcEncodeframeDecision.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>Quantizer step index [0..255]</summary>
+        public int QIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->q_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->q_index = value;
+            }
+        }
+
+        /// <summary>Maximal frame size allowed to encode a frame</summary>
+        public int MaxFrameSize
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->max_frame_size;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->max_frame_size = value;
+            }
+        }
+    }
+
+    /// <summary>Information for the frame to be encoded.</summary>
+    /// <remarks>
+    /// <para>The encoder will send the information to external rate control model through</para>
+    /// <para>get_encodeframe_decision() defined in vpx_rc_funcs_t.</para>
+    /// </remarks>
+    public unsafe partial class VpxRcEncodeframeInfo : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 48)]
+        public partial struct __Internal
+        {
+            internal int frame_type;
+            internal int show_index;
+            internal int coding_index;
+            internal int gop_index;
+            internal fixed int ref_frame_coding_indexes[3];
+            internal fixed int ref_frame_valid_list[3];
+            internal int gop_size;
+            internal int use_alt_ref;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_encodeframe_info@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeInfo> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeInfo>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcEncodeframeInfo managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcEncodeframeInfo managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcEncodeframeInfo __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcEncodeframeInfo(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcEncodeframeInfo __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcEncodeframeInfo)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcEncodeframeInfo __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcEncodeframeInfo(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcEncodeframeInfo(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcEncodeframeInfo(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcEncodeframeInfo()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeInfo.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcEncodeframeInfo(global::vpxmd.VpxRcEncodeframeInfo _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeInfo.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcEncodeframeInfo.__Internal*) __Instance) = *((global::vpxmd.VpxRcEncodeframeInfo.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// <para>0: Key frame</para>
+        /// <para>1: Inter frame</para>
+        /// <para>2: Alternate reference frame</para>
+        /// <para>3: Overlay frame</para>
+        /// <para>4: Golden frame</para>
+        /// </summary>
+        public int FrameType
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_type;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_type = value;
+            }
+        }
+
+        /// <summary>display index, starts from zero</summary>
+        public int ShowIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->show_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->show_index = value;
+            }
+        }
+
+        /// <summary>coding index, starts from zero</summary>
+        public int CodingIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->coding_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->coding_index = value;
+            }
+        }
+
+        /// <summary>index of the current frame in this group of picture, starts from zero.</summary>
+        public int GopIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->gop_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->gop_index = value;
+            }
+        }
+
+        /// <summary>three reference frames' coding indices</summary>
+        public int[] RefFrameCodingIndexes
+        {
+            get
+            {
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->ref_frame_coding_indexes, 3);
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    for (int i = 0; i < 3; i++)
+                        ((__Internal*)__Instance)->ref_frame_coding_indexes[i] = value[i];
+                }
+            }
+        }
+
+        /// <summary>
+        /// <para>The validity of the three reference frames.</para>
+        /// <para>0: Invalid</para>
+        /// <para>1: Valid</para>
+        /// </summary>
+        public int[] RefFrameValidList
+        {
+            get
+            {
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->ref_frame_valid_list, 3);
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    for (int i = 0; i < 3; i++)
+                        ((__Internal*)__Instance)->ref_frame_valid_list[i] = value[i];
+                }
+            }
+        }
+
+        /// <summary>The length of the current GOP.</summary>
+        public int GopSize
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->gop_size;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->gop_size = value;
+            }
+        }
+
+        /// <summary>Whether the current GOP uses an alt ref.</summary>
+        public int UseAltRef
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->use_alt_ref;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->use_alt_ref = value;
+            }
+        }
+    }
+
+    /// <summary>Frame coding result</summary>
+    /// <remarks>
+    /// <para>The encoder will send the result to the external rate control model through</para>
+    /// <para>update_encodeframe_result() defined in vpx_rc_funcs_t.</para>
+    /// </remarks>
+    public unsafe partial class VpxRcEncodeframeResult : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 32)]
+        public partial struct __Internal
+        {
+            internal long sse;
+            internal long bit_count;
+            internal long pixel_count;
+            internal int actual_encoding_qindex;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_encodeframe_result@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeResult> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcEncodeframeResult>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcEncodeframeResult managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcEncodeframeResult managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcEncodeframeResult __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcEncodeframeResult(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcEncodeframeResult __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcEncodeframeResult)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcEncodeframeResult __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcEncodeframeResult(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcEncodeframeResult(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcEncodeframeResult(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcEncodeframeResult()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeResult.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcEncodeframeResult(global::vpxmd.VpxRcEncodeframeResult _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcEncodeframeResult.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcEncodeframeResult.__Internal*) __Instance) = *((global::vpxmd.VpxRcEncodeframeResult.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>sum of squared error of the reconstructed frame</summary>
+        public long Sse
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->sse;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->sse = value;
+            }
+        }
+
+        /// <summary>number of bits spent on coding the frame</summary>
+        public long BitCount
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->bit_count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->bit_count = value;
+            }
+        }
+
+        /// <summary>number of pixels in YUV planes of the frame</summary>
+        public long PixelCount
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pixel_count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pixel_count = value;
+            }
+        }
+
+        /// <summary>the actual qindex used to encode the frame</summary>
+        public int ActualEncodingQindex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->actual_encoding_qindex;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->actual_encoding_qindex = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>First pass frame stats</para>
+    /// <para>This is a mirror of vp9's FIRSTPASS_STATS except that spatial_layer_id is</para>
+    /// <para>omitted</para>
+    /// </summary>
+    public unsafe partial class VpxRcFrameStats : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 208)]
+        public partial struct __Internal
+        {
+            internal double frame;
+            internal double weight;
+            internal double intra_error;
+            internal double coded_error;
+            internal double sr_coded_error;
+            internal double frame_noise_energy;
+            internal double pcnt_inter;
+            internal double pcnt_motion;
+            internal double pcnt_second_ref;
+            internal double pcnt_neutral;
+            internal double pcnt_intra_low;
+            internal double pcnt_intra_high;
+            internal double intra_skip_pct;
+            internal double intra_smooth_pct;
+            internal double inactive_zone_rows;
+            internal double inactive_zone_cols;
+            internal double MVr;
+            internal double mvr_abs;
+            internal double MVc;
+            internal double mvc_abs;
+            internal double MVrv;
+            internal double MVcv;
+            internal double mv_in_out_count;
+            internal double duration;
+            internal double count;
+            internal double new_mv_count;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_frame_stats@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFrameStats> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFrameStats>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcFrameStats managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcFrameStats managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcFrameStats __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcFrameStats(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcFrameStats __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcFrameStats)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcFrameStats __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcFrameStats(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcFrameStats(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcFrameStats(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcFrameStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFrameStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcFrameStats(global::vpxmd.VpxRcFrameStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFrameStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcFrameStats.__Internal*) __Instance) = *((global::vpxmd.VpxRcFrameStats.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// <para>Frame number in display order, if stats are for a single frame.</para>
+        /// <para>No real meaning for a collection of frames.</para>
+        /// </summary>
+        public double Frame
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Weight assigned to this frame (or total weight for the collection of</para>
+        /// <para>frames) currently based on intra factor and brightness factor. This is used</para>
+        /// <para>to distribute bits between easier and harder frames.</para>
+        /// </summary>
+        public double Weight
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->weight;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->weight = value;
+            }
+        }
+
+        /// <summary>Intra prediction error.</summary>
+        public double IntraError
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->intra_error;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->intra_error = value;
+            }
+        }
+
+        /// <summary>Best of intra pred error and inter pred error using last frame as ref.</summary>
+        public double CodedError
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->coded_error;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->coded_error = value;
+            }
+        }
+
+        /// <summary>Best of intra pred error and inter pred error using golden frame as ref.</summary>
+        public double SrCodedError
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->sr_coded_error;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->sr_coded_error = value;
+            }
+        }
+
+        /// <summary>Estimate the noise energy of the current frame.</summary>
+        public double FrameNoiseEnergy
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_noise_energy;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_noise_energy = value;
+            }
+        }
+
+        /// <summary>Percentage of blocks with inter pred error&lt;intra pred error.</summary>
+        public double PcntInter
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_inter;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_inter = value;
+            }
+        }
+
+        /// <summary>Percentage of blocks using (inter prediction and) non-zero motion vectors.</summary>
+        public double PcntMotion
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_motion;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_motion = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks where golden frame was better than last or intra:</para>
+        /// <para>inter pred error using golden frame&lt;inter pred error using last frame and</para>
+        /// <para>inter pred error using golden frame&lt;intra pred error</para>
+        /// </summary>
+        public double PcntSecondRef
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_second_ref;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_second_ref = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks where intra and inter prediction errors were very</para>
+        /// <para>close.</para>
+        /// </summary>
+        public double PcntNeutral
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_neutral;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_neutral = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks that have intra error&lt;inter error and inter error&lt;</para>
+        /// <para>LOW_I_THRESH</para>
+        /// <para>- bit_depth 8: LOW_I_THRESH = 24000</para>
+        /// <para>- bit_depth 10: LOW_I_THRESH = 24000&lt;&lt;4</para>
+        /// <para>- bit_depth 12: LOW_I_THRESH = 24000&lt;&lt;8</para>
+        /// </summary>
+        public double PcntIntraLow
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_intra_low;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_intra_low = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks that have intra error&lt;inter error and intra error&lt;</para>
+        /// <para>LOW_I_THRESH but inter error &gt;= LOW_I_THRESH LOW_I_THRESH</para>
+        /// <para>- bit_depth 8: LOW_I_THRESH = 24000</para>
+        /// <para>- bit_depth 10: LOW_I_THRESH = 24000&lt;&lt;4</para>
+        /// <para>- bit_depth 12: LOW_I_THRESH = 24000&lt;&lt;8</para>
+        /// </summary>
+        public double PcntIntraHigh
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->pcnt_intra_high;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->pcnt_intra_high = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks that have almost no intra error residual</para>
+        /// <para>(i.e. are in effect completely flat and untextured in the intra</para>
+        /// <para>domain). In natural videos this is uncommon, but it is much more</para>
+        /// <para>common in animations, graphics and screen content, so may be used</para>
+        /// <para>as a signal to detect these types of content.</para>
+        /// </summary>
+        public double IntraSkipPct
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->intra_skip_pct;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->intra_skip_pct = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Percentage of blocks that have intra error&lt;SMOOTH_INTRA_THRESH</para>
+        /// <para>- bit_depth 8:  SMOOTH_INTRA_THRESH = 4000</para>
+        /// <para>- bit_depth 10: SMOOTH_INTRA_THRESH = 4000&lt;&lt;4</para>
+        /// <para>- bit_depth 12: SMOOTH_INTRA_THRESH = 4000&lt;&lt;8</para>
+        /// </summary>
+        public double IntraSmoothPct
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->intra_smooth_pct;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->intra_smooth_pct = value;
+            }
+        }
+
+        /// <summary>Image mask rows top and bottom.</summary>
+        public double InactiveZoneRows
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->inactive_zone_rows;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->inactive_zone_rows = value;
+            }
+        }
+
+        /// <summary>Image mask columns at left and right edges.</summary>
+        public double InactiveZoneCols
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->inactive_zone_cols;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->inactive_zone_cols = value;
+            }
+        }
+
+        /// <summary>Mean of row motion vectors.</summary>
+        public double MVr
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->MVr;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->MVr = value;
+            }
+        }
+
+        /// <summary>Mean of absolute value of row motion vectors.</summary>
+        public double MvrAbs
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->mvr_abs;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->mvr_abs = value;
+            }
+        }
+
+        /// <summary>Mean of column motion vectors.</summary>
+        public double MVc
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->MVc;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->MVc = value;
+            }
+        }
+
+        /// <summary>Mean of absolute value of column motion vectors.</summary>
+        public double MvcAbs
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->mvc_abs;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->mvc_abs = value;
+            }
+        }
+
+        /// <summary>Variance of row motion vectors.</summary>
+        public double MVrv
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->MVrv;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->MVrv = value;
+            }
+        }
+
+        /// <summary>Variance of column motion vectors.</summary>
+        public double MVcv
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->MVcv;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->MVcv = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Value in range [-1,1] indicating fraction of row and column motion vectors</para>
+        /// <para>that point inwards (negative MV value) or outwards (positive MV value).</para>
+        /// <para>For example, value of 1 indicates, all row/column MVs are inwards.</para>
+        /// </summary>
+        public double MvInOutCount
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->mv_in_out_count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->mv_in_out_count = value;
+            }
+        }
+
+        /// <summary>Duration of the frame / collection of frames.</summary>
+        public double Duration
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->duration;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->duration = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>1.0 if stats are for a single frame, or</para>
+        /// <para>number of frames whose stats are accumulated.</para>
+        /// </summary>
+        public double Count
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->count = value;
+            }
+        }
+
+        /// <summary>Number of new mv in a frame.</summary>
+        public double NewMvCount
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->new_mv_count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->new_mv_count = value;
+            }
+        }
+    }
+
+    /// <summary>Collection of first pass frame stats</summary>
+    public unsafe partial class VpxRcFirstpassStats : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
+        public partial struct __Internal
+        {
+            internal __IntPtr frame_stats;
+            internal int num_frames;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_firstpass_stats@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFirstpassStats> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFirstpassStats>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcFirstpassStats managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcFirstpassStats managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcFirstpassStats __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcFirstpassStats(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcFirstpassStats __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcFirstpassStats)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcFirstpassStats __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcFirstpassStats(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcFirstpassStats(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcFirstpassStats(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcFirstpassStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFirstpassStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcFirstpassStats(global::vpxmd.VpxRcFirstpassStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFirstpassStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcFirstpassStats.__Internal*) __Instance) = *((global::vpxmd.VpxRcFirstpassStats.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// <para>Pointer to first pass frame stats.</para>
+        /// <para>The pointed array of vpx_rc_frame_stats_t should have length equal to</para>
+        /// <para>number of show frames in the video.</para>
+        /// </summary>
+        public global::vpxmd.VpxRcFrameStats FrameStats
+        {
+            get
+            {
+                var __result0 = global::vpxmd.VpxRcFrameStats.__GetOrCreateInstance(((__Internal*)__Instance)->frame_stats, false);
+                return __result0;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_stats = value is null ? __IntPtr.Zero : value.__Instance;
+            }
+        }
+
+        /// <summary>Number of show frames in the video.</summary>
+        public int NumFrames
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->num_frames;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->num_frames = value;
+            }
+        }
+    }
+
+    /// <summary>Encode config sent to external rate control model</summary>
+    public unsafe partial class VpxRcConfig : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 44)]
+        public partial struct __Internal
+        {
+            internal int frame_width;
+            internal int frame_height;
+            internal int show_frame_count;
+            internal int max_gf_interval;
+            internal int min_gf_interval;
+            internal int target_bitrate_kbps;
+            internal int frame_rate_num;
+            internal int frame_rate_den;
+            internal global::vpxmd.VpxExtRcMode rc_mode;
+            internal int overshoot_percent;
+            internal int undershoot_percent;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_config@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcConfig> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcConfig>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcConfig managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcConfig managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcConfig __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcConfig(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcConfig __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcConfig)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcConfig __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcConfig(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcConfig(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcConfig(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcConfig()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcConfig.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcConfig(global::vpxmd.VpxRcConfig _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcConfig.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcConfig.__Internal*) __Instance) = *((global::vpxmd.VpxRcConfig.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>frame width</summary>
+        public int FrameWidth
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_width;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_width = value;
+            }
+        }
+
+        /// <summary>frame height</summary>
+        public int FrameHeight
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_height;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_height = value;
+            }
+        }
+
+        /// <summary>number of visible frames in the video</summary>
+        public int ShowFrameCount
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->show_frame_count;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->show_frame_count = value;
+            }
+        }
+
+        /// <summary>max GOP size in number of show frames</summary>
+        public int MaxGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->max_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->max_gf_interval = value;
+            }
+        }
+
+        /// <summary>min GOP size in number of show frames</summary>
+        public int MinGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->min_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->min_gf_interval = value;
+            }
+        }
+
+        /// <summary>Target bitrate in kilobytes per second</summary>
+        public int TargetBitrateKbps
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->target_bitrate_kbps;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->target_bitrate_kbps = value;
+            }
+        }
+
+        /// <summary>numerator of frame rate</summary>
+        public int FrameRateNum
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_rate_num;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_rate_num = value;
+            }
+        }
+
+        /// <summary>denominator of frame rate</summary>
+        public int FrameRateDen
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_rate_den;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_rate_den = value;
+            }
+        }
+
+        /// <summary>Q mode or VBR mode</summary>
+        public global::vpxmd.VpxExtRcMode RcMode
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->rc_mode;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->rc_mode = value;
+            }
+        }
+
+        /// <summary>for VBR mode only</summary>
+        public int OvershootPercent
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->overshoot_percent;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->overshoot_percent = value;
+            }
+        }
+
+        /// <summary>for VBR mode only</summary>
+        public int UndershootPercent
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->undershoot_percent;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->undershoot_percent = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>Information passed to the external rate control model to</para>
+    /// <para>help make GOP decisions.</para>
+    /// </summary>
+    public unsafe partial class VpxRcGopInfo : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 52)]
+        public partial struct __Internal
+        {
+            internal int min_gf_interval;
+            internal int max_gf_interval;
+            internal int active_min_gf_interval;
+            internal int active_max_gf_interval;
+            internal int allow_alt_ref;
+            internal int is_key_frame;
+            internal int last_gop_use_alt_ref;
+            internal int frames_since_key;
+            internal int frames_to_key;
+            internal int lag_in_frames;
+            internal int show_index;
+            internal int coding_index;
+            internal int gop_global_index;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_gop_info@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcGopInfo> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcGopInfo>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcGopInfo managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcGopInfo managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcGopInfo __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcGopInfo(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcGopInfo __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcGopInfo)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcGopInfo __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcGopInfo(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcGopInfo(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcGopInfo(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcGopInfo()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcGopInfo.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcGopInfo(global::vpxmd.VpxRcGopInfo _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcGopInfo.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcGopInfo.__Internal*) __Instance) = *((global::vpxmd.VpxRcGopInfo.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// <para>Minimum allowed gf interval, fixed for the whole clip.</para>
+        /// <para>Note that it will be modified to match vp9's level constraints</para>
+        /// <para>in the encoder.</para>
+        /// <para>The level constraint is defined in vp9_encoder.c:</para>
+        /// <para>const Vp9LevelSpec vp9_level_defs[VP9_LEVELS].</para>
+        /// </summary>
+        public int MinGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->min_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->min_gf_interval = value;
+            }
+        }
+
+        /// <summary>Maximum allowed gf interval, fixed for the whole clip.</summary>
+        public int MaxGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->max_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->max_gf_interval = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Minimum allowed gf interval for the current GOP, determined</para>
+        /// <para>by the encoder.</para>
+        /// </summary>
+        public int ActiveMinGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->active_min_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->active_min_gf_interval = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Maximum allowed gf interval for the current GOP, determined</para>
+        /// <para>by the encoder.</para>
+        /// </summary>
+        public int ActiveMaxGfInterval
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->active_max_gf_interval;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->active_max_gf_interval = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Whether to allow the use of alt ref, determined by the encoder.</para>
+        /// <para>It is fixed for the entire encode.</para>
+        /// <para>See function &quot;is_altref_enabled&quot; in vp9_encoder.h.</para>
+        /// </summary>
+        public int AllowAltRef
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->allow_alt_ref;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->allow_alt_ref = value;
+            }
+        }
+
+        /// <summary>Is the current frame a key frame.</summary>
+        public int IsKeyFrame
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->is_key_frame;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->is_key_frame = value;
+            }
+        }
+
+        /// <summary>Does the previous gop use alt ref or not.</summary>
+        public int LastGopUseAltRef
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->last_gop_use_alt_ref;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->last_gop_use_alt_ref = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Current frame distance to the last keyframe, e.g., if Nth frame is a key,</para>
+        /// <para>then the value of the N+1 th frame is 1.</para>
+        /// </summary>
+        public int FramesSinceKey
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frames_since_key;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frames_since_key = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Current frame distance to the next keyframe, e.g. if Nth frame is a key,</para>
+        /// <para>then the value of frame N - 1 is 1.</para>
+        /// </summary>
+        public int FramesToKey
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frames_to_key;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frames_to_key = value;
+            }
+        }
+
+        /// <summary>Number of lookahead source frames.</summary>
+        public int LagInFrames
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->lag_in_frames;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->lag_in_frames = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Display index (temporal stamp) of this frame in the whole clip,</para>
+        /// <para>starts from zero.</para>
+        /// </summary>
+        public int ShowIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->show_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->show_index = value;
+            }
+        }
+
+        /// <summary>Coding index of this frame in the whole clip, starts from zero.</summary>
+        public int CodingIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->coding_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->coding_index = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>The index of the current gop, starts from zero, resets to zero</para>
+        /// <para>when a keyframe is set.</para>
+        /// </summary>
+        public int GopGlobalIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->gop_global_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->gop_global_index = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// <para>The decision made by the external rate control model to set the</para>
+    /// <para>group of picture.</para>
+    /// </summary>
+    public unsafe partial class VpxRcGopDecision : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
+        public partial struct __Internal
+        {
+            internal int gop_coding_frames;
+            internal int use_alt_ref;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_gop_decision@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcGopDecision> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcGopDecision>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcGopDecision managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcGopDecision managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcGopDecision __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcGopDecision(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcGopDecision __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcGopDecision)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcGopDecision __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcGopDecision(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcGopDecision(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcGopDecision(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcGopDecision()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcGopDecision.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcGopDecision(global::vpxmd.VpxRcGopDecision _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcGopDecision.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcGopDecision.__Internal*) __Instance) = *((global::vpxmd.VpxRcGopDecision.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>The number of frames of this GOP</summary>
+        public int GopCodingFrames
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->gop_coding_frames;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->gop_coding_frames = value;
+            }
+        }
+
+        /// <summary>Whether to use alt ref for this GOP</summary>
+        public int UseAltRef
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->use_alt_ref;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->use_alt_ref = value;
+            }
+        }
+    }
+
+    /// <summary>Callback function set for external rate control.</summary>
+    /// <remarks>
+    /// <para>The user can enable external rate control by registering</para>
+    /// <para>a set of callback functions with the codec control flag</para>
+    /// <para>VP9E_SET_EXTERNAL_RATE_CONTROL.</para>
+    /// </remarks>
+    public unsafe partial class VpxRcFuncs : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 80)]
+        public partial struct __Internal
+        {
+            internal global::vpxmd.VpxRcType rc_type;
+            internal __IntPtr create_model;
+            internal __IntPtr send_firstpass_stats;
+            internal __IntPtr send_tpl_gop_stats;
+            internal __IntPtr get_encodeframe_decision;
+            internal __IntPtr update_encodeframe_result;
+            internal __IntPtr get_gop_decision;
+            internal __IntPtr get_frame_rdmult;
+            internal __IntPtr delete_model;
+            internal __IntPtr priv;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_rc_funcs@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFuncs> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRcFuncs>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRcFuncs managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRcFuncs managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxRcFuncs __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRcFuncs(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxRcFuncs __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRcFuncs)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxRcFuncs __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxRcFuncs(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxRcFuncs(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxRcFuncs(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxRcFuncs()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFuncs.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxRcFuncs(global::vpxmd.VpxRcFuncs _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRcFuncs.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxRcFuncs.__Internal*) __Instance) = *((global::vpxmd.VpxRcFuncs.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>The rate control type of this API.</summary>
+        public global::vpxmd.VpxRcType RcType
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->rc_type;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->rc_type = value;
+            }
+        }
+
+        /// <summary>Create an external rate control model.</summary>
+        public global::vpxmd.VpxRcCreateModelCbFnT CreateModel
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->create_model;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcCreateModelCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcCreateModelCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->create_model = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Send first pass stats to the external rate control model.</summary>
+        public global::vpxmd.VpxRcSendFirstpassStatsCbFnT SendFirstpassStats
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->send_firstpass_stats;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcSendFirstpassStatsCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcSendFirstpassStatsCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->send_firstpass_stats = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Send TPL stats for current GOP to the external rate control model.</summary>
+        public global::vpxmd.VpxRcSendTplGopStatsCbFnT SendTplGopStats
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->send_tpl_gop_stats;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcSendTplGopStatsCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcSendTplGopStatsCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->send_tpl_gop_stats = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Get encodeframe decision from the external rate control model.</summary>
+        public global::vpxmd.VpxRcGetEncodeframeDecisionCbFnT GetEncodeframeDecision
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->get_encodeframe_decision;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcGetEncodeframeDecisionCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcGetEncodeframeDecisionCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->get_encodeframe_decision = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Update encodeframe result to the external rate control model.</summary>
+        public global::vpxmd.VpxRcUpdateEncodeframeResultCbFnT UpdateEncodeframeResult
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->update_encodeframe_result;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcUpdateEncodeframeResultCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcUpdateEncodeframeResultCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->update_encodeframe_result = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Get GOP decisions from the external rate control model.</summary>
+        public global::vpxmd.VpxRcGetGopDecisionCbFnT GetGopDecision
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->get_gop_decision;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcGetGopDecisionCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcGetGopDecisionCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->get_gop_decision = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Get rdmult for the frame from the external rate control model.</summary>
+        public global::vpxmd.VpxRcGetFrameRdmultCbFnT GetFrameRdmult
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->get_frame_rdmult;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcGetFrameRdmultCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcGetFrameRdmultCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->get_frame_rdmult = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Delete the external rate control model.</summary>
+        public global::vpxmd.VpxRcDeleteModelCbFnT DeleteModel
+        {
+            get
+            {
+                var __ptr0 = ((__Internal*)__Instance)->delete_model;
+                return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxRcDeleteModelCbFnT) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxRcDeleteModelCbFnT));
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->delete_model = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+            }
+        }
+
+        /// <summary>Private data for the external rate control model.</summary>
+        public __IntPtr Priv
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->priv;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->priv = (__IntPtr) value;
+            }
+        }
+    }
+
+    /// <summary>Temporal dependency model stats for each block before propagation</summary>
+    /// <summary>Temporal dependency model stats for each frame before propagation</summary>
+    /// <summary>Temporal dependency model stats for each GOP before propagation</summary>
+    /// <summary>Temporal dependency model stats for each block before propagation</summary>
+    public unsafe partial class VpxTplBlockStats : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 56)]
+        public partial struct __Internal
+        {
+            internal short row;
+            internal short col;
+            internal long intra_cost;
+            internal long inter_cost;
+            internal short mv_r;
+            internal short mv_c;
+            internal long recrf_rate;
+            internal long recrf_dist;
+            internal int ref_frame_index;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0VpxTplBlockStats@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplBlockStats> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplBlockStats>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxTplBlockStats managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxTplBlockStats managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxTplBlockStats __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxTplBlockStats(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxTplBlockStats __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxTplBlockStats)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxTplBlockStats __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxTplBlockStats(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxTplBlockStats(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxTplBlockStats(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxTplBlockStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplBlockStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxTplBlockStats(global::vpxmd.VpxTplBlockStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplBlockStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxTplBlockStats.__Internal*) __Instance) = *((global::vpxmd.VpxTplBlockStats.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>Pixel row of the top left corner</summary>
+        public short Row
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->row;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->row = value;
+            }
+        }
+
+        /// <summary>Pixel col of the top left corner</summary>
+        public short Col
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->col;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->col = value;
+            }
+        }
+
+        /// <summary>Intra cost</summary>
+        public long IntraCost
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->intra_cost;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->intra_cost = value;
+            }
+        }
+
+        /// <summary>Inter cost</summary>
+        public long InterCost
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->inter_cost;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->inter_cost = value;
+            }
+        }
+
+        /// <summary>Motion vector row</summary>
+        public short MvR
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->mv_r;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->mv_r = value;
+            }
+        }
+
+        /// <summary>Motion vector col</summary>
+        public short MvC
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->mv_c;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->mv_c = value;
+            }
+        }
+
+        /// <summary>Rate from reconstructed ref frame</summary>
+        public long RecrfRate
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->recrf_rate;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->recrf_rate = value;
+            }
+        }
+
+        /// <summary>Distortion from reconstructed ref frame</summary>
+        public long RecrfDist
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->recrf_dist;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->recrf_dist = value;
+            }
+        }
+
+        /// <summary>Ref frame index in the ref frame buffer</summary>
+        public int RefFrameIndex
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->ref_frame_index;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->ref_frame_index = value;
+            }
+        }
+    }
+
+    /// <summary>Temporal dependency model stats for each frame before propagation</summary>
+    public unsafe partial class VpxTplFrameStats : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 24)]
+        public partial struct __Internal
+        {
+            internal int frame_width;
+            internal int frame_height;
+            internal int num_blocks;
+            internal __IntPtr block_stats_list;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0VpxTplFrameStats@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplFrameStats> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplFrameStats>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxTplFrameStats managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxTplFrameStats managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxTplFrameStats __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxTplFrameStats(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxTplFrameStats __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxTplFrameStats)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxTplFrameStats __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxTplFrameStats(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxTplFrameStats(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxTplFrameStats(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxTplFrameStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplFrameStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxTplFrameStats(global::vpxmd.VpxTplFrameStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplFrameStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxTplFrameStats.__Internal*) __Instance) = *((global::vpxmd.VpxTplFrameStats.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>Frame width</summary>
+        public int FrameWidth
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_width;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_width = value;
+            }
+        }
+
+        /// <summary>Frame height</summary>
+        public int FrameHeight
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->frame_height;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_height = value;
+            }
+        }
+
+        /// <summary>Number of blocks. Size of block_stats_list</summary>
+        public int NumBlocks
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->num_blocks;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->num_blocks = value;
+            }
+        }
+
+        /// <summary>List of tpl stats for each block</summary>
+        public global::vpxmd.VpxTplBlockStats BlockStatsList
+        {
+            get
+            {
+                var __result0 = global::vpxmd.VpxTplBlockStats.__GetOrCreateInstance(((__Internal*)__Instance)->block_stats_list, false);
+                return __result0;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->block_stats_list = value is null ? __IntPtr.Zero : value.__Instance;
+            }
+        }
+    }
+
+    /// <summary>Temporal dependency model stats for each GOP before propagation</summary>
+    public unsafe partial class VpxTplGopStats : IDisposable
+    {
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
+        public partial struct __Internal
+        {
+            internal int size;
+            internal __IntPtr frame_stats_list;
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0VpxTplGopStats@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
+        }
+
+        public __IntPtr __Instance { get; protected set; }
+
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplGopStats> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxTplGopStats>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxTplGopStats managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxTplGopStats managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
+
+        protected bool __ownsNativeInstance;
+
+        internal static VpxTplGopStats __CreateInstance(__IntPtr native, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxTplGopStats(native.ToPointer(), skipVTables);
+        }
+
+        internal static VpxTplGopStats __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
+        {
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxTplGopStats)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
+        }
+
+        internal static VpxTplGopStats __CreateInstance(__Internal native, bool skipVTables = false)
+        {
+            return new VpxTplGopStats(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
+            return ret.ToPointer();
+        }
+
+        private VpxTplGopStats(__Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
+        {
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        protected VpxTplGopStats(void* native, bool skipVTables = false)
+        {
+            if (native == null)
+                return;
+            __Instance = new __IntPtr(native);
+        }
+
+        public VpxTplGopStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplGopStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+        }
+
+        public VpxTplGopStats(global::vpxmd.VpxTplGopStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxTplGopStats.__Internal));
+            __ownsNativeInstance = true;
+            __RecordNativeToManagedMapping(__Instance, this);
+            *((global::vpxmd.VpxTplGopStats.__Internal*) __Instance) = *((global::vpxmd.VpxTplGopStats.__Internal*) _0.__Instance);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
+        }
+
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
+        {
+            if (__Instance == IntPtr.Zero)
+                return;
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
+            if (__ownsNativeInstance)
+                Marshal.FreeHGlobal(__Instance);
+            __Instance = IntPtr.Zero;
+        }
+
+        /// <summary>GOP size, also the size of frame_stats_list.</summary>
+        public int Size
+        {
+            get
+            {
+                return ((__Internal*)__Instance)->size;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->size = value;
+            }
+        }
+
+        /// <summary>List of tpl stats for each frame</summary>
+        public global::vpxmd.VpxTplFrameStats FrameStatsList
+        {
+            get
+            {
+                var __result0 = global::vpxmd.VpxTplFrameStats.__GetOrCreateInstance(((__Internal*)__Instance)->frame_stats_list, false);
+                return __result0;
+            }
+
+            set
+            {
+                ((__Internal*)__Instance)->frame_stats_list = value is null ? __IntPtr.Zero : value.__Instance;
+            }
+        }
+    }
+
+    public unsafe partial class vpx_tpl
+    {
+        public partial struct __Internal
+        {
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_write_tpl_gop_stats", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxWriteTplGopStats(__IntPtr tpl_file, __IntPtr tpl_gop_stats);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_read_tpl_gop_stats", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxReadTplGopStats(__IntPtr tpl_file, __IntPtr tpl_gop_stats);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_free_tpl_gop_stats", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern void VpxFreeTplGopStats(__IntPtr tpl_gop_stats);
+        }
+
+        /// <summary>Write VpxTplGopStats to file</summary>
+        /// <param name="tpl_file">A FILE pointer that's already been opened.</param>
+        /// <param name="tpl_gop_stats">
+        /// <para>VpxTplGopStats that contains TPL stats for the</para>
+        /// <para>whole GOP.</para>
+        /// </param>
+        /// <returns>VPX_CODEC_OK if TPL stats are successfully written.</returns>
+        /// <remarks>Accepts an opened file handle and writes</remarks>
+        public static global::vpxmd.VpxCodecErrT VpxWriteTplGopStats(global::System.IntPtr tpl_file, global::vpxmd.VpxTplGopStats tpl_gop_stats)
+        {
+            var __arg1 = tpl_gop_stats is null ? __IntPtr.Zero : tpl_gop_stats.__Instance;
+            var ___ret = __Internal.VpxWriteTplGopStats(tpl_file, __arg1);
+            return ___ret;
+        }
+
+        /// <summary>Read VpxTplGopStats from file</summary>
+        /// <param name="tpl_file">A FILE pointer that's already been opened.</param>
+        /// <param name="tpl_gop_stats">
+        /// <para>VpxTplGopStats that contains TPL stats for the</para>
+        /// <para>whole GOP.</para>
+        /// </param>
+        /// <returns>VPX_CODEC_OK if TPL stats are successfully read from file.</returns>
+        /// <remarks>
+        /// <para>Accepts an opened file handle and reads TPL stats and stores them into</para>
+        /// <para>Allocates memory for TPL stats.</para>
+        /// </remarks>
+        public static global::vpxmd.VpxCodecErrT VpxReadTplGopStats(global::System.IntPtr tpl_file, global::vpxmd.VpxTplGopStats tpl_gop_stats)
+        {
+            var __arg1 = tpl_gop_stats is null ? __IntPtr.Zero : tpl_gop_stats.__Instance;
+            var ___ret = __Internal.VpxReadTplGopStats(tpl_file, __arg1);
+            return ___ret;
+        }
+
+        /// <summary>Free the memory allocated for VpxTplGopStats</summary>
+        /// <param name="tpl_gop_stats">
+        /// <para>VpxTplGopStats that contains TPL stats for the</para>
+        /// <para>whole GOP.</para>
+        /// </param>
+        public static void VpxFreeTplGopStats(global::vpxmd.VpxTplGopStats tpl_gop_stats)
+        {
+            var __arg0 = tpl_gop_stats is null ? __IntPtr.Zero : tpl_gop_stats.__Instance;
+            __Internal.VpxFreeTplGopStats(__arg0);
         }
     }
 
@@ -4204,16 +7816,16 @@ namespace vpxmd
     /// <para>This callback is invoked by the decoder to notify the application of</para>
     /// <para>the availability of decoded image data.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void VpxCodecPutFrameCbFnT(global::System.IntPtr user_priv, global::System.IntPtr img);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate void VpxCodecPutFrameCbFnT(__IntPtr user_priv, __IntPtr img);
 
     /// <summary>put slice callback prototype</summary>
     /// <remarks>
     /// <para>This callback is invoked by the decoder to notify the application of</para>
     /// <para>the availability of partially decoded image data.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void VpxCodecPutSliceCbFnT(global::System.IntPtr user_priv, global::System.IntPtr img, global::System.IntPtr valid, global::System.IntPtr update);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate void VpxCodecPutSliceCbFnT(__IntPtr user_priv, __IntPtr img, __IntPtr valid, __IntPtr update);
 
     /// <summary>Stream properties</summary>
     /// <remarks>
@@ -4223,144 +7835,167 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecStreamInfo : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal uint sz;
-
-            [FieldOffset(4)]
             internal uint w;
-
-            [FieldOffset(8)]
             internal uint h;
-
-            [FieldOffset(12)]
             internal uint is_kf;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_stream_info@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_stream_info@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecStreamInfo> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecStreamInfo>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecStreamInfo> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecStreamInfo>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecStreamInfo managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecStreamInfo managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecStreamInfo __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecStreamInfo __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecStreamInfo(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecStreamInfo(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecStreamInfo __CreateInstance(global::vpxmd.VpxCodecStreamInfo.__Internal native, bool skipVTables = false)
+        internal static VpxCodecStreamInfo __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecStreamInfo(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecStreamInfo)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecStreamInfo.__Internal native)
+        internal static VpxCodecStreamInfo __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecStreamInfo.__Internal));
-            *(global::vpxmd.VpxCodecStreamInfo.__Internal*) ret = native;
+            return new VpxCodecStreamInfo(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecStreamInfo(global::vpxmd.VpxCodecStreamInfo.__Internal native, bool skipVTables = false)
+        private VpxCodecStreamInfo(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecStreamInfo(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecStreamInfo()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecStreamInfo.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecStreamInfo(global::vpxmd.VpxCodecStreamInfo _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecStreamInfo.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecStreamInfo.__Internal*) __Instance) = *((global::vpxmd.VpxCodecStreamInfo.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecStreamInfo __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Size of this structure</summary>
         public uint Sz
         {
             get
             {
-                return ((global::vpxmd.VpxCodecStreamInfo.__Internal*) __Instance)->sz;
+                return ((__Internal*)__Instance)->sz;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecStreamInfo.__Internal*)__Instance)->sz = value;
+                ((__Internal*)__Instance)->sz = value;
             }
         }
 
+        /// <summary>Width (or 0 for unknown/default)</summary>
         public uint W
         {
             get
             {
-                return ((global::vpxmd.VpxCodecStreamInfo.__Internal*) __Instance)->w;
+                return ((__Internal*)__Instance)->w;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecStreamInfo.__Internal*)__Instance)->w = value;
+                ((__Internal*)__Instance)->w = value;
             }
         }
 
+        /// <summary>Height (or 0 for unknown/default)</summary>
         public uint H
         {
             get
             {
-                return ((global::vpxmd.VpxCodecStreamInfo.__Internal*) __Instance)->h;
+                return ((__Internal*)__Instance)->h;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecStreamInfo.__Internal*)__Instance)->h = value;
+                ((__Internal*)__Instance)->h = value;
             }
         }
 
+        /// <summary>Current frame is a keyframe</summary>
         public uint IsKf
         {
             get
             {
-                return ((global::vpxmd.VpxCodecStreamInfo.__Internal*) __Instance)->is_kf;
+                return ((__Internal*)__Instance)->is_kf;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecStreamInfo.__Internal*)__Instance)->is_kf = value;
+                ((__Internal*)__Instance)->is_kf = value;
             }
         }
     }
@@ -4372,128 +8007,152 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxCodecDecCfg : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 12)]
+        [StructLayout(LayoutKind.Sequential, Size = 12)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal uint threads;
-
-            [FieldOffset(4)]
             internal uint w;
-
-            [FieldOffset(8)]
             internal uint h;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_dec_cfg@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_dec_cfg@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecDecCfg> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecDecCfg>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecDecCfg> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecDecCfg>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecDecCfg managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecDecCfg managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecDecCfg __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecDecCfg __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecDecCfg(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecDecCfg(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecDecCfg __CreateInstance(global::vpxmd.VpxCodecDecCfg.__Internal native, bool skipVTables = false)
+        internal static VpxCodecDecCfg __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecDecCfg(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecDecCfg)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecDecCfg.__Internal native)
+        internal static VpxCodecDecCfg __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecDecCfg.__Internal));
-            *(global::vpxmd.VpxCodecDecCfg.__Internal*) ret = native;
+            return new VpxCodecDecCfg(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecDecCfg(global::vpxmd.VpxCodecDecCfg.__Internal native, bool skipVTables = false)
+        private VpxCodecDecCfg(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecDecCfg(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecDecCfg()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecDecCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecDecCfg(global::vpxmd.VpxCodecDecCfg _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecDecCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecDecCfg.__Internal*) __Instance) = *((global::vpxmd.VpxCodecDecCfg.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecDecCfg __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Maximum number of threads to use, default 1</summary>
         public uint Threads
         {
             get
             {
-                return ((global::vpxmd.VpxCodecDecCfg.__Internal*) __Instance)->threads;
+                return ((__Internal*)__Instance)->threads;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecDecCfg.__Internal*)__Instance)->threads = value;
+                ((__Internal*)__Instance)->threads = value;
             }
         }
 
+        /// <summary>Width</summary>
         public uint W
         {
             get
             {
-                return ((global::vpxmd.VpxCodecDecCfg.__Internal*) __Instance)->w;
+                return ((__Internal*)__Instance)->w;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecDecCfg.__Internal*)__Instance)->w = value;
+                ((__Internal*)__Instance)->w = value;
             }
         }
 
+        /// <summary>Height</summary>
         public uint H
         {
             get
             {
-                return ((global::vpxmd.VpxCodecDecCfg.__Internal*) __Instance)->h;
+                return ((__Internal*)__Instance)->h;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecDecCfg.__Internal*)__Instance)->h = value;
+                ((__Internal*)__Instance)->h = value;
             }
         }
     }
@@ -4502,45 +8161,29 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_dec_init_ver")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDecInitVer(global::System.IntPtr ctx, global::System.IntPtr iface, global::System.IntPtr cfg, int flags, int ver);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_dec_init_ver", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDecInitVer(__IntPtr ctx, __IntPtr iface, __IntPtr cfg, int flags, int ver);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_peek_stream_info")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecPeekStreamInfo(global::System.IntPtr iface, byte* data, uint data_sz, global::System.IntPtr si);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_peek_stream_info", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecPeekStreamInfo(__IntPtr iface, byte* data, uint data_sz, __IntPtr si);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_stream_info")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecGetStreamInfo(global::System.IntPtr ctx, global::System.IntPtr si);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_stream_info", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecGetStreamInfo(__IntPtr ctx, __IntPtr si);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_decode")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDecode(global::System.IntPtr ctx, byte* data, uint data_sz, global::System.IntPtr user_priv, int deadline);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_decode", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecDecode(__IntPtr ctx, byte* data, uint data_sz, __IntPtr user_priv, int deadline);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_get_frame")]
-            internal static extern global::System.IntPtr VpxCodecGetFrame(global::System.IntPtr ctx, void** iter);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_get_frame", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecGetFrame(__IntPtr ctx, __IntPtr* iter);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_register_put_frame_cb")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecRegisterPutFrameCb(global::System.IntPtr ctx, global::System.IntPtr cb, global::System.IntPtr user_priv);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_register_put_frame_cb", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecRegisterPutFrameCb(__IntPtr ctx, __IntPtr cb, __IntPtr user_priv);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_register_put_slice_cb")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecRegisterPutSliceCb(global::System.IntPtr ctx, global::System.IntPtr cb, global::System.IntPtr user_priv);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_register_put_slice_cb", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecRegisterPutSliceCb(__IntPtr ctx, __IntPtr cb, __IntPtr user_priv);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_set_frame_buffer_functions")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecSetFrameBufferFunctions(global::System.IntPtr ctx, global::System.IntPtr cb_get, global::System.IntPtr cb_release, global::System.IntPtr cb_priv);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_set_frame_buffer_functions", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecSetFrameBufferFunctions(__IntPtr ctx, __IntPtr cb_get, __IntPtr cb_release, __IntPtr cb_priv);
         }
 
         /// <summary>Initialize a decoder instance</summary>
@@ -4560,18 +8203,16 @@ namespace vpxmd
         /// <para>If the library was configured with --disable-multithread, this call</para>
         /// <para>is not thread safe and should be guarded with a lock if being used</para>
         /// <para>in a multithreaded context.</para>
-        /// <para>#VPX_CODEC_OK</para>
-        /// <para>The decoder algorithm initialized.</para>
-        /// <para>#VPX_CODEC_MEM_ERROR</para>
+        /// <para>The decoder algorithm has been initialized.</para>
         /// <para>Memory allocation failed.</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecDecInitVer(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecIface iface, global::vpxmd.VpxCodecDecCfg cfg, int flags, int ver)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __arg2 = ReferenceEquals(cfg, null) ? global::System.IntPtr.Zero : cfg.__Instance;
-            var __ret = __Internal.VpxCodecDecInitVer(__arg0, __arg1, __arg2, flags, ver);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var __arg2 = cfg is null ? __IntPtr.Zero : cfg.__Instance;
+            var ___ret = __Internal.VpxCodecDecInitVer(__arg0, __arg1, __arg2, flags, ver);
+            return ___ret;
         }
 
         /// <summary>Parse stream info from a buffer</summary>
@@ -4580,42 +8221,40 @@ namespace vpxmd
         /// <param name="data_sz">Size of the data buffer</param>
         /// <param name="si">
         /// <para>Pointer to stream info to update. The size member</para>
-        /// <para>clobbered by the algorithm. This parameter</para>
-        /// <para>be NULL.</para>
+        /// <para>be properly initialized, butbe</para>
+        /// <para>clobbered by the algorithm. This parameterbe NULL.</para>
         /// </param>
         /// <remarks>
         /// <para>Performs high level parsing of the bitstream. Construction of a decoder</para>
         /// <para>context is not necessary. Can be used to determine if the bitstream is</para>
         /// <para>of the proper format, and to extract information from the stream.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>Bitstream is parsable and stream information updated</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecPeekStreamInfo(global::vpxmd.VpxCodecIface iface, byte* data, uint data_sz, global::vpxmd.VpxCodecStreamInfo si)
         {
-            var __arg0 = ReferenceEquals(iface, null) ? global::System.IntPtr.Zero : iface.__Instance;
-            var __arg3 = ReferenceEquals(si, null) ? global::System.IntPtr.Zero : si.__Instance;
-            var __ret = __Internal.VpxCodecPeekStreamInfo(__arg0, data, data_sz, __arg3);
-            return __ret;
+            var __arg0 = iface is null ? __IntPtr.Zero : iface.__Instance;
+            var __arg3 = si is null ? __IntPtr.Zero : si.__Instance;
+            var ___ret = __Internal.VpxCodecPeekStreamInfo(__arg0, data, data_sz, __arg3);
+            return ___ret;
         }
 
         /// <summary>Return information about the current stream.</summary>
         /// <param name="ctx">Pointer to this instance's context</param>
         /// <param name="si">
         /// <para>Pointer to stream info to update. The size member</para>
-        /// <para>clobbered by the algorithm. This parameter</para>
-        /// <para>be NULL.</para>
+        /// <para>be properly initialized, butbe</para>
+        /// <para>clobbered by the algorithm. This parameterbe NULL.</para>
         /// </param>
         /// <remarks>
         /// <para>Returns information about the stream that has been parsed during decoding.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>Bitstream is parsable and stream information updated</para>
         /// </remarks>
         public static global::vpxmd.VpxCodecErrT VpxCodecGetStreamInfo(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecStreamInfo si)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __arg1 = ReferenceEquals(si, null) ? global::System.IntPtr.Zero : si.__Instance;
-            var __ret = __Internal.VpxCodecGetStreamInfo(__arg0, __arg1);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var __arg1 = si is null ? __IntPtr.Zero : si.__Instance;
+            var ___ret = __Internal.VpxCodecGetStreamInfo(__arg0, __arg1);
+            return ___ret;
         }
 
         /// <summary>Decode data</summary>
@@ -4643,7 +8282,7 @@ namespace vpxmd
         /// <remarks>
         /// <para>Processes a buffer of coded data. If the processing results in a new</para>
         /// <para>decoded frame becoming available, put_slice and put_frame callbacks may be</para>
-        /// <para>invoked, as appropriate. Encoded data</para>
+        /// <para>invoked, as appropriate. Encoded databe passed in DTS (decode</para>
         /// <para>time stamp) order. Frames produced will always be in PTS (presentation</para>
         /// <para>time stamp) order.</para>
         /// <para>If the decoder is configured with VPX_CODEC_USE_INPUT_FRAGMENTS enabled,</para>
@@ -4654,11 +8293,11 @@ namespace vpxmd
         /// <para>with NULL as data and 0 as data_sz. The memory passed to this function</para>
         /// <para>must be available until the frame has been decoded.</para>
         /// </remarks>
-        public static global::vpxmd.VpxCodecErrT VpxCodecDecode(global::vpxmd.VpxCodecCtx ctx, byte* data, uint data_sz, global::System.IntPtr user_priv, int deadline)
+        public static global::vpxmd.VpxCodecErrT VpxCodecDecode(global::vpxmd.VpxCodecCtx ctx, byte* data, uint data_sz, __IntPtr user_priv, int deadline)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecDecode(__arg0, data, data_sz, user_priv, deadline);
-            return __ret;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecDecode(__arg0, data, data_sz, user_priv, deadline);
+            return ___ret;
         }
 
         /// <summary>Decoded frames iterator</summary>
@@ -4676,15 +8315,11 @@ namespace vpxmd
         /// <para>vpx_codec_decode call, and remains valid until the next call to</para>
         /// <para>vpx_codec_decode.</para>
         /// </remarks>
-        public static global::vpxmd.VpxImage VpxCodecGetFrame(global::vpxmd.VpxCodecCtx ctx, void** iter)
+        public static global::vpxmd.VpxImage VpxCodecGetFrame(global::vpxmd.VpxCodecCtx ctx, __IntPtr* iter)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            var __ret = __Internal.VpxCodecGetFrame(__arg0, iter);
-            global::vpxmd.VpxImage __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxImage.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxImage) global::vpxmd.VpxImage.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxImage.__CreateInstance(__ret);
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
+            var ___ret = __Internal.VpxCodecGetFrame(__arg0, iter);
+            var __result0 = global::vpxmd.VpxImage.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
@@ -4695,19 +8330,16 @@ namespace vpxmd
         /// <remarks>
         /// <para>Registers a given function to be called when a decoded frame is</para>
         /// <para>available.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>Callback successfully registered.</para>
-        /// <para>#VPX_CODEC_ERROR</para>
         /// <para>Decoder context not initialized.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Algorithm not capable of posting frame completion.</para>
         /// </remarks>
-        public static global::vpxmd.VpxCodecErrT VpxCodecRegisterPutFrameCb(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecPutFrameCbFnT cb, global::System.IntPtr user_priv)
+        public static global::vpxmd.VpxCodecErrT VpxCodecRegisterPutFrameCb(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecPutFrameCbFnT cb, __IntPtr user_priv)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
             var __arg1 = cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
-            var __ret = __Internal.VpxCodecRegisterPutFrameCb(__arg0, __arg1, user_priv);
-            return __ret;
+            var ___ret = __Internal.VpxCodecRegisterPutFrameCb(__arg0, __arg1, user_priv);
+            return ___ret;
         }
 
         /// <summary>Register for notification of slice completion.</summary>
@@ -4717,19 +8349,16 @@ namespace vpxmd
         /// <remarks>
         /// <para>Registers a given function to be called when a decoded slice is</para>
         /// <para>available.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>Callback successfully registered.</para>
-        /// <para>#VPX_CODEC_ERROR</para>
         /// <para>Decoder context not initialized.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Algorithm not capable of posting slice completion.</para>
         /// </remarks>
-        public static global::vpxmd.VpxCodecErrT VpxCodecRegisterPutSliceCb(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecPutSliceCbFnT cb, global::System.IntPtr user_priv)
+        public static global::vpxmd.VpxCodecErrT VpxCodecRegisterPutSliceCb(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxCodecPutSliceCbFnT cb, __IntPtr user_priv)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
             var __arg1 = cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
-            var __ret = __Internal.VpxCodecRegisterPutSliceCb(__arg0, __arg1, user_priv);
-            return __ret;
+            var ___ret = __Internal.VpxCodecRegisterPutSliceCb(__arg0, __arg1, user_priv);
+            return ___ret;
         }
 
         /// <summary>Pass in external frame buffers for the decoder to use.</summary>
@@ -4743,25 +8372,21 @@ namespace vpxmd
         /// <para>not internally reference the frame buffer. This set function must</para>
         /// <para>be called before the first call to decode or libvpx will assume the</para>
         /// <para>default behavior of allocating frame buffers internally.</para>
-        /// <para>#VPX_CODEC_OK</para>
         /// <para>External frame buffers will be used by libvpx.</para>
-        /// <para>#VPX_CODEC_INVALID_PARAM</para>
         /// <para>One or more of the callbacks were NULL.</para>
-        /// <para>#VPX_CODEC_ERROR</para>
         /// <para>Decoder context not initialized.</para>
-        /// <para>#VPX_CODEC_INCAPABLE</para>
         /// <para>Algorithm not capable of using external frame buffers.</para>
         /// <para>When decoding VP9, the application may be required to pass in at least</para>
         /// <para>#VP9_MAXIMUM_REF_BUFFERS + #VPX_MAXIMUM_WORK_BUFFERS external frame</para>
         /// <para>buffers.</para>
         /// </remarks>
-        public static global::vpxmd.VpxCodecErrT VpxCodecSetFrameBufferFunctions(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxGetFrameBufferCbFnT cb_get, global::vpxmd.VpxReleaseFrameBufferCbFnT cb_release, global::System.IntPtr cb_priv)
+        public static global::vpxmd.VpxCodecErrT VpxCodecSetFrameBufferFunctions(global::vpxmd.VpxCodecCtx ctx, global::vpxmd.VpxGetFrameBufferCbFnT cb_get, global::vpxmd.VpxReleaseFrameBufferCbFnT cb_release, __IntPtr cb_priv)
         {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
+            var __arg0 = ctx is null ? __IntPtr.Zero : ctx.__Instance;
             var __arg1 = cb_get == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb_get);
             var __arg2 = cb_release == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb_release);
-            var __ret = __Internal.VpxCodecSetFrameBufferFunctions(__arg0, __arg1, __arg2, cb_priv);
-            return __ret;
+            var ___ret = __Internal.VpxCodecSetFrameBufferFunctions(__arg0, __arg1, __arg2, cb_priv);
+            return ___ret;
         }
     }
 
@@ -4784,8 +8409,8 @@ namespace vpxmd
     /// <para>function call. |fb| is guaranteed to not be NULL. On success the callback</para>
     /// <para>must return 0. Any failure the callback must return a value less than 0.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate int VpxGetFrameBufferCbFnT(global::System.IntPtr priv, ulong min_size, global::System.IntPtr fb);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate int VpxGetFrameBufferCbFnT(__IntPtr priv, ulong min_size, __IntPtr fb);
 
     /// <summary>release frame buffer callback prototype</summary>
     /// <param name="priv">Callback's private data</param>
@@ -4796,135 +8421,159 @@ namespace vpxmd
     /// <para>success the callback must return 0. Any failure the callback must return</para>
     /// <para>a value less than 0.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate int VpxReleaseFrameBufferCbFnT(global::System.IntPtr priv, global::System.IntPtr fb);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate int VpxReleaseFrameBufferCbFnT(__IntPtr priv, __IntPtr fb);
 
     /// <summary>External frame buffer</summary>
     /// <remarks>This structure holds allocated frame buffers used by the decoder.</remarks>
     public unsafe partial class VpxCodecFrameBuffer : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 24)]
+        [StructLayout(LayoutKind.Sequential, Size = 24)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr data;
-
-            [FieldOffset(8)]
+            internal __IntPtr data;
             internal ulong size;
+            internal __IntPtr priv;
 
-            [FieldOffset(16)]
-            internal global::System.IntPtr priv;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_codec_frame_buffer@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_codec_frame_buffer@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecFrameBuffer> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecFrameBuffer>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecFrameBuffer> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxCodecFrameBuffer>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxCodecFrameBuffer managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxCodecFrameBuffer managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxCodecFrameBuffer __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxCodecFrameBuffer __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecFrameBuffer(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxCodecFrameBuffer(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxCodecFrameBuffer __CreateInstance(global::vpxmd.VpxCodecFrameBuffer.__Internal native, bool skipVTables = false)
+        internal static VpxCodecFrameBuffer __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxCodecFrameBuffer(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxCodecFrameBuffer)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxCodecFrameBuffer.__Internal native)
+        internal static VpxCodecFrameBuffer __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecFrameBuffer.__Internal));
-            *(global::vpxmd.VpxCodecFrameBuffer.__Internal*) ret = native;
+            return new VpxCodecFrameBuffer(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxCodecFrameBuffer(global::vpxmd.VpxCodecFrameBuffer.__Internal native, bool skipVTables = false)
+        private VpxCodecFrameBuffer(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxCodecFrameBuffer(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxCodecFrameBuffer()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecFrameBuffer.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxCodecFrameBuffer(global::vpxmd.VpxCodecFrameBuffer _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxCodecFrameBuffer.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxCodecFrameBuffer.__Internal*) __Instance) = *((global::vpxmd.VpxCodecFrameBuffer.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxCodecFrameBuffer __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Pointer to the data buffer</summary>
         public byte* Data
         {
             get
             {
-                return (byte*) ((global::vpxmd.VpxCodecFrameBuffer.__Internal*) __Instance)->data;
+                return (byte*) ((__Internal*)__Instance)->data;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecFrameBuffer.__Internal*)__Instance)->data = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->data = (__IntPtr) value;
             }
         }
 
+        /// <summary>Size of data in bytes</summary>
         public ulong Size
         {
             get
             {
-                return ((global::vpxmd.VpxCodecFrameBuffer.__Internal*) __Instance)->size;
+                return ((__Internal*)__Instance)->size;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecFrameBuffer.__Internal*)__Instance)->size = value;
+                ((__Internal*)__Instance)->size = value;
             }
         }
 
-        public global::System.IntPtr Priv
+        /// <summary>Frame's private data</summary>
+        public __IntPtr Priv
         {
             get
             {
-                return ((global::vpxmd.VpxCodecFrameBuffer.__Internal*) __Instance)->priv;
+                return ((__Internal*)__Instance)->priv;
             }
 
             set
             {
-                ((global::vpxmd.VpxCodecFrameBuffer.__Internal*)__Instance)->priv = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->priv = (__IntPtr) value;
             }
         }
     }
@@ -4953,6 +8602,7 @@ namespace vpxmd
         /// <para>speed at the expense of quality.</para>
         /// <para>Valid range for VP8: -16..16</para>
         /// <para>Valid range for VP9: -9..9</para>
+        /// <para>A negative value (-n) is treated as its absolute value (n) in VP9.</para>
         /// <para>Supported in codecs: VP8, VP9</para>
         /// </remarks>
         VP8E_SET_CPUUSED = 13,
@@ -5051,7 +8701,7 @@ namespace vpxmd
         /// <para>per-frame bitrate, with the special (and default) value 0 meaning</para>
         /// <para>the feature is off, i.e., no golden frame boost in CBR mode and</para>
         /// <para>average bitrate target is used.</para>
-        /// <para>For example, to allow 100% more bits, i.e, 2X, in a golden frame</para>
+        /// <para>For example, to allow 100% more bits, i.e., 2X, in a golden frame</para>
         /// <para>than average frame, set this to 100.</para>
         /// <para>Supported in codecs: VP9</para>
         /// </remarks>
@@ -5223,17 +8873,6 @@ namespace vpxmd
         /// <para>Supported in codecs: VP9</para>
         /// </remarks>
         VP9E_SET_COLOR_SPACE = 46,
-        /// <summary>Codec control function to set temporal layering mode.</summary>
-        /// <remarks>
-        /// <para>Valid ranges: 0..3, default is &quot;0&quot;</para>
-        /// <para>(VP9E_TEMPORAL_LAYERING_MODE_NOLAYERING).</para>
-        /// <para>0 = VP9E_TEMPORAL_LAYERING_MODE_NOLAYERING</para>
-        /// <para>1 = VP9E_TEMPORAL_LAYERING_MODE_BYPASS</para>
-        /// <para>2 = VP9E_TEMPORAL_LAYERING_MODE_0101</para>
-        /// <para>3 = VP9E_TEMPORAL_LAYERING_MODE_0212</para>
-        /// <para>Supported in codecs: VP9</para>
-        /// </remarks>
-        VP9E_SET_TEMPORAL_LAYERING_MODE = 47,
         /// <summary>Codec control function to set minimum interval between GF/ARF frames</summary>
         /// <remarks>
         /// <para>By default the value is set as 4.</para>
@@ -5303,7 +8942,7 @@ namespace vpxmd
         /// <para>per-frame bitrate, with the special (and default) value 0 meaning</para>
         /// <para>the feature is off, i.e., no golden frame boost in CBR mode and</para>
         /// <para>average bitrate target is used.</para>
-        /// <para>For example, to allow 100% more bits, i.e, 2X, in a golden frame</para>
+        /// <para>For example, to allow 100% more bits, i.e., 2X, in a golden frame</para>
         /// <para>than average frame, set this to 100.</para>
         /// <para>Supported in codecs: VP8</para>
         /// </remarks>
@@ -5384,7 +9023,64 @@ namespace vpxmd
         /// <para>Cap it at +/-15.</para>
         /// <para>Supported in codecs: VP9</para>
         /// </remarks>
-        VP9E_SET_DELTA_Q_UV = 67
+        VP9E_SET_DELTA_Q_UV = 67,
+        /// <summary>Codec control function to disable increase Q on overshoot in CBR.</summary>
+        /// <remarks>
+        /// <para>0: On (default), 1: Disable.</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_SET_DISABLE_OVERSHOOT_MAXQ_CBR = 68,
+        /// <summary>Codec control function to disable loopfilter.</summary>
+        /// <remarks>
+        /// <para>0: Loopfilter on all frames, 1: Disable on non reference frames.</para>
+        /// <para>2: Disable on all frames.</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_SET_DISABLE_LOOPFILTER = 69,
+        /// <summary>Codec control function to enable external rate control library.</summary>
+        /// <remarks>
+        /// <para>args[0]: path of the rate control library</para>
+        /// <para>args[1]: private config of the rate control library</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_SET_EXTERNAL_RATE_CONTROL = 70,
+        /// <summary>Codec control to disable internal features in rate control.</summary>
+        /// <remarks>
+        /// <para>This will do 3 things, only for 1 pass:</para>
+        /// <para>- Turn off low motion computation</para>
+        /// <para>- Turn off gf update constraint on key frame frequency</para>
+        /// <para>- Turn off content mode for cyclic refresh</para>
+        /// <para>With those, the rate control is expected to work exactly the same as the</para>
+        /// <para>interface provided in ratectrl_rtc.cc/h</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_SET_RTC_EXTERNAL_RATECTRL = 71,
+        /// <summary>Codec control function to get loopfilter level in the encoder.</summary>
+        /// <remarks>Supported in codecs: VP9</remarks>
+        VP9E_GET_LOOPFILTER_LEVEL = 72,
+        /// <summary>Codec control to get last quantizers for all spatial layers.</summary>
+        /// <remarks>
+        /// <para>Return value uses an array of internal quantizers scale defined by the</para>
+        /// <para>codec, for all spatial layers.</para>
+        /// <para>The size of the array passed in should be #VPX_SS_MAX_LAYERS.</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_GET_LAST_QUANTIZER_SVC_LAYERS = 73,
+        /// <summary>Codec control to disable internal features in rate control.</summary>
+        /// <remarks>
+        /// <para>This will turn off cyclic refresh for vp8.</para>
+        /// <para>With this, the rate control is expected to work exactly the same as the</para>
+        /// <para>interface provided in vp8_ratectrl_rtc.cc/h</para>
+        /// <para>Supported in codecs: VP8</para>
+        /// </remarks>
+        VP8E_SET_RTC_EXTERNAL_RATECTRL = 74,
+        /// <summary>Codec control to set quantizer for the next frame.</summary>
+        /// <remarks>
+        /// <para>This will turn off cyclic refresh. Only applicable to 1-pass without</para>
+        /// <para>spatial layers.</para>
+        /// <para>Supported in codecs: VP9</para>
+        /// </remarks>
+        VP9E_SET_QUANTIZER_ONE_PASS = 75
     }
 
     /// <summary>vpx 1-D scaling mode</summary>
@@ -5512,174 +9208,184 @@ namespace vpxmd
     /// <remarks>These defines the data structures for the region of interest map</remarks>
     public unsafe partial class VpxRoiMap : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 168)]
+        [StructLayout(LayoutKind.Sequential, Size = 168)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal byte enabled;
-
-            [FieldOffset(8)]
-            internal global::System.IntPtr roi_map;
-
-            [FieldOffset(16)]
+            internal __IntPtr roi_map;
             internal uint rows;
-
-            [FieldOffset(20)]
             internal uint cols;
-
-            [FieldOffset(24)]
             internal fixed int delta_q[8];
-
-            [FieldOffset(56)]
             internal fixed int delta_lf[8];
-
-            [FieldOffset(88)]
             internal fixed int skip[8];
-
-            [FieldOffset(120)]
             internal fixed int ref_frame[8];
-
-            [FieldOffset(152)]
             internal fixed uint static_threshold[4];
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_roi_map@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_roi_map@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRoiMap> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRoiMap>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRoiMap> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRoiMap>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRoiMap managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRoiMap managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxRoiMap __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxRoiMap __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRoiMap(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRoiMap(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxRoiMap __CreateInstance(global::vpxmd.VpxRoiMap.__Internal native, bool skipVTables = false)
+        internal static VpxRoiMap __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRoiMap(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRoiMap)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxRoiMap.__Internal native)
+        internal static VpxRoiMap __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRoiMap.__Internal));
-            *(global::vpxmd.VpxRoiMap.__Internal*) ret = native;
+            return new VpxRoiMap(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxRoiMap(global::vpxmd.VpxRoiMap.__Internal native, bool skipVTables = false)
+        private VpxRoiMap(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxRoiMap(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxRoiMap()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRoiMap.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxRoiMap(global::vpxmd.VpxRoiMap _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRoiMap.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxRoiMap.__Internal*) __Instance) = *((global::vpxmd.VpxRoiMap.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxRoiMap __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>If ROI is enabled.</summary>
         public byte Enabled
         {
             get
             {
-                return ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->enabled;
+                return ((__Internal*)__Instance)->enabled;
             }
 
             set
             {
-                ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->enabled = value;
+                ((__Internal*)__Instance)->enabled = value;
             }
         }
 
+        /// <summary>
+        /// <para>An id between 0-3 (0-7 for vp9) for each 16x16 (8x8 for VP9)</para>
+        /// <para>region within a frame.</para>
+        /// </summary>
         public byte* RoiMap
         {
             get
             {
-                return (byte*) ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->roi_map;
+                return (byte*) ((__Internal*)__Instance)->roi_map;
             }
 
             set
             {
-                ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->roi_map = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->roi_map = (__IntPtr) value;
             }
         }
 
+        /// <summary>Number of rows.</summary>
         public uint Rows
         {
             get
             {
-                return ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->rows;
+                return ((__Internal*)__Instance)->rows;
             }
 
             set
             {
-                ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->rows = value;
+                ((__Internal*)__Instance)->rows = value;
             }
         }
 
+        /// <summary>Number of columns.</summary>
         public uint Cols
         {
             get
             {
-                return ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->cols;
+                return ((__Internal*)__Instance)->cols;
             }
 
             set
             {
-                ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->cols = value;
+                ((__Internal*)__Instance)->cols = value;
             }
         }
 
+        /// <summary>Quantizer deltas. Valid range: [-63, 63].</summary>
         public int[] DeltaQ
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->delta_q != null)
-                {
-                    __value = new int[8];
-                    for (int i = 0; i < 8; i++)
-                        __value[i] = ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->delta_q[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->delta_q, 8);
             }
 
             set
@@ -5687,23 +9393,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 8; i++)
-                        ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->delta_q[i] = value[i];
+                        ((__Internal*)__Instance)->delta_q[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Loop filter deltas. Valid range: [-63, 63].</summary>
         public int[] DeltaLf
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->delta_lf != null)
-                {
-                    __value = new int[8];
-                    for (int i = 0; i < 8; i++)
-                        __value[i] = ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->delta_lf[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->delta_lf, 8);
             }
 
             set
@@ -5711,23 +9411,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 8; i++)
-                        ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->delta_lf[i] = value[i];
+                        ((__Internal*)__Instance)->delta_lf[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Skip this block.</summary>
         public int[] Skip
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->skip != null)
-                {
-                    __value = new int[8];
-                    for (int i = 0; i < 8; i++)
-                        __value[i] = ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->skip[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->skip, 8);
             }
 
             set
@@ -5735,23 +9429,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 8; i++)
-                        ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->skip[i] = value[i];
+                        ((__Internal*)__Instance)->skip[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Reference frame for this block.</summary>
         public int[] RefFrame
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->ref_frame != null)
-                {
-                    __value = new int[8];
-                    for (int i = 0; i < 8; i++)
-                        __value[i] = ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->ref_frame[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->ref_frame, 8);
             }
 
             set
@@ -5759,23 +9447,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 8; i++)
-                        ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->ref_frame[i] = value[i];
+                        ((__Internal*)__Instance)->ref_frame[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Static breakout threshold for each segment. Only used in VP8.</summary>
         public uint[] StaticThreshold
         {
             get
             {
-                uint[] __value = null;
-                if (((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->static_threshold != null)
-                {
-                    __value = new uint[4];
-                    for (int i = 0; i < 4; i++)
-                        __value[i] = ((global::vpxmd.VpxRoiMap.__Internal*) __Instance)->static_threshold[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<uint>(((__Internal*)__Instance)->static_threshold, 4);
             }
 
             set
@@ -5783,7 +9465,7 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 4; i++)
-                        ((global::vpxmd.VpxRoiMap.__Internal*)__Instance)->static_threshold[i] = value[i];
+                        ((__Internal*)__Instance)->static_threshold[i] = value[i];
                 }
             }
         }
@@ -5793,128 +9475,152 @@ namespace vpxmd
     /// <remarks>These defines the data structures for active region map</remarks>
     public unsafe partial class VpxActiveMap : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr active_map;
-
-            [FieldOffset(8)]
+            internal __IntPtr active_map;
             internal uint rows;
-
-            [FieldOffset(12)]
             internal uint cols;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_active_map@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_active_map@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxActiveMap> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxActiveMap>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxActiveMap> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxActiveMap>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxActiveMap managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxActiveMap managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxActiveMap __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxActiveMap __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxActiveMap(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxActiveMap(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxActiveMap __CreateInstance(global::vpxmd.VpxActiveMap.__Internal native, bool skipVTables = false)
+        internal static VpxActiveMap __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxActiveMap(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxActiveMap)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxActiveMap.__Internal native)
+        internal static VpxActiveMap __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxActiveMap.__Internal));
-            *(global::vpxmd.VpxActiveMap.__Internal*) ret = native;
+            return new VpxActiveMap(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxActiveMap(global::vpxmd.VpxActiveMap.__Internal native, bool skipVTables = false)
+        private VpxActiveMap(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxActiveMap(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxActiveMap()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxActiveMap.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxActiveMap(global::vpxmd.VpxActiveMap _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxActiveMap.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxActiveMap.__Internal*) __Instance) = *((global::vpxmd.VpxActiveMap.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxActiveMap __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>specify an on (1) or off (0) each 16x16 region within a frame</summary>
         public byte* ActiveMap
         {
             get
             {
-                return (byte*) ((global::vpxmd.VpxActiveMap.__Internal*) __Instance)->active_map;
+                return (byte*) ((__Internal*)__Instance)->active_map;
             }
 
             set
             {
-                ((global::vpxmd.VpxActiveMap.__Internal*)__Instance)->active_map = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->active_map = (__IntPtr) value;
             }
         }
 
+        /// <summary>number of rows</summary>
         public uint Rows
         {
             get
             {
-                return ((global::vpxmd.VpxActiveMap.__Internal*) __Instance)->rows;
+                return ((__Internal*)__Instance)->rows;
             }
 
             set
             {
-                ((global::vpxmd.VpxActiveMap.__Internal*)__Instance)->rows = value;
+                ((__Internal*)__Instance)->rows = value;
             }
         }
 
+        /// <summary>number of cols</summary>
         public uint Cols
         {
             get
             {
-                return ((global::vpxmd.VpxActiveMap.__Internal*) __Instance)->cols;
+                return ((__Internal*)__Instance)->cols;
             }
 
             set
             {
-                ((global::vpxmd.VpxActiveMap.__Internal*)__Instance)->cols = value;
+                ((__Internal*)__Instance)->cols = value;
             }
         }
     }
@@ -5923,112 +9629,137 @@ namespace vpxmd
     /// <remarks>This defines the data structure for image scaling mode</remarks>
     public unsafe partial class VpxScalingMode : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 8)]
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal global::vpxmd.VpxScalingMode1d h_scaling_mode;
-
-            [FieldOffset(4)]
             internal global::vpxmd.VpxScalingMode1d v_scaling_mode;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_scaling_mode@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_scaling_mode@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxScalingMode> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxScalingMode>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxScalingMode> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxScalingMode>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxScalingMode managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxScalingMode managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxScalingMode __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxScalingMode __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxScalingMode(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxScalingMode(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxScalingMode __CreateInstance(global::vpxmd.VpxScalingMode.__Internal native, bool skipVTables = false)
+        internal static VpxScalingMode __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxScalingMode(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxScalingMode)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxScalingMode.__Internal native)
+        internal static VpxScalingMode __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxScalingMode.__Internal));
-            *(global::vpxmd.VpxScalingMode.__Internal*) ret = native;
+            return new VpxScalingMode(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxScalingMode(global::vpxmd.VpxScalingMode.__Internal native, bool skipVTables = false)
+        private VpxScalingMode(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxScalingMode(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxScalingMode()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxScalingMode.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxScalingMode(global::vpxmd.VpxScalingMode _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxScalingMode.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxScalingMode.__Internal*) __Instance) = *((global::vpxmd.VpxScalingMode.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxScalingMode __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>horizontal scaling mode</summary>
         public global::vpxmd.VpxScalingMode1d HScalingMode
         {
             get
             {
-                return ((global::vpxmd.VpxScalingMode.__Internal*) __Instance)->h_scaling_mode;
+                return ((__Internal*)__Instance)->h_scaling_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxScalingMode.__Internal*)__Instance)->h_scaling_mode = value;
+                ((__Internal*)__Instance)->h_scaling_mode = value;
             }
         }
 
+        /// <summary>vertical scaling mode</summary>
         public global::vpxmd.VpxScalingMode1d VScalingMode
         {
             get
             {
-                return ((global::vpxmd.VpxScalingMode.__Internal*) __Instance)->v_scaling_mode;
+                return ((__Internal*)__Instance)->v_scaling_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxScalingMode.__Internal*)__Instance)->v_scaling_mode = value;
+                ((__Internal*)__Instance)->v_scaling_mode = value;
             }
         }
     }
@@ -6041,130 +9772,147 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxSvcLayerId : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 28)]
+        [StructLayout(LayoutKind.Sequential, Size = 28)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal int spatial_layer_id;
-
-            [FieldOffset(4)]
             internal int temporal_layer_id;
-
-            [FieldOffset(8)]
             internal fixed int temporal_layer_id_per_spatial[5];
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_svc_layer_id@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_svc_layer_id@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcLayerId> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcLayerId>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcLayerId> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcLayerId>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxSvcLayerId managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxSvcLayerId managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxSvcLayerId __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxSvcLayerId __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcLayerId(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxSvcLayerId(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxSvcLayerId __CreateInstance(global::vpxmd.VpxSvcLayerId.__Internal native, bool skipVTables = false)
+        internal static VpxSvcLayerId __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcLayerId(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxSvcLayerId)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxSvcLayerId.__Internal native)
+        internal static VpxSvcLayerId __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcLayerId.__Internal));
-            *(global::vpxmd.VpxSvcLayerId.__Internal*) ret = native;
+            return new VpxSvcLayerId(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxSvcLayerId(global::vpxmd.VpxSvcLayerId.__Internal native, bool skipVTables = false)
+        private VpxSvcLayerId(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxSvcLayerId(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxSvcLayerId()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcLayerId.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxSvcLayerId(global::vpxmd.VpxSvcLayerId _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcLayerId.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxSvcLayerId.__Internal*) __Instance) = *((global::vpxmd.VpxSvcLayerId.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxSvcLayerId __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>First spatial layer to start encoding.</summary>
         public int SpatialLayerId
         {
             get
             {
-                return ((global::vpxmd.VpxSvcLayerId.__Internal*) __Instance)->spatial_layer_id;
+                return ((__Internal*)__Instance)->spatial_layer_id;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcLayerId.__Internal*)__Instance)->spatial_layer_id = value;
+                ((__Internal*)__Instance)->spatial_layer_id = value;
             }
         }
 
+        /// <summary>Temporal layer id number.</summary>
         public int TemporalLayerId
         {
             get
             {
-                return ((global::vpxmd.VpxSvcLayerId.__Internal*) __Instance)->temporal_layer_id;
+                return ((__Internal*)__Instance)->temporal_layer_id;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcLayerId.__Internal*)__Instance)->temporal_layer_id = value;
+                ((__Internal*)__Instance)->temporal_layer_id = value;
             }
         }
 
+        /// <summary>Temp layer id.</summary>
         public int[] TemporalLayerIdPerSpatial
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcLayerId.__Internal*) __Instance)->temporal_layer_id_per_spatial != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcLayerId.__Internal*) __Instance)->temporal_layer_id_per_spatial[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->temporal_layer_id_per_spatial, 5);
             }
 
             set
@@ -6172,7 +9920,7 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcLayerId.__Internal*)__Instance)->temporal_layer_id_per_spatial[i] = value[i];
+                        ((__Internal*)__Instance)->temporal_layer_id_per_spatial[i] = value[i];
                 }
             }
         }
@@ -6187,128 +9935,127 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxSvcRefFrameConfig : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 240)]
+        [StructLayout(LayoutKind.Sequential, Size = 240)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal fixed int lst_fb_idx[5];
-
-            [FieldOffset(20)]
             internal fixed int gld_fb_idx[5];
-
-            [FieldOffset(40)]
             internal fixed int alt_fb_idx[5];
-
-            [FieldOffset(60)]
             internal fixed int update_buffer_slot[5];
-
-            [FieldOffset(80)]
             internal fixed int update_last[5];
-
-            [FieldOffset(100)]
             internal fixed int update_golden[5];
-
-            [FieldOffset(120)]
             internal fixed int update_alt_ref[5];
-
-            [FieldOffset(140)]
             internal fixed int reference_last[5];
-
-            [FieldOffset(160)]
             internal fixed int reference_golden[5];
-
-            [FieldOffset(180)]
             internal fixed int reference_alt_ref[5];
-
-            [FieldOffset(200)]
             internal fixed long duration[5];
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_svc_ref_frame_config@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_svc_ref_frame_config@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcRefFrameConfig> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcRefFrameConfig>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcRefFrameConfig> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcRefFrameConfig>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxSvcRefFrameConfig managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxSvcRefFrameConfig managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxSvcRefFrameConfig __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxSvcRefFrameConfig __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcRefFrameConfig(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxSvcRefFrameConfig(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxSvcRefFrameConfig __CreateInstance(global::vpxmd.VpxSvcRefFrameConfig.__Internal native, bool skipVTables = false)
+        internal static VpxSvcRefFrameConfig __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcRefFrameConfig(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxSvcRefFrameConfig)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxSvcRefFrameConfig.__Internal native)
+        internal static VpxSvcRefFrameConfig __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcRefFrameConfig.__Internal));
-            *(global::vpxmd.VpxSvcRefFrameConfig.__Internal*) ret = native;
+            return new VpxSvcRefFrameConfig(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxSvcRefFrameConfig(global::vpxmd.VpxSvcRefFrameConfig.__Internal native, bool skipVTables = false)
+        private VpxSvcRefFrameConfig(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxSvcRefFrameConfig(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxSvcRefFrameConfig()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcRefFrameConfig.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxSvcRefFrameConfig(global::vpxmd.VpxSvcRefFrameConfig _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcRefFrameConfig.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance) = *((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxSvcRefFrameConfig __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Last buffer index.</summary>
         public int[] LstFbIdx
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->lst_fb_idx != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->lst_fb_idx[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->lst_fb_idx, 5);
             }
 
             set
@@ -6316,23 +10063,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->lst_fb_idx[i] = value[i];
+                        ((__Internal*)__Instance)->lst_fb_idx[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Golden buffer index.</summary>
         public int[] GldFbIdx
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->gld_fb_idx != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->gld_fb_idx[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->gld_fb_idx, 5);
             }
 
             set
@@ -6340,23 +10081,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->gld_fb_idx[i] = value[i];
+                        ((__Internal*)__Instance)->gld_fb_idx[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Altref buffer index.</summary>
         public int[] AltFbIdx
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->alt_fb_idx != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->alt_fb_idx[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->alt_fb_idx, 5);
             }
 
             set
@@ -6364,23 +10099,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->alt_fb_idx[i] = value[i];
+                        ((__Internal*)__Instance)->alt_fb_idx[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Update reference frames.</summary>
         public int[] UpdateBufferSlot
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_buffer_slot != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_buffer_slot[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->update_buffer_slot, 5);
             }
 
             set
@@ -6388,23 +10117,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->update_buffer_slot[i] = value[i];
+                        ((__Internal*)__Instance)->update_buffer_slot[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Update last.</summary>
         public int[] UpdateLast
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_last != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_last[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->update_last, 5);
             }
 
             set
@@ -6412,23 +10135,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->update_last[i] = value[i];
+                        ((__Internal*)__Instance)->update_last[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Update golden.</summary>
         public int[] UpdateGolden
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_golden != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_golden[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->update_golden, 5);
             }
 
             set
@@ -6436,23 +10153,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->update_golden[i] = value[i];
+                        ((__Internal*)__Instance)->update_golden[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Update altref.</summary>
         public int[] UpdateAltRef
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_alt_ref != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->update_alt_ref[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->update_alt_ref, 5);
             }
 
             set
@@ -6460,23 +10171,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->update_alt_ref[i] = value[i];
+                        ((__Internal*)__Instance)->update_alt_ref[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Last as reference.</summary>
         public int[] ReferenceLast
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_last != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_last[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->reference_last, 5);
             }
 
             set
@@ -6484,23 +10189,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->reference_last[i] = value[i];
+                        ((__Internal*)__Instance)->reference_last[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Golden as reference.</summary>
         public int[] ReferenceGolden
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_golden != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_golden[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->reference_golden, 5);
             }
 
             set
@@ -6508,23 +10207,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->reference_golden[i] = value[i];
+                        ((__Internal*)__Instance)->reference_golden[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Altref as reference.</summary>
         public int[] ReferenceAltRef
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_alt_ref != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->reference_alt_ref[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->reference_alt_ref, 5);
             }
 
             set
@@ -6532,23 +10225,17 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->reference_alt_ref[i] = value[i];
+                        ((__Internal*)__Instance)->reference_alt_ref[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Duration per spatial layer.</summary>
         public long[] Duration
         {
             get
             {
-                long[] __value = null;
-                if (((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->duration != null)
-                {
-                    __value = new long[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*) __Instance)->duration[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<long>(((__Internal*)__Instance)->duration, 5);
             }
 
             set
@@ -6556,7 +10243,7 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcRefFrameConfig.__Internal*)__Instance)->duration[i] = value[i];
+                        ((__Internal*)__Instance)->duration[i] = value[i];
                 }
             }
         }
@@ -6571,104 +10258,119 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class VpxSvcFrameDrop : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 28)]
+        [StructLayout(LayoutKind.Sequential, Size = 28)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal fixed int framedrop_thresh[5];
-
-            [FieldOffset(20)]
             internal global::vpxmd.SVC_LAYER_DROP_MODE framedrop_mode;
-
-            [FieldOffset(24)]
             internal int max_consec_drop;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_svc_frame_drop@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_svc_frame_drop@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcFrameDrop> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcFrameDrop>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcFrameDrop> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcFrameDrop>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxSvcFrameDrop managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxSvcFrameDrop managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxSvcFrameDrop __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxSvcFrameDrop __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcFrameDrop(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxSvcFrameDrop(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxSvcFrameDrop __CreateInstance(global::vpxmd.VpxSvcFrameDrop.__Internal native, bool skipVTables = false)
+        internal static VpxSvcFrameDrop __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcFrameDrop(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxSvcFrameDrop)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxSvcFrameDrop.__Internal native)
+        internal static VpxSvcFrameDrop __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcFrameDrop.__Internal));
-            *(global::vpxmd.VpxSvcFrameDrop.__Internal*) ret = native;
+            return new VpxSvcFrameDrop(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxSvcFrameDrop(global::vpxmd.VpxSvcFrameDrop.__Internal native, bool skipVTables = false)
+        private VpxSvcFrameDrop(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxSvcFrameDrop(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxSvcFrameDrop()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcFrameDrop.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxSvcFrameDrop(global::vpxmd.VpxSvcFrameDrop _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcFrameDrop.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxSvcFrameDrop.__Internal*) __Instance) = *((global::vpxmd.VpxSvcFrameDrop.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxSvcFrameDrop __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Frame drop thresholds</summary>
         public int[] FramedropThresh
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcFrameDrop.__Internal*) __Instance)->framedrop_thresh != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcFrameDrop.__Internal*) __Instance)->framedrop_thresh[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->framedrop_thresh, 5);
             }
 
             set
@@ -6676,34 +10378,36 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcFrameDrop.__Internal*)__Instance)->framedrop_thresh[i] = value[i];
+                        ((__Internal*)__Instance)->framedrop_thresh[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Layer-based or constrained dropping.</summary>
         public global::vpxmd.SVC_LAYER_DROP_MODE FramedropMode
         {
             get
             {
-                return ((global::vpxmd.VpxSvcFrameDrop.__Internal*) __Instance)->framedrop_mode;
+                return ((__Internal*)__Instance)->framedrop_mode;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcFrameDrop.__Internal*)__Instance)->framedrop_mode = value;
+                ((__Internal*)__Instance)->framedrop_mode = value;
             }
         }
 
+        /// <summary>Maximum consecutive drops, for any layer.</summary>
         public int MaxConsecDrop
         {
             get
             {
-                return ((global::vpxmd.VpxSvcFrameDrop.__Internal*) __Instance)->max_consec_drop;
+                return ((__Internal*)__Instance)->max_consec_drop;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcFrameDrop.__Internal*)__Instance)->max_consec_drop = value;
+                ((__Internal*)__Instance)->max_consec_drop = value;
             }
         }
     }
@@ -6712,101 +10416,118 @@ namespace vpxmd
     /// <remarks>This defines the spatial layer sync flag, defined per spatial layer.</remarks>
     public unsafe partial class VpxSvcSpatialLayerSync : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 24)]
+        [StructLayout(LayoutKind.Sequential, Size = 24)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal fixed int spatial_layer_sync[5];
-
-            [FieldOffset(20)]
             internal int base_layer_intra_only;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_svc_spatial_layer_sync@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_svc_spatial_layer_sync@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcSpatialLayerSync> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcSpatialLayerSync>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcSpatialLayerSync> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxSvcSpatialLayerSync>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxSvcSpatialLayerSync managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxSvcSpatialLayerSync managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxSvcSpatialLayerSync __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxSvcSpatialLayerSync __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcSpatialLayerSync(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxSvcSpatialLayerSync(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxSvcSpatialLayerSync __CreateInstance(global::vpxmd.VpxSvcSpatialLayerSync.__Internal native, bool skipVTables = false)
+        internal static VpxSvcSpatialLayerSync __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxSvcSpatialLayerSync(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxSvcSpatialLayerSync)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxSvcSpatialLayerSync.__Internal native)
+        internal static VpxSvcSpatialLayerSync __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcSpatialLayerSync.__Internal));
-            *(global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) ret = native;
+            return new VpxSvcSpatialLayerSync(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxSvcSpatialLayerSync(global::vpxmd.VpxSvcSpatialLayerSync.__Internal native, bool skipVTables = false)
+        private VpxSvcSpatialLayerSync(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxSvcSpatialLayerSync(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxSvcSpatialLayerSync()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcSpatialLayerSync.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxSvcSpatialLayerSync(global::vpxmd.VpxSvcSpatialLayerSync _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxSvcSpatialLayerSync.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) __Instance) = *((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxSvcSpatialLayerSync __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Sync layer flags</summary>
         public int[] SpatialLayerSync
         {
             get
             {
-                int[] __value = null;
-                if (((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) __Instance)->spatial_layer_sync != null)
-                {
-                    __value = new int[5];
-                    for (int i = 0; i < 5; i++)
-                        __value[i] = ((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) __Instance)->spatial_layer_sync[i];
-                }
-                return __value;
+                return CppSharp.Runtime.MarshalUtil.GetArray<int>(((__Internal*)__Instance)->spatial_layer_sync, 5);
             }
 
             set
@@ -6814,21 +10535,22 @@ namespace vpxmd
                 if (value != null)
                 {
                     for (int i = 0; i < 5; i++)
-                        ((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*)__Instance)->spatial_layer_sync[i] = value[i];
+                        ((__Internal*)__Instance)->spatial_layer_sync[i] = value[i];
                 }
             }
         }
 
+        /// <summary>Flag for setting Intra-only frame on base</summary>
         public int BaseLayerIntraOnly
         {
             get
             {
-                return ((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*) __Instance)->base_layer_intra_only;
+                return ((__Internal*)__Instance)->base_layer_intra_only;
             }
 
             set
             {
-                ((global::vpxmd.VpxSvcSpatialLayerSync.__Internal*)__Instance)->base_layer_intra_only = value;
+                ((__Internal*)__Instance)->base_layer_intra_only = value;
             }
         }
     }
@@ -6837,790 +10559,713 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_vp8_cx")]
-            internal static extern global::System.IntPtr VpxCodecVp8Cx();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_vp8_cx", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVp8Cx();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_vp9_cx")]
-            internal static extern global::System.IntPtr VpxCodecVp9Cx();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_vp9_cx", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVp9Cx();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_FRAME_FLAGS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_FRAME_FLAGS(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ROI_MAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_roi_map@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ROI_MAP(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_TEMPORAL_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ACTIVEMAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_active_map@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ACTIVEMAP(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ROI_MAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_roi_map@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ROI_MAP(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_SCALEMODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_scaling_mode@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCALEMODE(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_ROI_MAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_roi_map@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROI_MAP(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_CPUUSED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CPUUSED(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ACTIVEMAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_active_map@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ACTIVEMAP(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ENABLEAUTOALTREF@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ENABLEAUTOALTREF(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_SCALEMODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_scaling_mode@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCALEMODE(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_NOISE_SENSITIVITY@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_NOISE_SENSITIVITY(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_SHARPNESS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SHARPNESS(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_PARAMETERS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAX@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_PARAMETERS(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_STATIC_THRESHOLD@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_STATIC_THRESHOLD(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_REGISTER_CX_CALLBACK@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAX@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_REGISTER_CX_CALLBACK(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_TOKEN_PARTITIONS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TOKEN_PARTITIONS(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_layer_id@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_LAYER_ID(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_GET_LAST_QUANTIZER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_CPUUSED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CPUUSED(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_GET_LAST_QUANTIZER_64@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER_64(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ENABLEAUTOALTREF@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ENABLEAUTOALTREF(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ARNR_MAXFRAMES@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_NOISE_SENSITIVITY@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_NOISE_SENSITIVITY(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ARNR_STRENGTH@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_STRENGTH(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_SHARPNESS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SHARPNESS(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_ARNR_TYPE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_TYPE(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_STATIC_THRESHOLD@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_STATIC_THRESHOLD(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_TUNING@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TUNING(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_TOKEN_PARTITIONS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TOKEN_PARTITIONS(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_CQ_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CQ_LEVEL(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ARNR_MAXFRAMES@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_MAX_INTRA_BITRATE_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_MAX_INTRA_BITRATE_PCT(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ARNR_STRENGTH@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_STRENGTH(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_FRAME_FLAGS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_FRAME_FLAGS(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_ARNR_TYPE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_TYPE(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_MAX_INTER_BITRATE_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_INTER_BITRATE_PCT(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_TUNING@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TUNING(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_GF_CBR_BOOST_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_GF_CBR_BOOST_PCT(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_CQ_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CQ_LEVEL(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_TEMPORAL_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_TILE_COLUMNS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_COLUMNS(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_SCREEN_CONTENT_MODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_TILE_ROWS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_ROWS(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_LOSSLESS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_LOSSLESS(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_TPL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TPL(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_TILE_COLUMNS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_COLUMNS(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_GET_LAST_QUANTIZER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_TILE_ROWS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_ROWS(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_GET_LAST_QUANTIZER_64@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER_64(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_FRAME_PARALLEL_DECODING@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PARALLEL_DECODING(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_GET_SVC_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_layer_id@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_LAYER_ID(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_AQ_MODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_AQ_MODE(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_MAX_INTRA_BITRATE_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_MAX_INTRA_BITRATE_PCT(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_FRAME_PERIODIC_BOOST@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PERIODIC_BOOST(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_MAX_INTER_BITRATE_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_INTER_BITRATE_PCT(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_NOISE_SENSITIVITY@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_NOISE_SENSITIVITY(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_GF_CBR_BOOST_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8E_SET_SCREEN_CONTENT_MODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_ROI_MAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_roi_map@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROI_MAP(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_GF_CBR_BOOST_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_GF_CBR_BOOST_PCT(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_PARAMETERS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAX@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_PARAMETERS(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_LOSSLESS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_LOSSLESS(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_layer_id@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_LAYER_ID(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_FRAME_PARALLEL_DECODING@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PARALLEL_DECODING(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_TUNE_CONTENT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TUNE_CONTENT(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_AQ_MODE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_AQ_MODE(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_SVC_LAYER_ID@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_layer_id@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_LAYER_ID(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_ALT_REF_AQ@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ALT_REF_AQ(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_REGISTER_CX_CALLBACK@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAX@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_REGISTER_CX_CALLBACK(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_FRAME_PERIODIC_BOOST@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PERIODIC_BOOST(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_COLOR_SPACE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_SPACE(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_NOISE_SENSITIVITY@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_NOISE_SENSITIVITY(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_MIN_GF_INTERVAL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MIN_GF_INTERVAL(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_TUNE_CONTENT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TUNE_CONTENT(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_MAX_GF_INTERVAL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_GF_INTERVAL(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_COLOR_SPACE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_SPACE(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_ACTIVEMAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_active_map@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_ACTIVEMAP(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_MIN_GF_INTERVAL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MIN_GF_INTERVAL(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_COLOR_RANGE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_RANGE(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_MAX_GF_INTERVAL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_GF_INTERVAL(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_REF_FRAME_CONFIG@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_ref_frame_config@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_REF_FRAME_CONFIG(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_GET_ACTIVEMAP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_active_map@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_ACTIVEMAP(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_RENDER_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_RENDER_SIZE(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_COLOR_RANGE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_RANGE(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_TARGET_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TARGET_LEVEL(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_REF_FRAME_CONFIG@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_ref_frame_config@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_REF_FRAME_CONFIG(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_ROW_MT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROW_MT(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_RENDER_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_RENDER_SIZE(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LEVEL(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_TARGET_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TARGET_LEVEL(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_ALT_REF_AQ@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ALT_REF_AQ(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_ROW_MT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROW_MT(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_GF_CBR_BOOST_PCT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_GET_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LEVEL(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_ENABLE_MOTION_VECTOR_UNIT_TEST@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_ENABLE_MOTION_VECTOR_UNIT_TEST(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_ENABLE_MOTION_VECTOR_UNIT_TEST@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_ENABLE_MOTION_VECTOR_UNIT_TEST(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_INTER_LAYER_PRED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_INTER_LAYER_PRED(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_INTER_LAYER_PRED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_INTER_LAYER_PRED(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_FRAME_DROP_LAYER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_frame_drop@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_FRAME_DROP_LAYER(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_FRAME_DROP_LAYER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_frame_drop@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_FRAME_DROP_LAYER(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_SVC_REF_FRAME_CONFIG@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_ref_frame_config@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_REF_FRAME_CONFIG(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_GET_SVC_REF_FRAME_CONFIG@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_ref_frame_config@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_REF_FRAME_CONFIG(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_GF_TEMPORAL_REF@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_GF_TEMPORAL_REF(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_GF_TEMPORAL_REF@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_GF_TEMPORAL_REF(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_SVC_SPATIAL_LAYER_SYNC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_spatial_layer_sync@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_SPATIAL_LAYER_SYNC(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_SVC_SPATIAL_LAYER_SYNC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_svc_spatial_layer_sync@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_SPATIAL_LAYER_SYNC(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_TPL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TPL(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_POSTENCODE_DROP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_POSTENCODE_DROP(global::System.IntPtr _0, int _1, uint _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_POSTENCODE_DROP@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_POSTENCODE_DROP(__IntPtr _0, int _1, uint _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9E_SET_DELTA_Q_UV@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DELTA_Q_UV(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_DELTA_Q_UV@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DELTA_Q_UV(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_DISABLE_OVERSHOOT_MAXQ_CBR@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DISABLE_OVERSHOOT_MAXQ_CBR(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_DISABLE_LOOPFILTER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DISABLE_LOOPFILTER(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_EXTERNAL_RATE_CONTROL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_rc_funcs@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_EXTERNAL_RATE_CONTROL(__IntPtr _0, int _1, __IntPtr _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_RTC_EXTERNAL_RATECTRL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_RTC_EXTERNAL_RATECTRL(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_LOOPFILTER_LEVEL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LOOPFILTER_LEVEL(__IntPtr _0, int _1, int* _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_GET_LAST_QUANTIZER_SVC_LAYERS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LAST_QUANTIZER_SVC_LAYERS(__IntPtr _0, int _1, int* _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8E_SET_RTC_EXTERNAL_RATECTRL@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_RTC_EXTERNAL_RATECTRL(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9E_SET_QUANTIZER_ONE_PASS@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_QUANTIZER_ONE_PASS(__IntPtr _0, int _1, int _2);
         }
 
+        /// <summary>The interface to the VP8 encoder.</summary>
         public static global::vpxmd.VpxCodecIface VpxCodecVp8Cx()
         {
-            var __ret = __Internal.VpxCodecVp8Cx();
-            global::vpxmd.VpxCodecIface __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxCodecIface.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxCodecIface) global::vpxmd.VpxCodecIface.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxCodecIface.__CreateInstance(__ret);
+            var ___ret = __Internal.VpxCodecVp8Cx();
+            var __result0 = global::vpxmd.VpxCodecIface.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
+        /// <summary>The interface to the VP9 encoder.</summary>
         public static global::vpxmd.VpxCodecIface VpxCodecVp9Cx()
         {
-            var __ret = __Internal.VpxCodecVp9Cx();
-            global::vpxmd.VpxCodecIface __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxCodecIface.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxCodecIface) global::vpxmd.VpxCodecIface.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxCodecIface.__CreateInstance(__ret);
+            var ___ret = __Internal.VpxCodecVp9Cx();
+            var __result0 = global::vpxmd.VpxCodecIface.__GetOrCreateInstance(___ret, false);
             return __result0;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_FRAME_FLAGS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_FRAME_FLAGS(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(__arg0, _1, _2);
-            return __ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ROI_MAP(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRoiMap _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ROI_MAP(__arg0, _1, __arg2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROI_MAP(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRoiMap _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_ROI_MAP(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ROI_MAP(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ACTIVEMAP(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxActiveMap _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ACTIVEMAP(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ACTIVEMAP(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCALEMODE(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxScalingMode _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_SCALEMODE(__arg0, _1, __arg2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_PARAMETERS(global::vpxmd.VpxCodecCtx _0, int _1, global::System.IntPtr _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_PARAMETERS(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_REGISTER_CX_CALLBACK(global::vpxmd.VpxCodecCtx _0, int _1, global::System.IntPtr _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_REGISTER_CX_CALLBACK(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcLayerId _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_LAYER_ID(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_SCALEMODE(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CPUUSED(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_CPUUSED(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_CPUUSED(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ENABLEAUTOALTREF(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ENABLEAUTOALTREF(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ENABLEAUTOALTREF(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_NOISE_SENSITIVITY(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_NOISE_SENSITIVITY(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_NOISE_SENSITIVITY(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SHARPNESS(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_SHARPNESS(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_SHARPNESS(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_STATIC_THRESHOLD(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_STATIC_THRESHOLD(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_STATIC_THRESHOLD(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TOKEN_PARTITIONS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_TOKEN_PARTITIONS(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_STRENGTH(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ARNR_STRENGTH(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_TYPE(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_ARNR_TYPE(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TUNING(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_TUNING(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CQ_LEVEL(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_CQ_LEVEL(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_COLUMNS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_TILE_COLUMNS(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_ROWS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_TILE_ROWS(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TPL(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_TPL(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_TOKEN_PARTITIONS(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP8E_GET_LAST_QUANTIZER(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP8E_GET_LAST_QUANTIZER(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_GET_LAST_QUANTIZER_64(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP8E_GET_LAST_QUANTIZER_64(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP8E_GET_LAST_QUANTIZER_64(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcLayerId _2)
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_GET_SVC_LAYER_ID(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ARNR_MAXFRAMES(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_STRENGTH(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ARNR_STRENGTH(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_ARNR_TYPE(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_ARNR_TYPE(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TUNING(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_TUNING(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_CQ_LEVEL(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_CQ_LEVEL(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_MAX_INTRA_BITRATE_PCT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_MAX_INTRA_BITRATE_PCT(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_MAX_INTRA_BITRATE_PCT(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_FRAME_FLAGS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_FRAME_FLAGS(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_INTER_BITRATE_PCT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_MAX_INTER_BITRATE_PCT(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_MAX_INTER_BITRATE_PCT(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_GF_CBR_BOOST_PCT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_GF_CBR_BOOST_PCT(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_GF_CBR_BOOST_PCT(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_TEMPORAL_LAYER_ID(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_SCREEN_CONTENT_MODE(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_LOSSLESS(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_LOSSLESS(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_LOSSLESS(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_COLUMNS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_TILE_COLUMNS(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TILE_ROWS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_TILE_ROWS(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PARALLEL_DECODING(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_FRAME_PARALLEL_DECODING(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_FRAME_PARALLEL_DECODING(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_AQ_MODE(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_AQ_MODE(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ALT_REF_AQ(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_ALT_REF_AQ(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_AQ_MODE(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_FRAME_PERIODIC_BOOST(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_FRAME_PERIODIC_BOOST(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_FRAME_PERIODIC_BOOST(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_NOISE_SENSITIVITY(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_NOISE_SENSITIVITY(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_NOISE_SENSITIVITY(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROI_MAP(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRoiMap _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_ROI_MAP(__arg0, _1, __arg2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_PARAMETERS(global::vpxmd.VpxCodecCtx _0, int _1, __IntPtr _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_PARAMETERS(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcLayerId _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_LAYER_ID(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TUNE_CONTENT(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_TUNE_CONTENT(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_TUNE_CONTENT(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_LAYER_ID(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcLayerId _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_GET_SVC_LAYER_ID(__arg0, _1, __arg2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_REGISTER_CX_CALLBACK(global::vpxmd.VpxCodecCtx _0, int _1, __IntPtr _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_REGISTER_CX_CALLBACK(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_SPACE(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_COLOR_SPACE(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_COLOR_SPACE(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MIN_GF_INTERVAL(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_MIN_GF_INTERVAL(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_MIN_GF_INTERVAL(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_MAX_GF_INTERVAL(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_MAX_GF_INTERVAL(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_MAX_GF_INTERVAL(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_ACTIVEMAP(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxActiveMap _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_GET_ACTIVEMAP(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_GET_ACTIVEMAP(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_COLOR_RANGE(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_COLOR_RANGE(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_COLOR_RANGE(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_REF_FRAME_CONFIG(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcRefFrameConfig _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_REF_FRAME_CONFIG(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_REF_FRAME_CONFIG(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_RENDER_SIZE(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP9E_SET_RENDER_SIZE(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP9E_SET_RENDER_SIZE(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TARGET_LEVEL(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_TARGET_LEVEL(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_TARGET_LEVEL(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ROW_MT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_ROW_MT(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_ROW_MT(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LEVEL(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP9E_GET_LEVEL(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP9E_GET_LEVEL(__arg0, _1, __arg2);
+                return ___ret;
             }
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_ALT_REF_AQ(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_ALT_REF_AQ(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_GF_CBR_BOOST_PCT(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_ENABLE_MOTION_VECTOR_UNIT_TEST(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_ENABLE_MOTION_VECTOR_UNIT_TEST(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_ENABLE_MOTION_VECTOR_UNIT_TEST(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_INTER_LAYER_PRED(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_INTER_LAYER_PRED(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_INTER_LAYER_PRED(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_FRAME_DROP_LAYER(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcFrameDrop _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_FRAME_DROP_LAYER(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_FRAME_DROP_LAYER(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_SVC_REF_FRAME_CONFIG(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcRefFrameConfig _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_GET_SVC_REF_FRAME_CONFIG(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_GET_SVC_REF_FRAME_CONFIG(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_GF_TEMPORAL_REF(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_GF_TEMPORAL_REF(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_GF_TEMPORAL_REF(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_SVC_SPATIAL_LAYER_SYNC(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxSvcSpatialLayerSync _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_SVC_SPATIAL_LAYER_SYNC(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_SVC_SPATIAL_LAYER_SYNC(__arg0, _1, __arg2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_TPL(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_TPL(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_POSTENCODE_DROP(global::vpxmd.VpxCodecCtx _0, int _1, uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_POSTENCODE_DROP(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_POSTENCODE_DROP(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DELTA_Q_UV(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9E_SET_DELTA_Q_UV(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_DELTA_Q_UV(__arg0, _1, _2);
+            return ___ret;
         }
 
-        /// <summary>
-        /// <para>This interface provides the capability to encode raw VP8 streams.</para>
-        /// <para>@{</para>
-        /// </summary>
-        public static global::vpxmd.VpxCodecIface VpxCodecVp8CxAlgo
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DISABLE_OVERSHOOT_MAXQ_CBR(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            get
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp8_cx_algo");
-                return global::vpxmd.VpxCodecIface.__CreateInstance(*__ptr);
-            }
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_DISABLE_OVERSHOOT_MAXQ_CBR(__arg0, _1, _2);
+            return ___ret;
+        }
 
-            set
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_DISABLE_LOOPFILTER(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_DISABLE_LOOPFILTER(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_EXTERNAL_RATE_CONTROL(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRcFuncs _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_EXTERNAL_RATE_CONTROL(__arg0, _1, __arg2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_RTC_EXTERNAL_RATECTRL(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_RTC_EXTERNAL_RATECTRL(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LOOPFILTER_LEVEL(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            fixed (int* ___22 = &_2)
             {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp8_cx_algo");
-                if (ReferenceEquals(value, null))
-                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                *__ptr = *(global::vpxmd.VpxCodecIface.__Internal*) value.__Instance;
+                var __arg2 = ___22;
+                var ___ret = __Internal.VpxCodecControlVP9E_GET_LOOPFILTER_LEVEL(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
-        /// <summary>
-        /// <para>This interface provides the capability to encode raw VP9 streams.</para>
-        /// <para>@{</para>
-        /// </summary>
-        public static global::vpxmd.VpxCodecIface VpxCodecVp9CxAlgo
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_GET_LAST_QUANTIZER_SVC_LAYERS(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            get
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            fixed (int* ___22 = &_2)
             {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp9_cx_algo");
-                return global::vpxmd.VpxCodecIface.__CreateInstance(*__ptr);
+                var __arg2 = ___22;
+                var ___ret = __Internal.VpxCodecControlVP9E_GET_LAST_QUANTIZER_SVC_LAYERS(__arg0, _1, __arg2);
+                return ___ret;
             }
+        }
 
-            set
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp9_cx_algo");
-                if (ReferenceEquals(value, null))
-                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                *__ptr = *(global::vpxmd.VpxCodecIface.__Internal*) value.__Instance;
-            }
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8E_SET_RTC_EXTERNAL_RATECTRL(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8E_SET_RTC_EXTERNAL_RATECTRL(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9E_SET_QUANTIZER_ONE_PASS(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9E_SET_QUANTIZER_ONE_PASS(__arg0, _1, _2);
+            return ___ret;
         }
     }
 
@@ -7682,128 +11327,155 @@ namespace vpxmd
     /// </remarks>
     public unsafe partial class Vp8PostprocCfg : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 12)]
+        [StructLayout(LayoutKind.Sequential, Size = 12)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal int post_proc_flag;
-
-            [FieldOffset(4)]
             internal int deblocking_level;
-
-            [FieldOffset(8)]
             internal int noise_level;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vp8_postproc_cfg@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vp8_postproc_cfg@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp8PostprocCfg> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp8PostprocCfg>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp8PostprocCfg> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp8PostprocCfg>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.Vp8PostprocCfg managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.Vp8PostprocCfg managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.Vp8PostprocCfg __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static Vp8PostprocCfg __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.Vp8PostprocCfg(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new Vp8PostprocCfg(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.Vp8PostprocCfg __CreateInstance(global::vpxmd.Vp8PostprocCfg.__Internal native, bool skipVTables = false)
+        internal static Vp8PostprocCfg __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.Vp8PostprocCfg(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (Vp8PostprocCfg)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.Vp8PostprocCfg.__Internal native)
+        internal static Vp8PostprocCfg __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp8PostprocCfg.__Internal));
-            *(global::vpxmd.Vp8PostprocCfg.__Internal*) ret = native;
+            return new Vp8PostprocCfg(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private Vp8PostprocCfg(global::vpxmd.Vp8PostprocCfg.__Internal native, bool skipVTables = false)
+        private Vp8PostprocCfg(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected Vp8PostprocCfg(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public Vp8PostprocCfg()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp8PostprocCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public Vp8PostprocCfg(global::vpxmd.Vp8PostprocCfg _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp8PostprocCfg.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.Vp8PostprocCfg.__Internal*) __Instance) = *((global::vpxmd.Vp8PostprocCfg.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.Vp8PostprocCfg __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>
+        /// <para>the types of post processing to be done, should be combination of</para>
+        /// <para>&quot;vp8_postproc_level&quot;</para>
+        /// </summary>
         public int PostProcFlag
         {
             get
             {
-                return ((global::vpxmd.Vp8PostprocCfg.__Internal*) __Instance)->post_proc_flag;
+                return ((__Internal*)__Instance)->post_proc_flag;
             }
 
             set
             {
-                ((global::vpxmd.Vp8PostprocCfg.__Internal*)__Instance)->post_proc_flag = value;
+                ((__Internal*)__Instance)->post_proc_flag = value;
             }
         }
 
+        /// <summary>the strength of deblocking, valid range [0, 16]</summary>
         public int DeblockingLevel
         {
             get
             {
-                return ((global::vpxmd.Vp8PostprocCfg.__Internal*) __Instance)->deblocking_level;
+                return ((__Internal*)__Instance)->deblocking_level;
             }
 
             set
             {
-                ((global::vpxmd.Vp8PostprocCfg.__Internal*)__Instance)->deblocking_level = value;
+                ((__Internal*)__Instance)->deblocking_level = value;
             }
         }
 
+        /// <summary>the strength of additive noise, valid range [0, 16]</summary>
         public int NoiseLevel
         {
             get
             {
-                return ((global::vpxmd.Vp8PostprocCfg.__Internal*) __Instance)->noise_level;
+                return ((__Internal*)__Instance)->noise_level;
             }
 
             set
             {
-                ((global::vpxmd.Vp8PostprocCfg.__Internal*)__Instance)->noise_level = value;
+                ((__Internal*)__Instance)->noise_level = value;
             }
         }
     }
@@ -7812,114 +11484,139 @@ namespace vpxmd
     /// <remarks>Define the data struct to access vp8 reference frames.</remarks>
     public unsafe partial class VpxRefFrame : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 144)]
+        [StructLayout(LayoutKind.Sequential, Size = 144)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal global::vpxmd.VpxRefFrameType frame_type;
-
-            [FieldOffset(8)]
             internal global::vpxmd.VpxImage.__Internal img;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_ref_frame@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_ref_frame@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRefFrame> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRefFrame>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRefFrame> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxRefFrame>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxRefFrame managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxRefFrame managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxRefFrame __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxRefFrame __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRefFrame(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxRefFrame(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxRefFrame __CreateInstance(global::vpxmd.VpxRefFrame.__Internal native, bool skipVTables = false)
+        internal static VpxRefFrame __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxRefFrame(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxRefFrame)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxRefFrame.__Internal native)
+        internal static VpxRefFrame __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRefFrame.__Internal));
-            *(global::vpxmd.VpxRefFrame.__Internal*) ret = native;
+            return new VpxRefFrame(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxRefFrame(global::vpxmd.VpxRefFrame.__Internal native, bool skipVTables = false)
+        private VpxRefFrame(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxRefFrame(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxRefFrame()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRefFrame.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxRefFrame(global::vpxmd.VpxRefFrame _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxRefFrame.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxRefFrame.__Internal*) __Instance) = *((global::vpxmd.VpxRefFrame.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxRefFrame __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>which reference frame</summary>
         public global::vpxmd.VpxRefFrameType FrameType
         {
             get
             {
-                return ((global::vpxmd.VpxRefFrame.__Internal*) __Instance)->frame_type;
+                return ((__Internal*)__Instance)->frame_type;
             }
 
             set
             {
-                ((global::vpxmd.VpxRefFrame.__Internal*)__Instance)->frame_type = value;
+                ((__Internal*)__Instance)->frame_type = value;
             }
         }
 
+        /// <summary>reference frame data in image format</summary>
         public global::vpxmd.VpxImage Img
         {
             get
             {
-                return global::vpxmd.VpxImage.__CreateInstance(new global::System.IntPtr(&((global::vpxmd.VpxRefFrame.__Internal*) __Instance)->img));
+                return global::vpxmd.VpxImage.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->img));
             }
 
             set
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                ((global::vpxmd.VpxRefFrame.__Internal*)__Instance)->img = *(global::vpxmd.VpxImage.__Internal*) value.__Instance;
+                ((__Internal*)__Instance)->img = *(global::vpxmd.VpxImage.__Internal*) value.__Instance;
             }
         }
     }
@@ -7928,114 +11625,139 @@ namespace vpxmd
     /// <remarks>Define the data struct to access vp9 reference frames.</remarks>
     public unsafe partial class Vp9RefFrame : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 144)]
+        [StructLayout(LayoutKind.Sequential, Size = 144)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
             internal int idx;
-
-            [FieldOffset(8)]
             internal global::vpxmd.VpxImage.__Internal img;
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vp9_ref_frame@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vp9_ref_frame@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp9RefFrame> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp9RefFrame>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp9RefFrame> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.Vp9RefFrame>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.Vp9RefFrame managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.Vp9RefFrame managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.Vp9RefFrame __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static Vp9RefFrame __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.Vp9RefFrame(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new Vp9RefFrame(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.Vp9RefFrame __CreateInstance(global::vpxmd.Vp9RefFrame.__Internal native, bool skipVTables = false)
+        internal static Vp9RefFrame __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.Vp9RefFrame(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (Vp9RefFrame)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.Vp9RefFrame.__Internal native)
+        internal static Vp9RefFrame __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp9RefFrame.__Internal));
-            *(global::vpxmd.Vp9RefFrame.__Internal*) ret = native;
+            return new Vp9RefFrame(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private Vp9RefFrame(global::vpxmd.Vp9RefFrame.__Internal native, bool skipVTables = false)
+        private Vp9RefFrame(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected Vp9RefFrame(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public Vp9RefFrame()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp9RefFrame.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public Vp9RefFrame(global::vpxmd.Vp9RefFrame _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.Vp9RefFrame.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.Vp9RefFrame.__Internal*) __Instance) = *((global::vpxmd.Vp9RefFrame.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.Vp9RefFrame __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>frame index to get (input)</summary>
         public int Idx
         {
             get
             {
-                return ((global::vpxmd.Vp9RefFrame.__Internal*) __Instance)->idx;
+                return ((__Internal*)__Instance)->idx;
             }
 
             set
             {
-                ((global::vpxmd.Vp9RefFrame.__Internal*)__Instance)->idx = value;
+                ((__Internal*)__Instance)->idx = value;
             }
         }
 
+        /// <summary>img structure to populate (output)</summary>
         public global::vpxmd.VpxImage Img
         {
             get
             {
-                return global::vpxmd.VpxImage.__CreateInstance(new global::System.IntPtr(&((global::vpxmd.Vp9RefFrame.__Internal*) __Instance)->img));
+                return global::vpxmd.VpxImage.__CreateInstance(new __IntPtr(&((__Internal*)__Instance)->img));
             }
 
             set
             {
                 if (ReferenceEquals(value, null))
                     throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                ((global::vpxmd.Vp9RefFrame.__Internal*)__Instance)->img = *(global::vpxmd.VpxImage.__Internal*) value.__Instance;
+                ((__Internal*)__Instance)->img = *(global::vpxmd.VpxImage.__Internal*) value.__Instance;
             }
         }
     }
@@ -8044,57 +11766,49 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8_SET_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_ref_frame@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_REFERENCE(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8_SET_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_ref_frame@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_REFERENCE(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8_COPY_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_ref_frame@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8COPY_REFERENCE(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8_COPY_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_ref_frame@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8COPY_REFERENCE(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8_SET_POSTPROC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvp8_postproc_cfg@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_POSTPROC(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8_SET_POSTPROC@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvp8_postproc_cfg@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_POSTPROC(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9_GET_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvp9_ref_frame@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9GET_REFERENCE(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9_GET_REFERENCE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvp9_ref_frame@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9GET_REFERENCE(__IntPtr _0, int _1, __IntPtr _2);
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_REFERENCE(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRefFrame _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8SET_REFERENCE(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8SET_REFERENCE(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8COPY_REFERENCE(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxRefFrame _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8COPY_REFERENCE(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8COPY_REFERENCE(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8SET_POSTPROC(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.Vp8PostprocCfg _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8SET_POSTPROC(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8SET_POSTPROC(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9GET_REFERENCE(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.Vp9RefFrame _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9GET_REFERENCE(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9GET_REFERENCE(__arg0, _1, __arg2);
+            return ___ret;
         }
     }
 
@@ -8208,8 +11922,8 @@ namespace vpxmd
     /// <para>Decrypt n bytes of data from input -&gt; output, using the decrypt_state</para>
     /// <para>passed in VPXD_SET_DECRYPTOR.</para>
     /// </summary>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void VpxDecryptCb(global::System.IntPtr decrypt_state, byte* input, byte* output, int count);
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(__CallingConvention.Cdecl)]
+    public unsafe delegate void VpxDecryptCb(__IntPtr decrypt_state, byte* input, byte* output, int count);
 
     /// <summary>Structure to hold decryption state</summary>
     /// <remarks>Defines a structure to hold the decryption state and access function.</remarks>
@@ -8217,113 +11931,138 @@ namespace vpxmd
     /// <remarks>Defines a structure to hold the decryption state and access function.</remarks>
     public unsafe partial class VpxDecryptInit : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
         public partial struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr decrypt_cb;
+            internal __IntPtr decrypt_cb;
+            internal __IntPtr decrypt_state;
 
-            [FieldOffset(8)]
-            internal global::System.IntPtr decrypt_state;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0vpx_decrypt_init@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr __instance, global::System.IntPtr _0);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "??0vpx_decrypt_init@@QEAA@AEBU0@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr cctor(__IntPtr __instance, __IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public __IntPtr __Instance { get; protected set; }
 
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxDecryptInit> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxDecryptInit>();
+        internal static readonly new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxDecryptInit> NativeToManagedMap =
+            new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::vpxmd.VpxDecryptInit>();
+
+        internal static void __RecordNativeToManagedMapping(IntPtr native, global::vpxmd.VpxDecryptInit managed)
+        {
+            NativeToManagedMap[native] = managed;
+        }
+
+        internal static bool __TryGetNativeToManagedMapping(IntPtr native, out global::vpxmd.VpxDecryptInit managed)
+        {
+    
+            return NativeToManagedMap.TryGetValue(native, out managed);
+        }
 
         protected bool __ownsNativeInstance;
 
-        internal static global::vpxmd.VpxDecryptInit __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static VpxDecryptInit __CreateInstance(__IntPtr native, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxDecryptInit(native.ToPointer(), skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            return new VpxDecryptInit(native.ToPointer(), skipVTables);
         }
 
-        internal static global::vpxmd.VpxDecryptInit __CreateInstance(global::vpxmd.VpxDecryptInit.__Internal native, bool skipVTables = false)
+        internal static VpxDecryptInit __GetOrCreateInstance(__IntPtr native, bool saveInstance = false, bool skipVTables = false)
         {
-            return new global::vpxmd.VpxDecryptInit(native, skipVTables);
+            if (native == __IntPtr.Zero)
+                return null;
+            if (__TryGetNativeToManagedMapping(native, out var managed))
+                return (VpxDecryptInit)managed;
+            var result = __CreateInstance(native, skipVTables);
+            if (saveInstance)
+                __RecordNativeToManagedMapping(native, result);
+            return result;
         }
 
-        private static void* __CopyValue(global::vpxmd.VpxDecryptInit.__Internal native)
+        internal static VpxDecryptInit __CreateInstance(__Internal native, bool skipVTables = false)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxDecryptInit.__Internal));
-            *(global::vpxmd.VpxDecryptInit.__Internal*) ret = native;
+            return new VpxDecryptInit(native, skipVTables);
+        }
+
+        private static void* __CopyValue(__Internal native)
+        {
+            var ret = Marshal.AllocHGlobal(sizeof(__Internal));
+            *(__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VpxDecryptInit(global::vpxmd.VpxDecryptInit.__Internal native, bool skipVTables = false)
+        private VpxDecryptInit(__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         protected VpxDecryptInit(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            __Instance = new __IntPtr(native);
         }
 
         public VpxDecryptInit()
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxDecryptInit.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
         }
 
         public VpxDecryptInit(global::vpxmd.VpxDecryptInit _0)
         {
             __Instance = Marshal.AllocHGlobal(sizeof(global::vpxmd.VpxDecryptInit.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            __RecordNativeToManagedMapping(__Instance, this);
             *((global::vpxmd.VpxDecryptInit.__Internal*) __Instance) = *((global::vpxmd.VpxDecryptInit.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(disposing: true, callNativeDtor : __ownsNativeInstance );
         }
 
-        public virtual void Dispose(bool disposing)
+        partial void DisposePartial(bool disposing);
+
+        internal protected virtual void Dispose(bool disposing, bool callNativeDtor )
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::vpxmd.VpxDecryptInit __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(__Instance, out _);
+            DisposePartial(disposing);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
+        /// <summary>Decrypt callback.</summary>
         public global::vpxmd.VpxDecryptCb DecryptCb
         {
             get
             {
-                var __ptr0 = ((global::vpxmd.VpxDecryptInit.__Internal*) __Instance)->decrypt_cb;
+                var __ptr0 = ((__Internal*)__Instance)->decrypt_cb;
                 return __ptr0 == IntPtr.Zero? null : (global::vpxmd.VpxDecryptCb) Marshal.GetDelegateForFunctionPointer(__ptr0, typeof(global::vpxmd.VpxDecryptCb));
             }
 
             set
             {
-                ((global::vpxmd.VpxDecryptInit.__Internal*)__Instance)->decrypt_cb = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
+                ((__Internal*)__Instance)->decrypt_cb = value == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(value);
             }
         }
 
-        public global::System.IntPtr DecryptState
+        /// <summary>Decryption state.</summary>
+        public __IntPtr DecryptState
         {
             get
             {
-                return ((global::vpxmd.VpxDecryptInit.__Internal*) __Instance)->decrypt_state;
+                return ((__Internal*)__Instance)->decrypt_state;
             }
 
             set
             {
-                ((global::vpxmd.VpxDecryptInit.__Internal*)__Instance)->decrypt_state = (global::System.IntPtr) value;
+                ((__Internal*)__Instance)->decrypt_state = (__IntPtr) value;
             }
         }
     }
@@ -8332,277 +12071,207 @@ namespace vpxmd
     {
         public partial struct __Internal
         {
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_vp8_dx")]
-            internal static extern global::System.IntPtr VpxCodecVp8Dx();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_vp8_dx", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVp8Dx();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="vpx_codec_vp9_dx")]
-            internal static extern global::System.IntPtr VpxCodecVp9Dx();
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "vpx_codec_vp9_dx", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern __IntPtr VpxCodecVp9Dx();
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8D_GET_LAST_REF_UPDATES@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_UPDATES(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8D_GET_LAST_REF_UPDATES@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_UPDATES(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8D_GET_FRAME_CORRUPTED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_FRAME_CORRUPTED(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8D_GET_FRAME_CORRUPTED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_FRAME_CORRUPTED(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8D_GET_LAST_REF_USED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_USED(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8D_GET_LAST_REF_USED@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_USED(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VPXD_GET_LAST_QUANTIZER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_GET_LAST_QUANTIZER(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VPXD_SET_DECRYPTOR@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_decrypt_init@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_SET_DECRYPTOR(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VPXD_SET_DECRYPTOR@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_decrypt_init@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_SET_DECRYPTOR(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP8D_SET_DECRYPTOR@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_decrypt_init@@@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_SET_DECRYPTOR(__IntPtr _0, int _1, __IntPtr _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP8D_SET_DECRYPTOR@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAUvpx_decrypt_init@@@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_SET_DECRYPTOR(global::System.IntPtr _0, int _1, global::System.IntPtr _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9D_GET_FRAME_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_FRAME_SIZE(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9D_GET_DISPLAY_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_DISPLAY_SIZE(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9D_GET_DISPLAY_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_DISPLAY_SIZE(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9D_GET_BIT_DEPTH@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAI@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_BIT_DEPTH(global::System.IntPtr _0, int _1, uint* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9D_GET_BIT_DEPTH@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAI@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_BIT_DEPTH(__IntPtr _0, int _1, uint* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9D_GET_FRAME_SIZE@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_FRAME_SIZE(global::System.IntPtr _0, int _1, int* _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9_SET_BYTE_ALIGNMENT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9SET_BYTE_ALIGNMENT(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9_INVERT_TILE_DECODE_ORDER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9INVERT_TILE_DECODE_ORDER(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9_INVERT_TILE_DECODE_ORDER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9INVERT_TILE_DECODE_ORDER(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9_DECODE_SVC_SPATIAL_LAYER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9_SET_SKIP_LOOP_FILTER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9SET_SKIP_LOOP_FILTER(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9_SET_SKIP_LOOP_FILTER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9SET_SKIP_LOOP_FILTER(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9_DECODE_SVC_SPATIAL_LAYER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(__IntPtr _0, int _1, int _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9D_SET_ROW_MT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_ROW_MT(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VPXD_GET_LAST_QUANTIZER@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HPEAH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_GET_LAST_QUANTIZER(__IntPtr _0, int _1, int* _2);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("vpxmd", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="?vpx_codec_control_VP9D_SET_LOOP_FILTER_OPT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z")]
-            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_LOOP_FILTER_OPT(global::System.IntPtr _0, int _1, int _2);
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9D_SET_ROW_MT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_ROW_MT(__IntPtr _0, int _1, int _2);
+
+            [SuppressUnmanagedCodeSecurity, DllImport("vpxmd", EntryPoint = "?vpx_codec_control_VP9D_SET_LOOP_FILTER_OPT@@YA?AW4vpx_codec_err_t@@PEAUvpx_codec_ctx@@HH@Z", CallingConvention = __CallingConvention.Cdecl)]
+            internal static extern global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_LOOP_FILTER_OPT(__IntPtr _0, int _1, int _2);
         }
 
+        /// <summary>The interface to the VP8 decoder.</summary>
         public static global::vpxmd.VpxCodecIface VpxCodecVp8Dx()
         {
-            var __ret = __Internal.VpxCodecVp8Dx();
-            global::vpxmd.VpxCodecIface __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxCodecIface.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxCodecIface) global::vpxmd.VpxCodecIface.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxCodecIface.__CreateInstance(__ret);
+            var ___ret = __Internal.VpxCodecVp8Dx();
+            var __result0 = global::vpxmd.VpxCodecIface.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
+        /// <summary>The interface to the VP9 decoder.</summary>
         public static global::vpxmd.VpxCodecIface VpxCodecVp9Dx()
         {
-            var __ret = __Internal.VpxCodecVp9Dx();
-            global::vpxmd.VpxCodecIface __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::vpxmd.VpxCodecIface.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::vpxmd.VpxCodecIface) global::vpxmd.VpxCodecIface.NativeToManagedMap[__ret];
-            else __result0 = global::vpxmd.VpxCodecIface.__CreateInstance(__ret);
+            var ___ret = __Internal.VpxCodecVp9Dx();
+            var __result0 = global::vpxmd.VpxCodecIface.__GetOrCreateInstance(___ret, false);
             return __result0;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_UPDATES(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP8D_GET_LAST_REF_UPDATES(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP8D_GET_LAST_REF_UPDATES(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_FRAME_CORRUPTED(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP8D_GET_FRAME_CORRUPTED(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP8D_GET_FRAME_CORRUPTED(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_GET_LAST_REF_USED(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP8D_GET_LAST_REF_USED(__arg0, _1, __arg2);
-                return __ret;
-            }
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_GET_LAST_QUANTIZER(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            fixed (int* ___22 = &_2)
-            {
-                var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVPXD_GET_LAST_QUANTIZER(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP8D_GET_LAST_REF_USED(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_SET_DECRYPTOR(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxDecryptInit _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVPXD_SET_DECRYPTOR(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVPXD_SET_DECRYPTOR(__arg0, _1, __arg2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP8D_SET_DECRYPTOR(global::vpxmd.VpxCodecCtx _0, int _1, global::vpxmd.VpxDecryptInit _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __arg2 = ReferenceEquals(_2, null) ? global::System.IntPtr.Zero : _2.__Instance;
-            var __ret = __Internal.VpxCodecControlVP8D_SET_DECRYPTOR(__arg0, _1, __arg2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var __arg2 = _2 is null ? __IntPtr.Zero : _2.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP8D_SET_DECRYPTOR(__arg0, _1, __arg2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_FRAME_SIZE(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            fixed (int* ___22 = &_2)
+            {
+                var __arg2 = ___22;
+                var ___ret = __Internal.VpxCodecControlVP9D_GET_FRAME_SIZE(__arg0, _1, __arg2);
+                return ___ret;
+            }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_DISPLAY_SIZE(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (int* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP9D_GET_DISPLAY_SIZE(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP9D_GET_DISPLAY_SIZE(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_BIT_DEPTH(global::vpxmd.VpxCodecCtx _0, int _1, ref uint _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
             fixed (uint* ___22 = &_2)
             {
                 var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP9D_GET_BIT_DEPTH(__arg0, _1, __arg2);
-                return __ret;
+                var ___ret = __Internal.VpxCodecControlVP9D_GET_BIT_DEPTH(__arg0, _1, __arg2);
+                return ___ret;
             }
         }
 
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_GET_FRAME_SIZE(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9SET_BYTE_ALIGNMENT(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            fixed (int* ___22 = &_2)
-            {
-                var __arg2 = ___22;
-                var __ret = __Internal.VpxCodecControlVP9D_GET_FRAME_SIZE(__arg0, _1, __arg2);
-                return __ret;
-            }
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9SET_BYTE_ALIGNMENT(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9INVERT_TILE_DECODE_ORDER(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9INVERT_TILE_DECODE_ORDER(__arg0, _1, _2);
-            return __ret;
-        }
-
-        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
-        {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9INVERT_TILE_DECODE_ORDER(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9SET_SKIP_LOOP_FILTER(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9SET_SKIP_LOOP_FILTER(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9SET_SKIP_LOOP_FILTER(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9DECODE_SVC_SPATIAL_LAYER(__arg0, _1, _2);
+            return ___ret;
+        }
+
+        public static global::vpxmd.VpxCodecErrT VpxCodecControlVPXD_GET_LAST_QUANTIZER(global::vpxmd.VpxCodecCtx _0, int _1, ref int _2)
+        {
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            fixed (int* ___22 = &_2)
+            {
+                var __arg2 = ___22;
+                var ___ret = __Internal.VpxCodecControlVPXD_GET_LAST_QUANTIZER(__arg0, _1, __arg2);
+                return ___ret;
+            }
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_ROW_MT(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9D_SET_ROW_MT(__arg0, _1, _2);
-            return __ret;
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9D_SET_ROW_MT(__arg0, _1, _2);
+            return ___ret;
         }
 
         public static global::vpxmd.VpxCodecErrT VpxCodecControlVP9D_SET_LOOP_FILTER_OPT(global::vpxmd.VpxCodecCtx _0, int _1, int _2)
         {
-            var __arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var __ret = __Internal.VpxCodecControlVP9D_SET_LOOP_FILTER_OPT(__arg0, _1, _2);
-            return __ret;
-        }
-
-        /// <summary>
-        /// <para>This interface provides the capability to decode VP8 streams.</para>
-        /// <para>@{</para>
-        /// </summary>
-        public static global::vpxmd.VpxCodecIface VpxCodecVp8DxAlgo
-        {
-            get
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp8_dx_algo");
-                return global::vpxmd.VpxCodecIface.__CreateInstance(*__ptr);
-            }
-
-            set
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp8_dx_algo");
-                if (ReferenceEquals(value, null))
-                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                *__ptr = *(global::vpxmd.VpxCodecIface.__Internal*) value.__Instance;
-            }
-        }
-
-        /// <summary>
-        /// <para>This interface provides the capability to decode VP9 streams.</para>
-        /// <para>@{</para>
-        /// </summary>
-        public static global::vpxmd.VpxCodecIface VpxCodecVp9DxAlgo
-        {
-            get
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp9_dx_algo");
-                return global::vpxmd.VpxCodecIface.__CreateInstance(*__ptr);
-            }
-
-            set
-            {
-                var __ptr = (global::vpxmd.VpxCodecIface.__Internal*)CppSharp.SymbolResolver.ResolveSymbol("vpxmd", "vpx_codec_vp9_dx_algo");
-                if (ReferenceEquals(value, null))
-                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is passed by value.");
-                *__ptr = *(global::vpxmd.VpxCodecIface.__Internal*) value.__Instance;
-            }
+            var __arg0 = _0 is null ? __IntPtr.Zero : _0.__Instance;
+            var ___ret = __Internal.VpxCodecControlVP9D_SET_LOOP_FILTER_OPT(__arg0, _1, _2);
+            return ___ret;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Disable warning for missing XML doc comments. -->
@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="CppSharp" Version="1.1.5.3168" />
     <PackageReference Include="SIPSorceryMedia.Abstractions" Version="8.0.7" />
   </ItemGroup>
   

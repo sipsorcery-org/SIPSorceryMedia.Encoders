@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using vpxmd;
+using static vpxmd.VpxCodecCxPkt;
 
 namespace SIPSorceryMedia.Encoders.Codecs
 {
@@ -149,7 +150,7 @@ namespace SIPSorceryMedia.Encoders.Codecs
 
                     IntPtr iter = IntPtr.Zero;
 
-                    var pkt = vpx_encoder.VpxCodecGetCxData(_vpxEncodeCtx, (void**)&iter);
+                    var pkt = vpx_encoder.VpxCodecGetCxData(_vpxEncodeCtx, &iter);
 
                     while (pkt != null)
                     {
@@ -164,7 +165,7 @@ namespace SIPSorceryMedia.Encoders.Codecs
                                 throw new ApplicationException($"Unexpected packet type received from encoder, {pkt.Kind}.");
                         }
 
-                        pkt = vpx_encoder.VpxCodecGetCxData(_vpxEncodeCtx, (void**)&iter);
+                        pkt = vpx_encoder.VpxCodecGetCxData(_vpxEncodeCtx, &iter);
                     }
                 }
             }
@@ -197,7 +198,7 @@ namespace SIPSorceryMedia.Encoders.Codecs
                         {
                             IntPtr iter = IntPtr.Zero;
 
-                            VpxImage img = vpx_decoder.VpxCodecGetFrame(_vpxDecodeCtx, (void**)&iter);
+                            VpxImage img = vpx_decoder.VpxCodecGetFrame(_vpxDecodeCtx, &iter);
                             while (img != null)
                             {
                                 // Convert the VPX image buffer to an I420 buffer WITHOUT the stride.
@@ -228,7 +229,7 @@ namespace SIPSorceryMedia.Encoders.Codecs
                                
                                 VpxImage.VpxImgFree(img);
 
-                                img = vpx_decoder.VpxCodecGetFrame(_vpxDecodeCtx, (void**)&iter);
+                                img = vpx_decoder.VpxCodecGetFrame(_vpxDecodeCtx, &iter);
                             }
                         }
                     }
