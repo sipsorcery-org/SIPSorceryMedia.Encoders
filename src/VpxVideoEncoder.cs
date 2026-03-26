@@ -94,7 +94,7 @@ namespace SIPSorceryMedia.Encoders
                 }
                 else
                 {
-                    int stride = pixelFormat == VideoPixelFormatsEnum.Bgra ? width * 4 : width * 3;
+                    int stride = GetStride(width, pixelFormat);
                     var i420Buffer = PixelConverter.ToI420(width, height, stride, sample, pixelFormat);
                     encodedBuffer = _vp8Encoder.Encode(i420Buffer, vpxmd.VpxImgFmt.VPX_IMG_FMT_I420, _forceKeyFrame);
                 }
@@ -134,6 +134,24 @@ namespace SIPSorceryMedia.Encoders
                 }
             }
         }
+
+        private static int RoundUp(int value, int to) => (value + to - 1) / to * to;
+
+        private static int BytesPerPixel(VideoPixelFormatsEnum pixelFormat) => pixelFormat switch
+        {
+            VideoPixelFormatsEnum.Bgra => 4,
+            VideoPixelFormatsEnum.Rgba => 4,
+            VideoPixelFormatsEnum.Rgb  => 3,
+            VideoPixelFormatsEnum.Bgr  => 3,
+            _ => throw new ArgumentException($"Unsupported pixel format for bytes-per-pixel calculation: {pixelFormat}", nameof(pixelFormat))
+        };
+
+        /// <summary>
+        /// Calculates the row stride in bytes for the given width and pixel format,
+        /// rounding up to the nearest 4-byte boundary as required by most bitmap formats.
+        /// </summary>
+        private static int GetStride(int width, VideoPixelFormatsEnum pixelFormat) =>
+            RoundUp(value: width * BytesPerPixel(pixelFormat), to: 4);
 
         public void Dispose()
         {
